@@ -1,0 +1,1 @@
+<?php $this->load->view('front/'.$action_dir.'/'.$action_tpl); ?>

@@ -1,0 +1,194 @@
+@media (min-width: 1200px) { .container { width: 930px; } }
+body {font-family: Arial,Verdana,sans-serif;font-size:15px;color:#444;}
+a {color:#439;text-decoration:none;}
+a:hover, a:focus {color: #439;text-decoration:underline;}
+p {margin:.72em 0;}
+img {max-width:100%}
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-family: Arial,Verdana,sans-serif;}
+h1, h1 a, .h1 {font-size:36px; color:#333; margin:1.10em 0; line-height: 1.2;}
+h2, h2 a, .h2 {font-size:24px; color:#333; margin:1.10em 0; line-height: 1.2;}
+h3, h3 a, .h3 {font-size:18px; color:#333; margin:1.00em 0; line-height: 1.2;}
+
+ul{padding:0 0 0 3em;}
+ul li {list-style-position:outside;list-style-type:square;}
+table {font-size:1em;line-height:1.3em;}
+
+.perevodov-bg {background:#3C2A94;}
+.perevodov-bg a,.perevodov-bg a:visited{color:#fff;text-decoration:none;}
+
+.icon-usluga { text-align: center; font-size:8.5pt; padding:5px;text-decoration:none;border:1px solid #fff; display:inline-table; height:100px; width:85px; color:#009;}
+.icon-usluga img { margin-bottom: 10px; }
+.icon-usluga:hover { border:1px solid #f00; color:#009 }
+
+.usluga ul,.usluga ul li {list-style:none;}
+.usluga { float:left; width:95px; height:90px; background:#ddd; text-align: center; vertical-align: middle; font-size:12px; list-style:none;}
+
+.site-warning { border: 1px solid #f00; background-color: #fff; opacity: 0.7; color: #f00; text-align:center; border-radius: 3px; font-size:8pt; margin-top:30px;}
+.site-warning a { color: #f00;}
+
+/* СЛАЙДЕРЫ */
+.p-slider-h { display:inline-block; position:absolute; color:#FFF; font-size:1.5vw; background-color:rgba(255,0,0,.7); padding:.5% 2.0%; z-index: 10;  }
+.p-slider-p { display:inline-block; position:absolute; color:#FFF; font-size:1.0vw; background-color:rgba(0,0,128,.7); padding:.4% 1.5%; z-index: 10; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6); }
+.l10   { top:05%; left:0%; text-align: left; padding-left: 5%; }
+.l20   { top:15%; left:0%; text-align: left; padding-left: 5%; }
+.l30   { top:25%; left:0%; text-align: left; padding-left: 5%; }
+.l40   { top:35%; left:0%; text-align: left; padding-left: 5%; }
+.l50   { top:45%; left:0%; text-align: left; padding-left: 5%; }
+.l60   { top:55%; left:0%; text-align: left; padding-left: 5%; }
+.l70   { top:65%; left:0%; text-align: left; padding-left: 5%; }
+.l80   { top:75%; left:0%; text-align: left; padding-left: 5%; }
+.l90   { top:87%; left:0%; text-align: left; padding-left: 5%; }
+.r10   { top:05%; right:0%; text-align: right; padding-right: 5%; }
+.r20   { top:15%; right:0%; text-align: right; padding-right: 5%; }
+.r30   { top:25%; right:0%; text-align: right; padding-right: 5%; }
+.r40   { top:35%; right:0%; text-align: right; padding-right: 5%; }
+.r50   { top:45%; right:0%; text-align: right; padding-right: 5%; }
+.r60   { top:55%; right:0%; text-align: right; padding-right: 5%; }
+.r70   { top:65%; right:0%; text-align: right; padding-right: 5%; }
+.r80   { top:75%; right:0%; text-align: right; padding-right: 5%; }
+.r90   { top:87%; right:0%; text-align: right; padding-right: 5%; }
+
+/* КАРТА ДУБЛЬ ГИС */
+.dg_popup_title     { margin: 10px 5px; color: #ffc84b; white-space: nowrap; font: 22px/24px 'SuisseCond','Arial Narrow',Helvetica,Arial,sans-serif; }
+.dg_popup_phone     { font-size: 16px; margin: 10px 0px; }
+.dg_popup_address   { font-size: 11px; margin: 10px 0px; }
+.dg_popup_open      { font-size: 11px; margin: 10px 0px; }
+.dg-div-icon { border: 1px solid #444; background-color: #ddd; opacity: 0.7; color: #000; text-align:center; border-radius: 10px}
+
+header {}
+.header_top_wrap {color:#444; padding:.5em 1em;}
+.header_city_wrap a, .header_city_wrap a:visited {color:#000; border-bottom:1px dashed #999;}
+.header_city_wrap a:focus, .header_city_wrap a:active, .header_city_wrap a:hover{border-bottom:1px solid #444;text-decoration:none;}
+.header_lang_wrap {}
+.header_lang_wrap a {width:16px; height:16px; display:block; text-decoration:none; margin:10px 0 0 10px; float:right;}
+.header_lang_wrap a._ru{background: url('/images/front/icons_flag/ru.png') center center no-repeat;}
+.header_lang_wrap a._en{background: url('/images/front/icons_flag/gb.png') center center no-repeat;}
+.header_lang_wrap a._de{background: url('/images/front/icons_flag/de.png') center center no-repeat;}
+.header_lang_wrap a._fr{background: url('/images/front/icons_flag/fr.png') center center no-repeat;}
+.header_lang_wrap a._cn{background: url('/images/front/icons_flag/cn.png') center center no-repeat;}
+.header_networks_wrap {float:right;}
+
+nav ul,nav ul li {list-style:none;}
+.sidebar-nav {padding:9px 0;}
+.dropdown-menu {border:1px solid #D10000;}
+.dropdown-menu .sub-menu {left:100%; position:absolute; top:0; visibility:hidden; margin-top:-1px;}
+.dropdown-menu li:hover .sub-menu {visibility:visible;}
+.dropdown:hover .dropdown-menu {display: block;}
+.nav-tabs .dropdown-menu, .nav-pills .dropdown-menu, .navbar .dropdown-menu {margin-top: 0;}
+.navbar .sub-menu:before {border-bottom: 7px solid transparent;border-left: none;border-right: 7px solid #D10000;border-top: 7px solid transparent;left: -7px;top: 10px;}
+.navbar .sub-menu:after {border-top: 6px solid transparent;border-left: none;border-right: 6px solid #D10000;border-bottom: 6px solid transparent;left: 10px;top: 11px;left: -6px;}
+.nav-tabs > li a:hover {text-decoration:underline;}
+
+.main {border-left: 0px solid #ddd; border-right: 0px solid #ddd; padding-bottom:100px;}
+
+.b-main-services,.b-main-cities,.b-main-news {padding:0em 0}
+.b-main-services {font-size:14px}
+.b-main-services .panel {}
+.b-main-services .panel > .panel-heading {padding:.5em .7em}
+.b-main-services .panel > .panel-body {padding:.7em;min-height:4.3em;}
+
+.panel-default {border-color:transparent; box-shadow:none;}
+.panel-default > .panel-heading {color:#333; background-color:#efedff; border-color:#efedff;}
+
+.list-group-item {border:1px solid transparent;}
+
+.ir {text-indent:-999px;}
+
+.gorod_status_0, a.gorod_status_0 {color:#fff; background-color:#999; border-radius:3px; padding: 0 4px; text-decoration:none;}
+.gorod_status_1, a.gorod_status_1 {color:#fff; background-color:#439; border-radius:3px; padding: 0 4px; text-decoration:none;}
+.gorod_status_2, a.gorod_status_2 {color:#fff; background-color:#999; border-radius:3px; padding: 0 4px; text-decoration:none;}
+.gorod_status_3, a.gorod_status_3 {color:#fff; background-color:#f00; border-radius:3px; padding: 0 4px; text-decoration:none;}
+.gorod_sup {font-size:12px; vertical-align:super;}
+
+.allCity_item input[type="radio"]{display:none;}
+.allCity_item input[type="radio"] + label{color:#333;font-size:1em;line-height:1.21em;padding:.2em .5em;margin-bottom:0;cursor:pointer;}
+.allCity_item input[type="radio"]:checked + label{background:#E63336;color:#fff;}
+
+footer, footer td, footer a, footer a:hover, footer li {color:#999; background:#ddd}
+footer ul {padding:0; margin-left:20px; font-size:13px; }
+
+.si {display:block; float:left; position:relative; height:20px; width:20px; overflow:hidden; background:url('/images/front/siteicons.png') 0 0 no-repeat; margin:.1em .2em 0 0; font-size:2em;}
+.si-em {background-position: 0 0;}
+.si-vk {background-position:-20px 0;}
+.si-fb {background-position:-40px 0;}
+.si-gp {background-position:-60px 0;}
+.si-ok {background-position:-80px 0;}
+.si-lj {background-position:-100px 0;}
+.si-ma {background-position:-120px 0;}
+.si-li {background-position:-140px 0;}
+.si-ya {background-position:-160px 0;}
+.si-ig {background-position:-180px 0;}
+.si-tw {background-position:-200px 0;}
+.si-sk {background-position:-220px 0;}
+
+.text-grey{color:#737373;}
+.navbar-collapse { padding-right: 0; padding-left: 0; margin-left: -15px !important;  }
+.nav-tabs > li { border-right: 1px solid #ddd; }
+.nav-tabs > li > a { margin-right: 0; }
+.nav-tabs > li:last-child { border-right:0; }
+
+/* ВИЗИТНЫЕ КАРТОЧКИ КОМАНДЫ */
+.vcard {
+    display:inline-block;
+    width:290px;
+    background-color:#fbfbfb;
+    height:160px;
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    margin-right:5px; margin-bottom:10px;
+    font: 13pt 'SuisseCond','Arial Narrow',Helvetica,Arial,sans-serif;
+    -webkit-filter: grayscale(0%);
+    }
+.vcard:hover { 
+    border-radius:5px;
+    -webkit-filter: grayscale(0%);
+    background-color:#ebebfb
+    }
+.vcard, .vcard:hover, .vcard:visited { color: #000;}
+.vcard img   { border: 1px solid #ddd; border-radius: 5px;}
+.vcard-name  { margin: 9px 0; font-size: 100%; font-weight: 600; }
+.vcard-title { margin: 5px 0; font-size: 80%; line-height: .95 }
+.vcard-phone { margin: 5px 0; font-size: 80%; }
+.vcard-email { margin: 5px 0; font-size: 65%; }
+
+
+
+/*#allCity {}
+.allCity_item{margin:0 0 .75em;}
+.allCity_item input[type="radio"] { display:none; }
+.allCity_item input[type="radio"] + label { color: #733; font-family:Arial, sans-serif; font-size:14px; }
+.allCity_item input[type="radio"] + label span { display:inline-block; width:19px; height:19px; margin:-1px 4px 0 0; vertical-align:middle; cursor:pointer; -moz-border-radius: 50%; border-radius: 50%; }
+.allCity_item input[type="radio"] + label span { background-color:#733; }
+.allCity_item input[type="radio"]:checked + label span { background-color:#911; }
+.allCity_item input[type="radio"] + label span,
+.allCity_item input[type="radio"]:checked + label span { -webkit-transition:background-color 0.4s linear; -o-transition:background-color 0.4s linear; -moz-transition:background-color 0.4s linear; transition:background-color 0.4s linear; }*/
+
+/* ============================================================================================================================
+== BUBBLE WITH A BORDER AND TRIANGLE
+** ============================================================================================================================ */
+
+/* THE SPEECH BUBBLE
+------------------------------------------------------------------------------------------------------------------------------- */
+
+.triangle-border {
+  position:relative;
+  padding:0 3px;
+  margin: 0;
+  border: 1px solid #008;
+  color:#fff;
+  background:#008;
+  display:inline-block;
+  /* css3 */
+  -webkit-border-radius:5px;
+  -moz-border-radius:5px;
+  border-radius:5px;
+}
+
+.triangle-border:before {
+  content:""; position:absolute;
+  bottom:-10px; left:10px;
+  border-width:10px 10px 0px;
+  border-style:solid; border-color:#008 transparent;
+  display:block; width:0;
+}
+

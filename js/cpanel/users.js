@@ -1,0 +1,13 @@
+$(function(){
+
+    $(".chosen").chosen();
+
+
+    $(".form_filter").on('change',function(){
+
+        $("#do_filter").submit();
+
+    });
+
+
+});
