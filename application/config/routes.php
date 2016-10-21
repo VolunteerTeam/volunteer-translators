@@ -46,7 +46,8 @@ $route['login']                 = 'login/index';
 $route['cpanel/(.*)']           = 'cpanel/$1';
 $route['cpanel']                = 'cpanel/main';
 
-$route['user/reg']                = 'user/reg';
+$route['user/reg']                = 'user/register';
+$route['user/register']                = 'user/register';
 $route['user/forgot']                = 'user/forgot';
 $route['user/forgot/send']		= 'user/forgot/send';
 $route['user/forgot/restore/(.*)/(.*)']	= 'user/forgot/restore/$1/$2';
