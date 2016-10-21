@@ -40,6 +40,7 @@ class User extends CI_Controller
         $this->form_validation->set_message('required', 'поле обязательно для заполнения');
         $this->form_validation->set_message('valid_email', 'поле должно содержать правильный адрес электронной почты');
         $this->form_validation->set_message('matches', 'поле "Пароль" должно соответствовать значению в поле "Повторите пароль"');
+        $this->form_validation->set_message('alpha', 'поле должно содержать только буквы');
 
         //validate form input
         if ($this->form_validation->run() == FALSE)
