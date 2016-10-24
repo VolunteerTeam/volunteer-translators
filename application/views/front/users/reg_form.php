@@ -185,6 +185,7 @@
             minDate: moment().add(-100, 'years'),
             maxDate: moment().add(-10, 'years'),
             viewMode: 'years',
+            locale: 'ru'
         });
         datepicker1.on('dp.hide',function(){
             setTimeout(function(){

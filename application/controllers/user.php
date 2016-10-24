@@ -48,7 +48,7 @@ class User extends CI_Controller
             // fails
 
             $sources = array();
-            $sources['js'] = array('/js/vendor/bootstrap/moment.min.js','/js/vendor/bootstrap/bootstrap-datetimepicker.min.js');
+            $sources['js'] = array('/js/vendor/bootstrap/moment.min.js','/js/vendor/bootstrap/locale/ru.js','/js/vendor/bootstrap/bootstrap-datetimepicker.min.js');
             $sources['css'] = array('/css/vendor/bootstrap/bootstrap-datetimepicker.min.css');
 
             $this->load->view('front/common/header',$sources);
