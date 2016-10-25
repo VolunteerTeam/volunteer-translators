@@ -19,7 +19,7 @@
     <link href="/css/front/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="/css/front/custom.css" rel="stylesheet" type="text/css" />
     <?php
-        if($css){
+        if(isset($css)){
             foreach($css as $css_link) {
                 echo '<link href="'.$css_link.'" rel="stylesheet" type="text/css" />';
             }
@@ -40,8 +40,9 @@
             document.write(unescape("%3Cscript src='/js/front/jquery-2.1.4.min.js' type='text/javascript'%3E%3C/script%3E"));
         }
     </script>
+    <script src="/js/front/custom.js"></script>
     <?php
-    if($js){
+    if(isset($js)){
         foreach($js as $js_link) {
             echo '<script src="'.$js_link.'"></script>';
         }

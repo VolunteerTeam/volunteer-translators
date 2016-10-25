@@ -20,6 +20,31 @@
         font-size: 12px;
         font-weight: bold;
     }
+    #map_container {
+        padding: 15px;
+        display: none;
+    }
+    #map_canvas {
+        width: 100%;
+        height: 600px;
+    }
+    .ui-autocomplete {
+        background-color: white;
+        border: 1px solid #cfcfcf;
+        list-style-type: none;
+        padding-left: 5px;
+    }
+    .ui-autocomplete li {
+        list-style-type: none;
+    }
+    .ui-menu-item a {
+        color: #6f6f6f;
+    }
+    .ui-menu-item a:hover {
+        cursor: pointer;
+        text-decoration: none;
+        color: #3C2A94;
+    }
 </style>
 
 <div class="container main" role="main">
@@ -108,8 +133,13 @@
             <div class="col-md-4">
                 <label class="control-label">Город <span class="required">*</span></label>
                 <input type="text" name="city" value="<?php echo @$_POST['city']; ?>" class="form-control <?php if(!empty(form_error('city'))){echo "error";} ?>">
-                <span class="text-danger"><?php echo form_error('city'); ?></span>
+                <input id="latlng" name="latlng" type="text" value="<?php echo @$_POST['latlng']; ?>" hidden/>
+                <input id="place_id" name="place_id" type="text" value="<?php echo @$_POST['place_id']; ?>" hidden/>
+                <span class="text-danger" id="city-error"><?php echo form_error('city'); ?></span>
             </div>
+        </div>
+        <div class="row bestmedia-input" id="map_container">
+            <div id="map_canvas"></div><br/>
         </div>
         <div class="row bestmedia-input">
             <div class="col-md-6">
@@ -177,6 +207,40 @@
 </div>
 
 <script>
+    var geocoder;
+    var map;
+    var marker;
+
+    function initMap(){
+        //Определение карты
+        var latlng = "";
+        var myLatLng = "";
+        var coordinates = $("#latlng").val();
+        if(coordinates){
+            coordinates = coordinates.split(",");
+            myLatLng = {lat: parseFloat(coordinates[0]), lng: parseFloat(coordinates[1])};
+            latlng = new google.maps.LatLng(myLatLng['lat'],myLatLng['lng']);
+        } else {
+            latlng = new google.maps.LatLng(55.7494733,37.3523255); // Москва
+        }
+        var options = {
+            zoom: 10,
+            center: latlng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        map = new google.maps.Map(document.getElementById("map_canvas"), options);
+
+        //Определение геокодера
+        geocoder = new google.maps.Geocoder();
+
+        marker = new google.maps.Marker({
+            map: map,
+            draggable: true
+        });
+        if(myLatLng) marker.setPosition(myLatLng);
+    }
+
     $(document).ready(function(){
         // Подключение Datepicker для выбора даты рождения
         var datepicker1 = $("#datepicker1");
@@ -213,6 +277,67 @@
             var value = $(this).val(); // текущее значение поля Телефон
             if($.inArray(value.length, hyphens) != -1) {
                 $(this).val(value+"-");
+            }
+        });
+
+        // Подключение геокодера к поиску по городам
+        var city_field = $("input[name='city']");
+        var place_id = '<?php echo @$_POST['place_id']; ?>';
+        var latlng_field = $("#latlng");
+        var place_id_field = $("#place_id");
+        if(!place_id && navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(function(position) {
+                geocoder = new google.maps.Geocoder();
+                geocoder.geocode( {'location': {lat: position.coords.latitude, lng: position.coords.longitude}}, function(results, status){
+                    if (status === 'OK'){
+                        city_field.val(results[2].formatted_address);
+                        latlng_field.val(position.coords.latitude + "," + position.coords.longitude);
+                        place_id_field.val(results[2].place_id);
+                    }
+                })
+            })
+        }
+        city_field.focusin(function(){
+            $('#map_container').show();
+            initMap();
+        });
+        city_field.focusout(function(){
+            $('#map_container').hide();
+        });
+        city_field.keypress(function(){
+            latlng_field.val("");
+        });
+
+        city_field.autocomplete({
+            //Определяем значение для адреса при геокодировании
+            source: function(request, response) {
+                geocoder.geocode( {'address': request.term}, function(results, status) {
+                    response($.map(results, function(item) {
+                        return {
+                            label:  item.formatted_address,
+                            value: item.formatted_address,
+                            latitude: item.geometry.location.lat(),
+                            longitude: item.geometry.location.lng(),
+                            place_id: item.place_id
+                        }
+                    }));
+                })
+            },
+            //Выполняется при выборе конкретного адреса
+            select: function(event, ui) {
+                latlng_field.val(ui.item.latitude + "," + ui.item.longitude);
+                place_id_field.val(ui.item.place_id);
+                $("#city-error").hide();
+                var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+                marker.setPosition(location);
+                map.setCenter(location);
+            },
+            messages: {
+                noResults: '',
+                    results: function() {}
+            },
+            open: function(){
+                $('.ui-autocomplete').css('width', city_field.outerWidth()+"px");
             }
         });
     })

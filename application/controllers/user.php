@@ -33,7 +33,7 @@ class User extends CI_Controller
         $this->form_validation->set_rules('about', 'About', 'trim|required|xss_clean');
         $this->form_validation->set_rules('job_post', 'Job Post', 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', 'Date of Birth', 'required');
-        $this->form_validation->set_rules('city', 'City', 'required');
+        $this->form_validation->set_rules('city', 'City', 'required|callback_check_coordinates');
         $this->form_validation->set_rules('phone', 'Phone', 'trim|required|regex_match[/^\+7\-\d{3}\-\d{3}\-\d{2}\-\d{2}$/]');
 
         $this->form_validation->set_message('regex_match', 'поле должно быть заполнено в формате +7-ххх-ххх-хх-хх');
@@ -41,6 +41,7 @@ class User extends CI_Controller
         $this->form_validation->set_message('valid_email', 'поле должно содержать правильный адрес электронной почты');
         $this->form_validation->set_message('matches', 'поле "Пароль" должно соответствовать значению в поле "Повторите пароль"');
         $this->form_validation->set_message('alpha', 'поле должно содержать только буквы');
+        $this->form_validation->set_message('check_coordinates', 'Вы не указали действительные координаты');
 
         //validate form input
         if ($this->form_validation->run() == FALSE)
@@ -48,7 +49,13 @@ class User extends CI_Controller
             // fails
 
             $sources = array();
-            $sources['js'] = array('/js/vendor/bootstrap/moment.min.js','/js/vendor/bootstrap/locale/ru.js','/js/vendor/bootstrap/bootstrap-datetimepicker.min.js');
+            $sources['js'] = array(
+                                '/js/vendor/jquery-ui.min.js',
+                                '/js/vendor/bootstrap/moment.min.js',
+                                '/js/vendor/bootstrap/locale/ru.js',
+                                '/js/vendor/bootstrap/bootstrap-datetimepicker.min.js',
+                                'https://maps.google.com/maps/api/js?key=AIzaSyAcZF9a4bTTl7oT77NFJ3dozmSZNuISgA0&language=ru'
+                             );
             $sources['css'] = array('/css/vendor/bootstrap/bootstrap-datetimepicker.min.css');
 
             $this->load->view('front/common/header',$sources);
@@ -59,9 +66,10 @@ class User extends CI_Controller
         {
             //insert the user registration details into database
             $secret = sha1(rand(2589,195568).$this->input->post('email'));
-            var_dump($secret);
-            exit;
-            $data = array(
+            $this->load->view('front/common/header');
+            $this->load->view('front/users/dummy');
+            $this->load->view('front/common/footer');
+            /*$data = array(
                 'fname' => $this->input->post('fname'),
                 'lname' => $this->input->post('lname'),
                 'email' => $this->input->post('email'),
@@ -89,7 +97,7 @@ class User extends CI_Controller
                 // error
                 $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
                 redirect('user/register');
-            }
+            }*/
         }
     }
 
@@ -105,5 +113,9 @@ class User extends CI_Controller
             $this->session->set_flashdata('verify_msg','<div class="alert alert-danger text-center">Sorry! There is error verifying your Email Address!</div>');
             redirect('user/register');
         }
+    }
+
+    function check_coordinates() {
+        return $this->input->post('latlng') ? TRUE : FALSE;
     }
 }
