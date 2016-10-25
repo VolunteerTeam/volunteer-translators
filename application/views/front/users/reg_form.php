@@ -15,7 +15,7 @@
     input.error {
         border: 1px solid red;
     }
-    .text-danger p {
+    .text-danger {
         margin: 0;
         font-size: 12px;
         font-weight: bold;
@@ -133,6 +133,8 @@
             <div class="col-md-4">
                 <label class="control-label">Город <span class="required">*</span></label>
                 <input type="text" name="city" value="<?php echo @$_POST['city']; ?>" class="form-control <?php if(!empty(form_error('city'))){echo "error";} ?>">
+                <input id="country" name="country" type="text" value="<?php echo @$_POST['country']; ?>" hidden/>
+                <input id="country_short" name="country_short" type="text" value="<?php echo @$_POST['country_short']; ?>" hidden/>
                 <input id="latlng" name="latlng" type="text" value="<?php echo @$_POST['latlng']; ?>" hidden/>
                 <input id="place_id" name="place_id" type="text" value="<?php echo @$_POST['place_id']; ?>" hidden/>
                 <span class="text-danger" id="city-error"><?php echo form_error('city'); ?></span>
@@ -285,14 +287,26 @@
         var place_id = '<?php echo @$_POST['place_id']; ?>';
         var latlng_field = $("#latlng");
         var place_id_field = $("#place_id");
+        var country_field = $("#country");
+        var country_short_field = $("#country_short");
         if(!place_id && navigator.geolocation){
             navigator.geolocation.getCurrentPosition(function(position) {
                 geocoder = new google.maps.Geocoder();
                 geocoder.geocode( {'location': {lat: position.coords.latitude, lng: position.coords.longitude}}, function(results, status){
                     if (status === 'OK'){
-                        city_field.val(results[2].formatted_address);
+                        var num = 0;
+                        $.each(results,function(i,result){
+                            if(result.address_components[0].types[0] == 'locality'){
+                                num = i;
+                                return false;
+                            }
+                        });
+                        var address_length = results[num].address_components.length;
+                        city_field.val(results[num].formatted_address);
                         latlng_field.val(position.coords.latitude + "," + position.coords.longitude);
-                        place_id_field.val(results[2].place_id);
+                        place_id_field.val(results[num].place_id);
+                        country_field.val(results[num].address_components[address_length-1].long_name);
+                        country_short_field.val(results[num].address_components[address_length-1].short_name);
                     }
                 })
             })
@@ -318,6 +332,7 @@
                             value: item.formatted_address,
                             latitude: item.geometry.location.lat(),
                             longitude: item.geometry.location.lng(),
+                            address_components: item.address_components,
                             place_id: item.place_id
                         }
                     }));
@@ -325,12 +340,19 @@
             },
             //Выполняется при выборе конкретного адреса
             select: function(event, ui) {
-                latlng_field.val(ui.item.latitude + "," + ui.item.longitude);
-                place_id_field.val(ui.item.place_id);
-                $("#city-error").hide();
-                var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-                marker.setPosition(location);
-                map.setCenter(location);
+                if(ui.item.address_components[0]['types'][0] != 'locality'){
+                    $("#city-error").text("Нужно выбрать только населённый пункт (город, пгт и т.п.)").show();
+                } else {
+                    var address_length = ui.item.address_components.length;
+                    latlng_field.val(ui.item.latitude + "," + ui.item.longitude);
+                    place_id_field.val(ui.item.place_id);
+                    country_field.val(ui.item.address_components[address_length-1].long_name);
+                    country_short_field.val(ui.item.address_components[address_length-1].short_name);
+                    $("#city-error").hide();
+                    var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+                    marker.setPosition(location);
+                    map.setCenter(location);
+                }
             },
             messages: {
                 noResults: '',
