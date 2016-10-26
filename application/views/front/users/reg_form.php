@@ -162,35 +162,57 @@
         <div style="height: 50px;"></div>
         <div class="row bestmedia-input">
             <div class="col-md-6">
+                <input type="text" name="soc_profiles" value="" hidden>
+                <span class="text-danger"><?php echo form_error('soc_profiles'); ?></span>
+            </div>
+        </div>
+        <div class="row bestmedia-input">
+            <div class="col-md-6">
                 <label class="control-label">Facebook</label>
-                <input type="text" name="fb_profile" value="<?php echo @$_POST['fb_profile']; ?>" class="form-control" ></div>
+                <input type="text" name="fb_profile" value="<?php echo @$_POST['fb_profile']; ?>" class="form-control" >
+                <span class="text-danger"><?php echo form_error('fb_profile'); ?></span>
+            </div>
             <div class="col-md-6">
                 <label class="control-label">Вконтакте</label>
-                <input type="text" name="vk_profile" value="<?php echo @$_POST['vk_profile']; ?>" class="form-control" ></div>
+                <input type="text" name="vk_profile" value="<?php echo @$_POST['vk_profile']; ?>" class="form-control" >
+                <span class="text-danger"><?php echo form_error('vk_profile'); ?></span>
+            </div>
         </div>
         <div class="row bestmedia-input">
             <div class="col-md-6">
                 <label class="control-label">Одноклассники</label>
-                <input type="text" name="od_profile" value="<?php echo @$_POST['od_profile']; ?>" class="form-control" ></div>
+                <input type="text" name="od_profile" value="<?php echo @$_POST['od_profile']; ?>" class="form-control" >
+                <span class="text-danger"><?php echo form_error('od_profile'); ?></span>
+            </div>
             <div class="col-md-6">
                 <label class="control-label">Google+</label>
-                <input type="text" name="gp_profile" value="<?php echo @$_POST['gp_profile']; ?>" class="form-control" ></div>
+                <input type="text" name="gp_profile" value="<?php echo @$_POST['gp_profile']; ?>" class="form-control" >
+                <span class="text-danger"><?php echo form_error('gp_profile'); ?></span>
+            </div>
         </div>
         <div class="row bestmedia-input">
             <div class="col-md-6">
                 <label class="control-label">Twitter</label>
-                <input type="text" name="tw_profile" value="<?php echo @$_POST['tw_profile']; ?>" class="form-control" ></div>
+                <input type="text" name="tw_profile" value="<?php echo @$_POST['tw_profile']; ?>" class="form-control" >
+                <span class="text-danger"><?php echo form_error('tw_profile'); ?></span>
+            </div>
             <div class="col-md-6">
                 <label class="control-label">Instagram</label>
-                <input type="text" name="in_profile" value="<?php echo @$_POST['in_profile']; ?>" class="form-control" ></div>
+                <input type="text" name="in_profile" value="<?php echo @$_POST['in_profile']; ?>" class="form-control" >
+                <span class="text-danger"><?php echo form_error('in_profile'); ?></span>
+            </div>
         </div>
         <div class="row bestmedia-input">
             <div class="col-md-6">
                 <label class="control-label">Livejournal</label>
-                <input type="text" name="lj_profile" value="<?php echo @$_POST['lj_profile']; ?>" class="form-control" ></div>
+                <input type="text" name="lj_profile" value="<?php echo @$_POST['lj_profile']; ?>" class="form-control" >
+                <span class="text-danger"><?php echo form_error('lj_profile'); ?></span>
+            </div>
             <div class="col-md-6">
                 <label class="control-label">LinkenId</label>
-                <input type="text" name="li_profile" value="<?php echo @$_POST['li_profile']; ?>" class="form-control" ></div>
+                <input type="text" name="li_profile" value="<?php echo @$_POST['li_profile']; ?>" class="form-control" >
+                <span class="text-danger"><?php echo form_error('li_profile'); ?></span>
+            </div>
         </div>
         <div class="row bestmedia-input">
             <div class="col-md-12">
