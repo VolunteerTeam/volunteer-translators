@@ -12,7 +12,7 @@
     .form-control {
         width: 100%;
     }
-    input.error {
+    .error {
         border: 1px solid red;
     }
     .text-danger {
@@ -44,6 +44,9 @@
         cursor: pointer;
         text-decoration: none;
         color: #3C2A94;
+    }
+    .bestmedia-input {
+        margin-bottom: 10px;
     }
 </style>
 
@@ -96,7 +99,7 @@
         </div>
         <div class="row bestmedia-input">
             <div class="col-md-6">
-                <label class="control-label">Представление(вкратце о себе) <span class="required">*</span></label>
+                <label class="control-label">Представление (вкратце о себе) <span class="required">*</span></label>
                 <input type="text" name="about" value="<?php echo @$_POST['about']; ?>" class="form-control <?php if(!empty(form_error('about'))){echo "error";} ?>">
                 <span class="text-danger"><?php echo form_error('about'); ?></span>
             </div>
@@ -107,7 +110,7 @@
         </div>
         <div class="row bestmedia-input">
             <div class="col-md-12">
-                <label class="control-label">Должность(кем работаете) <span class="required">*</span></label>
+                <label class="control-label">Должность (кем работаете) <span class="required">*</span></label>
                 <input type="text" name="job_post" value="<?php echo @$_POST['job_post']; ?>" class="form-control <?php if(!empty(form_error('job_post'))){echo "error";} ?>">
                 <span class="text-danger"><?php echo form_error('job_post'); ?></span>
             </div>
@@ -124,11 +127,13 @@
                 <span class="text-danger"><?php echo form_error('dob'); ?></span>
             </div>
             <div class="col-md-4">
-                <label class="control-label">Пол</label>
-                <select name="sex" class="form-control" size="1" required="required">
-                    <option value="male" <?php if(@$_POST['sex'] == 'male') { echo "selected"; } ?> >Мужской</option>
-                    <option value="famale" <?php if(@$_POST['sex'] == 'famale') {echo "selected"; } ?> >Женский</option>
+                <label class="control-label">Пол <span class="required">*</span></label>
+                <select name="sex" class="form-control <?php if(!empty(form_error('sex'))){echo "error";} ?>" size="1">
+                    <option value="">------------</option>
+                    <option value="1" <?php if(@$_POST['sex'] == 'male') { echo "selected"; } ?> >Мужской</option>
+                    <option value="2" <?php if(@$_POST['sex'] == 'famale') {echo "selected"; } ?> >Женский</option>
                 </select>
+                <span class="text-danger"><?php echo form_error('sex'); ?></span>
             </div>
             <div class="col-md-4">
                 <label class="control-label">Город <span class="required">*</span></label>
@@ -187,20 +192,31 @@
                 <label class="control-label">LinkenId</label>
                 <input type="text" name="li_profile" value="<?php echo @$_POST['li_profile']; ?>" class="form-control" ></div>
         </div>
-        <div style="height: 50px;"></div>
         <div class="row bestmedia-input">
             <div class="col-md-12">
-                <label class="control-label">Группы</label>
-                <select class="form-control" name="group" size="1">
-                    <option value="7" <?php if(@$_POST['group'] == 'Заказчик') { echo "selected"; } ?>>Заказчик</option>
-                    <option value="4" <?php if(@$_POST['group'] == 'Волонтёр') { echo "selected"; } ?>>Волонтёр</option>
-                </select>
+                <p><b>Ваша роль <span class="required">*</span>:</b></p>
+                <div class="btn-group <?php if(!empty(form_error('group'))){echo "error";} ?>" data-toggle="buttons">
+                    <label class="btn btn-default">
+                        <input type="radio" name="group" value="7" <?php if(@$_POST['group'] == '7') { echo "checked"; } ?> /> Заказчик
+                    </label>
+                    <label class="btn btn-default">
+                        <input type="radio" name="group" value="4" <?php if(@$_POST['group'] == '7') { echo "checked"; } ?> /> Волонтёр
+                    </label>
+                </div>
+                <span class="text-danger"><?php echo form_error('group'); ?></span>
+                <?php
+                /*<select class="form-control" name="group" size="1">
+                    <option value="7" <?php //if(@$_POST['group'] == 'Заказчик') { echo "selected"; } ?>>Заказчик</option>
+                    <option value="4" <?php //if(@$_POST['group'] == 'Волонтёр') { echo "selected"; } ?>>Волонтёр</option>
+                </select>*/
+                ?>
+
             </div>
         </div>
         <div style="height: 30px;"></div>
         <div>
             <div class="text-center">
-                <input type="submit" name="submit" value="Сохранить" class="btn btn-success">
+                <input type="submit" name="submit" value="Зарегистрироваться" class="btn btn-success">
             </div>
         </div>
         <?php echo form_close(); ?>

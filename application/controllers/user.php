@@ -33,6 +33,8 @@ class User extends CI_Controller
         $this->form_validation->set_rules('about', 'About', 'trim|required|xss_clean');
         $this->form_validation->set_rules('job_post', 'Job Post', 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', 'Date of Birth', 'required');
+        $this->form_validation->set_rules('sex', 'Sex', 'required');
+        $this->form_validation->set_rules('group', 'Date of Birth', 'callback_group_required');
         $this->form_validation->set_rules('city', 'City', 'required|callback_check_coordinates');
         $this->form_validation->set_rules('phone', 'Phone', 'trim|required|regex_match[/^\+7\-\d{3}\-\d{3}\-\d{2}\-\d{2}$/]');
 
@@ -95,7 +97,7 @@ class User extends CI_Controller
 //                'gp_profile' => $this->input->post('gp_profile'),
 //                'in_profile' => $this->input->post('in_profile'),
 //                'dob' => $this->input->post('dob'),
-//                'sex' => $this->input->post('sex'),
+//                'sex_type' => $this->input->post('sex'),
 //                'coordinates' => $this->input->post('coordinates'),
 //                'about' => $this->input->post('about'),
 //                'group_id' => $this->input->post('group'),
@@ -143,5 +145,13 @@ class User extends CI_Controller
 
     function check_coordinates() {
         return $this->input->post('latlng') ? TRUE : FALSE;
+    }
+
+    function group_required($str) {
+        if(!$str){
+            $this->form_validation->set_message('group_required', 'выберите Вашу роль');
+            return false;
+        }
+        return true;
     }
 }
