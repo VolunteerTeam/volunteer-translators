@@ -37,6 +37,15 @@ class User extends CI_Controller
         $this->form_validation->set_rules('group', 'Date of Birth', 'callback_group_required');
         $this->form_validation->set_rules('city', 'City', 'required|callback_check_coordinates');
         $this->form_validation->set_rules('phone', 'Phone', 'trim|required|regex_match[/^\+7\-\d{3}\-\d{3}\-\d{2}\-\d{2}$/]');
+        $this->form_validation->set_rules('soc_profiles', 'Social profiles', 'callback_social_required');
+        $this->form_validation->set_rules('fb_profile', 'FB profile', 'callback_valid_fb_profile');
+        $this->form_validation->set_rules('vk_profile', 'VK profile', 'callback_valid_fb_profile');
+        $this->form_validation->set_rules('od_profile', 'OD profile', 'callback_valid_fb_profile');
+        $this->form_validation->set_rules('gp_profile', 'GP profile', 'callback_valid_fb_profile');
+        $this->form_validation->set_rules('tw_profile', 'TW profile', 'callback_valid_fb_profile');
+        $this->form_validation->set_rules('in_profile', 'IN profile', 'callback_valid_fb_profile');
+        $this->form_validation->set_rules('lj_profile', 'LJ profile', 'callback_valid_fb_profile');
+        $this->form_validation->set_rules('li_profile', 'LI profile', 'callback_valid_fb_profile');
 
         $this->form_validation->set_message('regex_match', 'поле должно быть заполнено в формате +7-ххх-ххх-хх-хх');
         $this->form_validation->set_message('required', 'поле обязательно для заполнения');
@@ -143,6 +152,8 @@ class User extends CI_Controller
         }
     }
 
+    // Функции валидации (в будущем надо вынести в отдельный класс)
+
     function check_coordinates() {
         return $this->input->post('latlng') ? TRUE : FALSE;
     }
@@ -153,5 +164,84 @@ class User extends CI_Controller
             return false;
         }
         return true;
+    }
+
+    function social_required(){
+        if( !$this->input->post('vk_profile') &&
+            !$this->input->post('fb_profile') &&
+            !$this->input->post('od_profile') &&
+            !$this->input->post('tw_profile') &&
+            !$this->input->post('li_profile') &&
+            !$this->input->post('lj_profile') &&
+            !$this->input->post('gp_profile') &&
+            !$this->input->post('in_profile')){
+
+            $this->form_validation->set_message('social_required', 'Пожалуйста, укажите хотя бы один профиль из соцсетей:');
+            return false;
+        }
+        return true;
+    }
+
+    function valid_fb_profile($str){
+        if(!$str || preg_match('/(?:(?:http|https):\/\/)?(?:www.)?facebook.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[?\w\-]*\/)?(?:profile.php\?id=(?=\d.*))?([\w\-]*)?/',$str)){
+            return true;
+        } else {
+            $this->form_validation->set_message('valid_fb_profile', 'неверно указан URL к профилю');
+            return false;
+        }
+    }
+
+    function valid_vk_profile($str){
+        if(!$str || preg_match('/^(http:\/\/|https:\/\/)?(www\.)?vk\.com\/(\w|\d)+?\/?$/',$str)){
+            return true;
+        } else {
+            $this->form_validation->set_message('valid_vk_profile', 'неверно указан URL к профилю');
+            return false;
+        }
+    }
+
+    function valid_od_profile($str){
+        if(!$str || preg_match('/^(http:\/\/|https:\/\/)?(www\.)?ok\.ru\/(\w|\d)+?\/?$/',$str)){
+            return true;
+        } else {
+            $this->form_validation->set_message('valid_od_profile', 'неверно указан URL к профилю');
+            return false;
+        }
+    }
+
+    function valid_gp_profile($str){
+        if(!$str || preg_match('/^(http:\/\/|https:\/\/)?(www\.)?plus\.google\.com\/(\w|\d)+?\/?$/',$str)){
+            return true;
+        } else {
+            $this->form_validation->set_message('valid_gp_profile', 'неверно указан URL к профилю');
+            return false;
+        }
+    }
+
+    function valid_tw_profile($str){
+        if(!$str || preg_match('/^(http:\/\/|https:\/\/)?(www\.)?twitter\.com\/(\w|\d)+?\/?$/',$str)){
+            return true;
+        } else {
+            $this->form_validation->set_message('valid_tw_profile', 'неверно указан URL к профилю');
+            return false;
+        }
+    }
+
+    function valid_in_profile($str){
+        if(!$str || preg_match('/^(http:\/\/|https:\/\/)?(www\.)?instagram\.com\/(\w|\d)+?\/?$/',$str)){
+            return true;
+        } else {
+            $this->form_validation->set_message('valid_in_profile', 'неверно указан URL к профилю');
+            return false;
+        }
+    }
+
+    function valid_lj_profile($str){
+        if(!$str || preg_match('/^(http:\/\/|https:\/\/)?(www\.)?\w+\.livejournal\.com(\/)?$/',$str)){
+            return true;
+        } else {
+            $this->form_validation->set_message('valid_lj_profile', 'неверно указан URL к профилю');
+            return false;
+        }
     }
 }
