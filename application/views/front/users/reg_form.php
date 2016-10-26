@@ -130,8 +130,8 @@
                 <label class="control-label">Пол <span class="required">*</span></label>
                 <select name="sex" class="form-control <?php if(!empty(form_error('sex'))){echo "error";} ?>" size="1">
                     <option value="">------------</option>
-                    <option value="1" <?php if(@$_POST['sex'] == 'male') { echo "selected"; } ?> >Мужской</option>
-                    <option value="2" <?php if(@$_POST['sex'] == 'famale') {echo "selected"; } ?> >Женский</option>
+                    <option value="1" <?php if(@$_POST['sex'] == '1') { echo "selected"; } ?> >Мужской</option>
+                    <option value="2" <?php if(@$_POST['sex'] == '2') {echo "selected"; } ?> >Женский</option>
                 </select>
                 <span class="text-danger"><?php echo form_error('sex'); ?></span>
             </div>
@@ -196,11 +196,11 @@
             <div class="col-md-12">
                 <p><b>Ваша роль <span class="required">*</span>:</b></p>
                 <div class="btn-group <?php if(!empty(form_error('group'))){echo "error";} ?>" data-toggle="buttons">
-                    <label class="btn btn-default">
-                        <input type="radio" name="group" value="7" <?php if(@$_POST['group'] == '7') { echo "checked"; } ?> /> Заказчик
+                    <label class="btn btn-default <?php if(@$_POST['group'] == '7') { echo "active"; } ?>">
+                        <input type="radio" name="group" value="7"  <?php if(@$_POST['group'] == '7') { echo "checked"; } ?>/> Заказчик
                     </label>
-                    <label class="btn btn-default">
-                        <input type="radio" name="group" value="4" <?php if(@$_POST['group'] == '7') { echo "checked"; } ?> /> Волонтёр
+                    <label class="btn btn-default <?php if(@$_POST['group'] == '4') { echo "active"; } ?>">
+                        <input type="radio" name="group" value="4"  <?php if(@$_POST['group'] == '4') { echo "checked"; } ?>/> Волонтёр
                     </label>
                 </div>
                 <span class="text-danger"><?php echo form_error('group'); ?></span>
