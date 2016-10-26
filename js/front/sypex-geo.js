@@ -6,7 +6,7 @@ $(function(){
     if(!city){
         $.ajax({
             dataType: "jsonp",
-            url: 'http://api.sypexgeo.net/sWCTr/jsonp?callback=check',
+            url: 'https://api.sypexgeo.net/sWCTr/jsonp?callback=check',
             success: function(data){
 
                 $modal.find(".modal-body").html('<p>Ваш город '+data.city.name_ru+'?</p>');
