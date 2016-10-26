@@ -42,6 +42,7 @@ class User extends CI_Controller
         $this->form_validation->set_message('matches', 'поле "Пароль" должно соответствовать значению в поле "Повторите пароль"');
         $this->form_validation->set_message('alpha', 'поле должно содержать только буквы');
         $this->form_validation->set_message('check_coordinates', 'Вы не указали действительные координаты');
+        $this->form_validation->set_message('is_unique', 'такой E-mail уже есть в базе');
 
         //validate form input
         if ($this->form_validation->run() == FALSE)
@@ -64,40 +65,65 @@ class User extends CI_Controller
         }
         else
         {
-            //insert the user registration details into database
-            $secret = sha1(rand(2589,195568).$this->input->post('email'));
             $this->load->view('front/common/header');
             $this->load->view('front/users/dummy');
             $this->load->view('front/common/footer');
-            /*$data = array(
-                'fname' => $this->input->post('fname'),
-                'lname' => $this->input->post('lname'),
-                'email' => $this->input->post('email'),
-                'password' => $this->input->post('password')
-            );
-            // insert form data into database
-            if ($this->users_model->insertUser($data))
-            {
-                // send email
-                if ($this->users_model->sendEmail($this->input->post('email')))
-                {
-                    // successfully sent mail
-                    $this->session->set_flashdata('msg','<div class="alert alert-success text-center">You are Successfully Registered! Please confirm the mail sent to your Email-ID!!!</div>');
-                    redirect('user/register');
-                }
-                else
-                {
-                    // error
-                    $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
-                    redirect('user/register');
-                }
-            }
-            else
-            {
-                // error
-                $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
-                redirect('user/register');
-            }*/
+            //insert the user registration details into database
+//            $salt = rand(2589,195568);
+//            $secret = sha1($salt.$this->input->post('email'));
+//            $password = sha1($salt.$this->input->post('password'));
+//            $city = $this->users_model->getCityId();
+//
+//            $data = array(
+//                'secret_key' => $secret,
+//                'ip_address' => $_SERVER['REMOTE_ADDR'],
+//                'password' => $password,
+//                'salt' => $salt,
+//                'email' => $this->input->post('email'),
+//                'first_name' => $this->input->post('first_name'),
+//                'last_name' => $this->input->post('last_name'),
+//                'patro_name' => $this->input->post('patro_name'),
+//                'phone' => $this->input->post('phone'),
+//                'job_post' => $this->input->post('job_post'),
+//                'skype' => $this->input->post('skype'),
+//                'vk_profile' => $this->input->post('vk_profile'),
+//                'fb_profile' => $this->input->post('fb_profile'),
+//                'od_profile' => $this->input->post('od_profile'),
+//                'tw_profile' => $this->input->post('tw_profile'),
+//                'li_profile' => $this->input->post('li_profile'),
+//                'lj_profile' => $this->input->post('lj_profile'),
+//                'gp_profile' => $this->input->post('gp_profile'),
+//                'in_profile' => $this->input->post('in_profile'),
+//                'dob' => $this->input->post('dob'),
+//                'sex' => $this->input->post('sex'),
+//                'coordinates' => $this->input->post('coordinates'),
+//                'about' => $this->input->post('about'),
+//                'group_id' => $this->input->post('group'),
+//                'city' => $city
+//            );
+//            // insert form data into database
+//            if ($this->users_model->insertUser($data))
+//            {
+//                // send email
+//                if ($this->users_model->sendEmail($this->input->post('email')))
+//                {
+//                    // successfully sent mail
+//                    $this->session->set_flashdata('msg','<div class="alert alert-success text-center">You are Successfully Registered! Please confirm the mail sent to your Email-ID!!!</div>');
+//                    redirect('user/register');
+//                }
+//                else
+//                {
+//                    // error
+//                    $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
+//                    redirect('user/register');
+//                }
+//            }
+//            else
+//            {
+//                // error
+//                $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
+//                redirect('user/register');
+//            }
         }
     }
 

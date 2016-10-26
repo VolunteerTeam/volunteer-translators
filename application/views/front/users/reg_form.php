@@ -192,8 +192,8 @@
             <div class="col-md-12">
                 <label class="control-label">Группы</label>
                 <select class="form-control" name="group" size="1">
-                    <option <?php if(@$_POST['group'] == 'Заказчик') { echo "selected"; } ?>>Заказчик</option>
-                    <option <?php if(@$_POST['group'] == 'Волонтёр') { echo "selected"; } ?>>Волонтёр</option>
+                    <option value="7" <?php if(@$_POST['group'] == 'Заказчик') { echo "selected"; } ?>>Заказчик</option>
+                    <option value="4" <?php if(@$_POST['group'] == 'Волонтёр') { echo "selected"; } ?>>Волонтёр</option>
                 </select>
             </div>
         </div>
@@ -298,6 +298,12 @@
                         $.each(results,function(i,result){
                             if(result.address_components[0].types[0] == 'locality'){
                                 num = i;
+                                $.each(result.address_components, function(i,component){
+                                    if(component.types[0] == 'country'){
+                                        country_field.val(component.long_name);
+                                        country_short_field.val(component.short_name);
+                                    }
+                                });
                                 return false;
                             }
                         });
@@ -305,8 +311,6 @@
                         city_field.val(results[num].formatted_address);
                         latlng_field.val(position.coords.latitude + "," + position.coords.longitude);
                         place_id_field.val(results[num].place_id);
-                        country_field.val(results[num].address_components[address_length-1].long_name);
-                        country_short_field.val(results[num].address_components[address_length-1].short_name);
                     }
                 })
             })
@@ -346,8 +350,12 @@
                     var address_length = ui.item.address_components.length;
                     latlng_field.val(ui.item.latitude + "," + ui.item.longitude);
                     place_id_field.val(ui.item.place_id);
-                    country_field.val(ui.item.address_components[address_length-1].long_name);
-                    country_short_field.val(ui.item.address_components[address_length-1].short_name);
+                    $.each(ui.item.address_components, function(i,component){
+                        if(component.types[0] == 'country'){
+                            country_field.val(component.long_name);
+                            country_short_field.val(component.short_name);
+                        }
+                    });
                     $("#city-error").hide();
                     var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
                     marker.setPosition(location);
