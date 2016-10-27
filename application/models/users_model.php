@@ -40,11 +40,11 @@ class Users_model extends MY_Model {
         return false;
     }
 
-    function getCityId($latlng = ""){
-        if(!$latlng && $this->input->post('latlng')) {
+    function getCityId($place_id = ""){
+        if(!$place_id && $this->input->post('place_id')) {
             $this->db->select('id');
             $this->db->from('locations_google_api');
-            $this->db->where("latlng = '" . $this->input->post('latlng') . "'");
+            $this->db->where("place_id = '" . $this->input->post('place_id') . "'");
             $query = $this->db->get();
             if (empty($query->result_array())) {
                 $data = array(
