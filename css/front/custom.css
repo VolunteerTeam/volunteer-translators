@@ -192,3 +192,10 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
   display:block; width:0;
 }
 
+.test_mode {
+    text-align: center;
+    background: #eab551;
+    padding: 10px;
+    font-weight: bold;
+}
+

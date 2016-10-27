@@ -12,9 +12,25 @@ class User extends CI_Controller
     {
         parent::__construct();
         $this->load->helper(array('form','url'));
-        $this->load->library(array('session', 'form_validation', 'email'));
+        $this->load->library(array('form_validation', 'email'));
         $this->load->database();
         $this->load->model('users_model');
+    }
+
+    function load_view($content,$data=array()){
+        $sources = array();
+        $sources['js'] = array(
+            '/js/vendor/jquery-ui.min.js',
+            '/js/vendor/bootstrap/moment.min.js',
+            '/js/vendor/bootstrap/locale/ru.js',
+            '/js/vendor/bootstrap/bootstrap-datetimepicker.min.js',
+            'https://maps.google.com/maps/api/js?key=AIzaSyAcZF9a4bTTl7oT77NFJ3dozmSZNuISgA0&language=ru'
+        );
+        $sources['css'] = array('/css/vendor/bootstrap/bootstrap-datetimepicker.min.css');
+
+        $this->load->view('front/common/header',$sources);
+        $this->load->view($content,$data);
+        $this->load->view('front/common/footer');
     }
 
     function index()
@@ -59,97 +75,93 @@ class User extends CI_Controller
         if ($this->form_validation->run() == FALSE)
         {
             // fails
-
-            $sources = array();
-            $sources['js'] = array(
-                                '/js/vendor/jquery-ui.min.js',
-                                '/js/vendor/bootstrap/moment.min.js',
-                                '/js/vendor/bootstrap/locale/ru.js',
-                                '/js/vendor/bootstrap/bootstrap-datetimepicker.min.js',
-                                'https://maps.google.com/maps/api/js?key=AIzaSyAcZF9a4bTTl7oT77NFJ3dozmSZNuISgA0&language=ru'
-                             );
-            $sources['css'] = array('/css/vendor/bootstrap/bootstrap-datetimepicker.min.css');
-
-            $this->load->view('front/common/header',$sources);
-            $this->load->view('front/users/reg_form');
-            $this->load->view('front/common/footer');
+            $this->load_view('front/users/reg_form');
         }
         else
         {
-            $this->load->view('front/common/header');
-            $this->load->view('front/users/dummy');
-            $this->load->view('front/common/footer');
+//            $this->load->view('front/common/header');
+//            $this->load->view('front/users/dummy');
+//            $this->load->view('front/common/footer');
             //insert the user registration details into database
-//            $salt = rand(2589,195568);
-//            $secret = sha1($salt.$this->input->post('email'));
-//            $password = sha1($salt.$this->input->post('password'));
-//            $city = $this->users_model->getCityId();
-//
-//            $data = array(
-//                'secret_key' => $secret,
-//                'ip_address' => $_SERVER['REMOTE_ADDR'],
-//                'password' => $password,
-//                'salt' => $salt,
-//                'email' => $this->input->post('email'),
-//                'first_name' => $this->input->post('first_name'),
-//                'last_name' => $this->input->post('last_name'),
-//                'patro_name' => $this->input->post('patro_name'),
-//                'phone' => $this->input->post('phone'),
-//                'job_post' => $this->input->post('job_post'),
-//                'skype' => $this->input->post('skype'),
-//                'vk_profile' => $this->input->post('vk_profile'),
-//                'fb_profile' => $this->input->post('fb_profile'),
-//                'od_profile' => $this->input->post('od_profile'),
-//                'tw_profile' => $this->input->post('tw_profile'),
-//                'li_profile' => $this->input->post('li_profile'),
-//                'lj_profile' => $this->input->post('lj_profile'),
-//                'gp_profile' => $this->input->post('gp_profile'),
-//                'in_profile' => $this->input->post('in_profile'),
-//                'dob' => $this->input->post('dob'),
-//                'sex_type' => $this->input->post('sex'),
-//                'coordinates' => $this->input->post('coordinates'),
-//                'about' => $this->input->post('about'),
-//                'group_id' => $this->input->post('group'),
-//                'city' => $city
-//            );
-//            // insert form data into database
-//            if ($this->users_model->insertUser($data))
-//            {
-//                // send email
-//                if ($this->users_model->sendEmail($this->input->post('email')))
-//                {
-//                    // successfully sent mail
-//                    $this->session->set_flashdata('msg','<div class="alert alert-success text-center">You are Successfully Registered! Please confirm the mail sent to your Email-ID!!!</div>');
-//                    redirect('user/register');
-//                }
-//                else
-//                {
-//                    // error
-//                    $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
-//                    redirect('user/register');
-//                }
-//            }
-//            else
-//            {
-//                // error
-//                $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Oops! Error.  Please try again later!!!</div>');
-//                redirect('user/register');
-//            }
+            $salt = rand(2589,195568);
+            $secret = sha1($salt.$this->input->post('email'));
+            $password = sha1($salt.$this->input->post('password'));
+            $city = $this->users_model->getCityId();
+
+            $data = array(
+                'secret_key' => $secret,
+                'ip_address' => $_SERVER['REMOTE_ADDR'],
+                'password' => $password,
+                'salt' => $salt,
+                'email' => $this->input->post('email'),
+                'created_on' => time(),
+                'first_name' => $this->input->post('first_name'),
+                'last_name' => $this->input->post('last_name'),
+                'patro_name' => $this->input->post('patro_name'),
+                'phone' => $this->input->post('phone'),
+                'job_post' => $this->input->post('job_post'),
+                'skype' => $this->input->post('skype'),
+                'vk_profile' => $this->input->post('vk_profile'),
+                'fb_profile' => $this->input->post('fb_profile'),
+                'od_profile' => $this->input->post('od_profile'),
+                'tw_profile' => $this->input->post('tw_profile'),
+                'li_profile' => $this->input->post('li_profile'),
+                'lj_profile' => $this->input->post('lj_profile'),
+                'gp_profile' => $this->input->post('gp_profile'),
+                'in_profile' => $this->input->post('in_profile'),
+                'dob' => $this->input->post('dob'),
+                'sex_type' => $this->input->post('sex'),
+                'about' => $this->input->post('about'),
+                'group_id' => $this->input->post('group'),
+                'city' => $city
+            );
+            // insert form data into database
+            $user_id = $this->users_model->insertUser($data);
+            if ($user_id)
+            {
+                //send verification email to user's email id
+                $this->load->library('email');
+                $subject = 'Активация аккаунта';
+                $message = '<p>Здравствуйте, '.$this->input->post('first_name').'!</p>Для активации Вашего аккаунта перейдите по <a href="'.$this->config->base_url().'user/activate?s='.$secret.'&email='.$this->input->post('email').'">ссылке</a>';
+                $from_email = 'system@perevodov.info';
+
+                $result = $this->email
+                    ->from($from_email)
+                    ->reply_to('volontery@perevodov.info')
+                    ->to($this->input->post('email'))
+                    ->subject($subject)
+                    ->message($message)
+                    ->send();
+
+                if ($result)
+                {
+                    // successfully sent mail
+                    $this->load_view('front/users/reg_confirm',array('status'=>'ok'));
+                }
+                else
+                {
+                    $this->users_model->remove_user($user_id);
+                    $data['email_msg'] = '<div class="alert alert-danger text-center">Письмо на Вашу электронную почту не было отправлено. Проверьте, пожалуйста, ещё раз правильность указания E-mail или попробуйте позже.</div>';
+                    $this->load_view('front/users/reg_form',$data);
+                }
+            }
+            else
+            {
+                // error
+                $this->load_view('front/users/reg_confirm',array('status'=>'DB fail'));
+            }
         }
     }
 
-    function verify($hash=NULL)
-    {
-        if ($this->users_model->verifyEmailID($hash))
-        {
-            $this->session->set_flashdata('verify_msg','<div class="alert alert-success text-center">Your Email Address is successfully verified! Please login to access your account!</div>');
-            redirect('user/register');
+    function activate(){
+        if($this->users_model->verifyEmailID($this->input->get())){
+            $this->session->set_flashdata('msg','<div class="alert alert-success text-center">Ваш электронный адресс успешно подтверждён. Теперь Вы можете войти в личный кабинет.</div>');
+            redirect('user/login');
         }
-        else
-        {
-            $this->session->set_flashdata('verify_msg','<div class="alert alert-danger text-center">Sorry! There is error verifying your Email Address!</div>');
-            redirect('user/register');
-        }
+    }
+
+    function login(){
+        $this->load_view('front/users/login_form');
     }
 
     // Функции валидации (в будущем надо вынести в отдельный класс)

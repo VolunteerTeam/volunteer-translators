@@ -63,6 +63,7 @@
         }(document, 'script', 'facebook-jssdk'));
     </script>
     <!-- /FACEBOOK JavaScript SDK -->
+    <div class="test_mode">Внимание! Это новый сайт сообщества. Мы постепенно на него переезжаем. Старый сайт тоже действует - <a href="http://volontery.perevodov.info" target="_blank">volontery.perevodov.info</a></div>
     <header>
         <div class="container header_top_wrap" style="height: 40px;">
             <div class="row">
@@ -164,7 +165,6 @@
                 </div>
             </div>
         </div>
-        <div class="site-warning container">Внимание! Это новый сайт сообщества. Мы постепенно на него переезжаем. Старый сайт тоже действует - <a href="http://volontery.perevodov.info" target="_blank">volontery.perevodov.info</a></div>
     </header>
 
         

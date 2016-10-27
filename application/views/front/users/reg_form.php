@@ -57,6 +57,10 @@
     <div class="row">
         <h1>Регистрация</h1>
         <?php
+            if(isset($email_msg)){
+                echo $email_msg;
+            }
+            echo $this->session->flashdata('msg');
             $attributes = array("name" => "reg_form");
             echo form_open("user/register", $attributes);
         ?>
@@ -104,12 +108,6 @@
                 <span class="text-danger"><?php echo form_error('about'); ?></span>
             </div>
             <div class="col-md-6">
-                <label class="control-label">Координаты </label>
-                <input type="text" name="coordinates" value="<?php echo @$_POST['coordinates']; ?>" class="form-control">
-            </div>
-        </div>
-        <div class="row bestmedia-input">
-            <div class="col-md-12">
                 <label class="control-label">Должность (кем работаете) <span class="required">*</span></label>
                 <input type="text" name="job_post" value="<?php echo @$_POST['job_post']; ?>" class="form-control <?php if(!empty(form_error('job_post'))){echo "error";} ?>">
                 <span class="text-danger"><?php echo form_error('job_post'); ?></span>
@@ -242,7 +240,6 @@
             </div>
         </div>
         <?php echo form_close(); ?>
-        <?php echo $this->session->flashdata('msg'); ?>
     </div>
 </div>
 
