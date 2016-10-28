@@ -214,7 +214,7 @@
         </div>
         <div class="row bestmedia-input">
             <div class="col-md-12">
-                <p><b>Ваша роль <span class="required">*</span>:</b></p>
+                <p><b>Ваша группа <span class="required">*</span>:</b></p>
                 <div class="btn-group <?php if(!empty(form_error('group'))){echo "error";} ?>" data-toggle="buttons">
                     <label class="btn btn-default <?php if(@$_POST['group'] == '7') { echo "active"; } ?>">
                         <input type="radio" name="group" value="7"  <?php if(@$_POST['group'] == '7') { echo "checked"; } ?>/> Заказчик
