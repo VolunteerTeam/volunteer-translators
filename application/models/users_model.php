@@ -32,7 +32,7 @@ class Users_model extends MY_Model {
                 $result = $query->row();
                 if($result->secret_key == $secret_key){
                     $this->db->where('id', $result->id);
-                    $this->db->update('users', array("email_confirm" => 1));
+                    $this->db->update('users', array("email_confirm" => 1,"active" => 1));
                     return true;
                 }
             }
@@ -61,6 +61,10 @@ class Users_model extends MY_Model {
                 return $result->id;
             }
         }
+    }
+
+    function setGroup($user_id,$group_id){
+        $this->db->insert('users_groups', array("user_id" => $user_id, "group_id" => $group_id));
     }
 
     function search_total($query = '')

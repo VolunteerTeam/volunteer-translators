@@ -85,13 +85,12 @@ class User extends CI_Controller
             //insert the user registration details into database
             $salt = rand(2589,195568);
             $secret = sha1($salt.$this->input->post('email'));
-            $password = sha1($salt.$this->input->post('password'));
             $city = $this->users_model->getCityId();
 
             $data = array(
                 'secret_key' => $secret,
                 'ip_address' => $_SERVER['REMOTE_ADDR'],
-                'password' => $password,
+                'password' => $this->input->post('password'),
                 'salt' => $salt,
                 'email' => $this->input->post('email'),
                 'created_on' => time(),
@@ -112,13 +111,14 @@ class User extends CI_Controller
                 'dob' => $this->input->post('dob'),
                 'sex_type' => $this->input->post('sex'),
                 'about' => $this->input->post('about'),
-                'group_id' => $this->input->post('group'),
                 'city' => $city
             );
             // insert form data into database
             $user_id = $this->users_model->insertUser($data);
             if ($user_id)
             {
+                $this->users_model->setGroup($user_id,$this->input->post('group'));
+
                 //send verification email to user's email id
                 $this->load->library('email');
                 $subject = 'Активация аккаунта';

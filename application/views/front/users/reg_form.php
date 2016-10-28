@@ -124,16 +124,27 @@
                 </div>
                 <span class="text-danger"><?php echo form_error('dob'); ?></span>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <label class="control-label">Пол <span class="required">*</span></label>
-                <select name="sex" class="form-control <?php if(!empty(form_error('sex'))){echo "error";} ?>" size="1">
+                <div class="btn-group <?php if(!empty(form_error('sex'))){echo "error";} ?>" data-toggle="buttons" style="display:block;">
+                    <label class="btn btn-default <?php if(@$_POST['sex'] == '1') { echo "active"; } ?>" style="width:50%">
+                        <input type="radio" name="group" value="1"  <?php if(@$_POST['sex'] == '1') { echo "checked"; } ?>/> мужской
+                    </label>
+                    <label class="btn btn-default <?php if(@$_POST['sex'] == '2') { echo "active"; } ?>" style="width:50%">
+                        <input type="radio" name="group" value="2"  <?php if(@$_POST['sex'] == '2') { echo "checked"; } ?>/> женский
+                    </label>
+                </div>
+                <span class="text-danger"><?php echo form_error('sex'); ?></span>
+                <?php
+                /*<select name="sex" class="form-control <?php if(!empty(form_error('sex'))){echo "error";} ?>" size="1">
                     <option value="">------------</option>
                     <option value="1" <?php if(@$_POST['sex'] == '1') { echo "selected"; } ?> >Мужской</option>
-                    <option value="2" <?php if(@$_POST['sex'] == '2') {echo "selected"; } ?> >Женский</option>
+                <option value="2" <?php if(@$_POST['sex'] == '2') {echo "selected"; } ?> >Женский</option>
                 </select>
-                <span class="text-danger"><?php echo form_error('sex'); ?></span>
+                <span class="text-danger"><?php echo form_error('sex'); ?></span>*/
+                ?>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <label class="control-label">Город <span class="required">*</span></label>
                 <input type="text" name="city" value="<?php echo @$_POST['city']; ?>" class="form-control <?php if(!empty(form_error('city'))){echo "error";} ?>">
                 <input id="country" name="country" type="text" value="<?php echo @$_POST['country']; ?>" hidden/>
@@ -221,6 +232,9 @@
                     </label>
                     <label class="btn btn-default <?php if(@$_POST['group'] == '4') { echo "active"; } ?>">
                         <input type="radio" name="group" value="4"  <?php if(@$_POST['group'] == '4') { echo "checked"; } ?>/> Волонтёр
+                    </label>
+                    <label class="btn btn-default <?php if(@$_POST['group'] == '3') { echo "active"; } ?>">
+                        <input type="radio" name="group" value="3"  <?php if(@$_POST['group'] == '3') { echo "checked"; } ?>/> Менеджер
                     </label>
                 </div>
                 <span class="text-danger"><?php echo form_error('group'); ?></span>
