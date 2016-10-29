@@ -128,10 +128,10 @@
                 <label class="control-label">Пол <span class="required">*</span></label>
                 <div class="btn-group <?php if(!empty(form_error('sex'))){echo "error";} ?>" data-toggle="buttons" style="display:block;">
                     <label class="btn btn-default <?php if(@$_POST['sex'] == '1') { echo "active"; } ?>" style="width:50%">
-                        <input type="radio" name="group" value="1"  <?php if(@$_POST['sex'] == '1') { echo "checked"; } ?>/> мужской
+                        <input type="radio" name="sex" value="1"  <?php if(@$_POST['sex'] == '1') { echo "checked"; } ?>/> мужской
                     </label>
                     <label class="btn btn-default <?php if(@$_POST['sex'] == '2') { echo "active"; } ?>" style="width:50%">
-                        <input type="radio" name="group" value="2"  <?php if(@$_POST['sex'] == '2') { echo "checked"; } ?>/> женский
+                        <input type="radio" name="sex" value="2"  <?php if(@$_POST['sex'] == '2') { echo "checked"; } ?>/> женский
                     </label>
                 </div>
                 <span class="text-danger"><?php echo form_error('sex'); ?></span>

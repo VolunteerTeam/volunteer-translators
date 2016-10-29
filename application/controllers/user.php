@@ -50,18 +50,18 @@ class User extends CI_Controller
         $this->form_validation->set_rules('job_post', 'Job Post', 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', 'Date of Birth', 'required');
         $this->form_validation->set_rules('sex', 'Sex', 'required');
-        $this->form_validation->set_rules('group', 'Date of Birth', 'callback_group_required');
+        $this->form_validation->set_rules('group', 'Group', 'callback_group_required');
         $this->form_validation->set_rules('city', 'City', 'required|callback_check_coordinates');
         $this->form_validation->set_rules('phone', 'Phone', 'trim|required|regex_match[/^\+7\-\d{3}\-\d{3}\-\d{2}\-\d{2}$/]');
         $this->form_validation->set_rules('soc_profiles', 'Social profiles', 'callback_social_required');
         $this->form_validation->set_rules('fb_profile', 'FB profile', 'callback_valid_fb_profile');
-        $this->form_validation->set_rules('vk_profile', 'VK profile', 'callback_valid_fb_profile');
-        $this->form_validation->set_rules('od_profile', 'OD profile', 'callback_valid_fb_profile');
-        $this->form_validation->set_rules('gp_profile', 'GP profile', 'callback_valid_fb_profile');
-        $this->form_validation->set_rules('tw_profile', 'TW profile', 'callback_valid_fb_profile');
-        $this->form_validation->set_rules('in_profile', 'IN profile', 'callback_valid_fb_profile');
-        $this->form_validation->set_rules('lj_profile', 'LJ profile', 'callback_valid_fb_profile');
-        $this->form_validation->set_rules('li_profile', 'LI profile', 'callback_valid_fb_profile');
+        $this->form_validation->set_rules('vk_profile', 'VK profile', 'callback_valid_vk_profile');
+        $this->form_validation->set_rules('od_profile', 'OD profile', 'callback_valid_od_profile');
+        $this->form_validation->set_rules('gp_profile', 'GP profile', 'callback_valid_gp_profile');
+        $this->form_validation->set_rules('tw_profile', 'TW profile', 'callback_valid_tw_profile');
+        $this->form_validation->set_rules('in_profile', 'IN profile', 'callback_valid_in_profile');
+        $this->form_validation->set_rules('lj_profile', 'LJ profile', 'callback_valid_lj_profile');
+        $this->form_validation->set_rules('li_profile', 'LI profile', 'callback_valid_li_profile');
 
         $this->form_validation->set_message('regex_match', 'поле должно быть заполнено в формате +7-ххх-ххх-хх-хх');
         $this->form_validation->set_message('required', 'поле обязательно для заполнения');
@@ -156,8 +156,10 @@ class User extends CI_Controller
     function activate(){
         if($this->users_model->verifyEmailID($this->input->get())){
             $this->session->set_flashdata('msg','<div class="alert alert-success text-center">Ваш электронный адресс успешно подтверждён. Теперь Вы можете войти в личный кабинет.</div>');
-            redirect('user/login');
+        } else {
+            $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Секретный ключ не совпадает с ключом, высланным на Вашу электронную почту.</div>');
         }
+        redirect('user/login');
     }
 
     function login(){
