@@ -9,10 +9,10 @@ class Auth extends My_Controller {
 			header('Location: /user/profile');         
 		}
 
-		$this->load->view('front/reg/header');
+		$this->load->view('front/common/header');
 
 		$this->load->view('front/reg/auth');
-		$this->load->view('front/reg/footer');
+		$this->load->view('front/common/footer');
 	}
 
 	function ajax() {

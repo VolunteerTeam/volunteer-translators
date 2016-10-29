@@ -54,8 +54,7 @@ $route['user/forgot/restore/(.*)/(.*)']	= 'user/forgot/restore/$1/$2';
 
 $route['user/reg/active/(.*)']           = 'user/reg/active/$1';
 $route['user/reg/regmail']                = 'user/reg/regmail';
-$route['user/activate']                = 'user/activate';
-$route['user/login']                = 'user/login';
+$route['user/activate']                = 'user/register/activate';
 $route['user/auth']                = 'user/auth';
 $route['user/logout']                = 'user/logout';
 $route['user/auth/ajax']                = 'user/auth/ajax';

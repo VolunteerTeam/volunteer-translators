@@ -79,10 +79,10 @@
 
                         <div class="pull-right" style="z-index:6; position: absolute; right:0;">
                             <?php if(@$is_auth) { ?>
-                                <a href="http://v2.perevodov.info/user/profile" role="button" aria-expanded="false"><?php echo $NameAndSename; ?></a>
+                                <a href="/user/profile" role="button" aria-expanded="false"><?php echo $NameAndSename; ?></a>
                                 <a href="/user/logout">(выход)</a>
                             <?php } else { ?>
-                                <a href="/user/login">Вход</a> |
+                                <a href="/user/auth">Вход</a> |
                                 <a href="/user/register">Регистрация</a>
                             <?php } ?>
                         </div>

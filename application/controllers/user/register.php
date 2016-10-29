@@ -6,7 +6,7 @@
  * Time: 11:05
  */
 
-class User extends CI_Controller
+class Register extends CI_Controller
 {
     public function __construct()
     {
@@ -34,11 +34,6 @@ class User extends CI_Controller
     }
 
     function index()
-    {
-        $this->register();
-    }
-
-    function register()
     {
         //set validation rules
         $this->form_validation->set_rules('first_name', 'First Name', 'trim|required|alpha|min_length[3]|max_length[30]|xss_clean');
@@ -79,9 +74,6 @@ class User extends CI_Controller
         }
         else
         {
-//            $this->load->view('front/common/header');
-//            $this->load->view('front/users/dummy');
-//            $this->load->view('front/common/footer');
             //insert the user registration details into database
             $salt = rand(2589,195568);
             $secret = sha1($salt.$this->input->post('email'));
@@ -159,11 +151,7 @@ class User extends CI_Controller
         } else {
             $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Секретный ключ не совпадает с ключом, высланным на Вашу электронную почту.</div>');
         }
-        redirect('user/login');
-    }
-
-    function login(){
-        $this->load_view('front/users/login_form');
+        redirect('user/auth');
     }
 
     // Функции валидации (в будущем надо вынести в отдельный класс)
