@@ -78,7 +78,7 @@
                         </div>
 
                         <div class="pull-right" style="z-index:6; position: absolute; right:0;">
-                            <?php if(@$is_auth) { ?>
+                            <?php if($this->ion_auth->logged_in()) { ?>
                                 <a href="/user/profile" role="button" aria-expanded="false"><?php echo $NameAndSename; ?></a>
                                 <a href="/user/logout">(выход)</a>
                             <?php } else { ?>

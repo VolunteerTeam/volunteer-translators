@@ -4,7 +4,7 @@ class Profile extends MY_Controller {
     function index()
     {
 		$this->load->library('session');
-		$cj=$this->session->userdata('mail');
+		$cj=$this->session->userdata('email');
 
 		if($cj==false) {
 			header('Location: /user/auth');
@@ -25,9 +25,9 @@ class Profile extends MY_Controller {
 			$header_param['NameAndSename'] = $data['data'][0]['first_name'].' '.$data['data'][0]['last_name'];
 		}
 		
-		$this->load->view('front/reg/header',  $header_param);
+		$this->load->view('front/common/header',  $header_param);
 		$this->load->view('front/reg/profile', $data);
-		$this->load->view('front/reg/footer');
+		$this->load->view('front/common/footer');
 	}
 		
 	function save()

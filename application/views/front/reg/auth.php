@@ -22,42 +22,22 @@
     <div class="wrapper">
         <?php
             $attributes = array("id" => "auth","class" => "form-signin");
-            echo form_open("user/auth/ajax", $attributes);
+            echo form_open("user/auth", $attributes);
         ?>
             <h2 class="form-signin-heading">Вход в Личный кабинет</h2>
-            <div class="alert alert-danger text-center" style="display:none;">Неверный логин или пароль!</div>
-            <input type="text" class="form-control" name="mail" placeholder="Email" required="" autofocus="" />
+            <?php
+                if(isset($msg)) echo $msg;
+            ?>
+            <input type="text" class="form-control" name="email" placeholder="Email" required="" autofocus="" />
             <input type="password" class="form-control" name="password" placeholder="Пароль" required=""/>
             <label class="checkbox">
-                <input type="checkbox" value="remember-me" id="rememberMe" name="rememberMe"> Запомнить меня
+                <input type="checkbox" value="remember-me" id="remember" name="remember"> Запомнить меня
             </label>
-            <button class="btn btn-success btn-block" type="submit" name="submit">Войти</button>
+            <input type="text" name="do_login" value="true" hidden>
+            <button class="btn btn-success btn-block" type="submit">Войти</button>
             <a href="/user/forgot">Забыли пароль?</a>
         <?php echo form_close(); ?>
     </div>
 
 </div>
 
-<script>
-    $(document).ready(function(){
-        // this is the id of the form
-        $("#auth").submit(function() {
-            var url = "/user/auth/ajax"; // the script where you handle the form input.
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: $("#auth").serialize(), // serializes the form's elements.
-                dataType: 'json'
-            })
-                .done(function(data) {
-                    if(data.success) {
-                        window.location = "/user/profile";
-                    } else {
-                        $(".alert-danger").show();
-                    }
-                });
-            event.preventDefault();
-        });
-    });
-</script>
