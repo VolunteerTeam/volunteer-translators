@@ -3,9 +3,11 @@ class Logout extends MY_Controller
 {
 	function index() 
 	{
-		$this->load->library('session');
-		$this->session->unset_userdata('mail');
-
-		header('Location: /');
+		$this->ion_auth->logout();
+		redirect("user/auth");
+//		$this->load->library('session');
+//		$this->session->unset_userdata('mail');
+//
+//		header('Location: /');
 	}
 }

@@ -3,31 +3,37 @@ class Profile extends MY_Controller {
     
     function index()
     {
-		$this->load->library('session');
-		$cj=$this->session->userdata('email');
-
-		if($cj==false) {
-			header('Location: /user/auth');
+		if($this->ion_auth->logged_in()){
+			$data['user'] = $this->ion_auth->user()->result_array()[0];
+			$this->load->view('front/common/header', $data);
+			$this->load->view('front/reg/profile');
+			$this->load->view('front/common/footer');
+		} else {
+			redirect("user/auth");
 		}
-		
-		$this->load->model('users');
-		
-		$data['data'] = $this->users->profile($cj);
 
-		$this->load->library('session');
-		$cj = $this->session->userdata('mail');
-		
-		$header_param = array();
-		
-		$header_param['is_auth'] = false;
-		if($cj == true) {
-			$header_param['is_auth'] = true;
-			$header_param['NameAndSename'] = $data['data'][0]['first_name'].' '.$data['data'][0]['last_name'];
-		}
-		
-		$this->load->view('front/common/header',  $header_param);
-		$this->load->view('front/reg/profile', $data);
-		$this->load->view('front/common/footer');
+
+//		$this->load->library('session');
+//		$cj=$this->session->userdata('email');
+//
+//		if($cj==false) {
+//			header('Location: /user/auth');
+//		}
+//
+//		$this->load->model('users');
+//
+//		$data['data'] = $this->users->profile($cj);
+//
+//		$this->load->library('session');
+//		$cj = $this->session->userdata('mail');
+//
+//		$header_param = array();
+//
+//		$header_param['is_auth'] = false;
+//		if($cj == true) {
+//			$header_param['is_auth'] = true;
+//		}
+
 	}
 		
 	function save()

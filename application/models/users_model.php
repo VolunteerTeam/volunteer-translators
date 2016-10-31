@@ -63,6 +63,16 @@ class Users_model extends MY_Model {
         }
     }
 
+    function getUserName($email){
+        $this->db->select('first_name, last_name');
+        $this->db->from('users');
+        $this->db->where("email = '" . $email . "'");
+        $query = $this->db->get();
+        $result = $query->row();
+        return $result->first_name . " " . $result->last_name;
+    }
+
+
     function setGroup($user_id,$group_id){
         $this->db->insert('users_groups', array("user_id" => $user_id, "group_id" => $group_id));
     }
