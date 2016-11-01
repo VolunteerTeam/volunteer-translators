@@ -1,36 +1,54 @@
+<style>
+	.form-signin {
+		max-width: 380px;
+		padding: 15px 35px 45px;
+		margin: 0 auto;
+	}
+	.form-control {
+		width:100%;
+	}
+	label.checkbox {
+		margin-left:20px;
+	}
+	.form-signin h2 {
+		text-align:center;
+	}
+</style>
+
 <div class="container main" role="main">
-
-<?php if(@$error != '') { ?>
-	<h3 style="text-align: center;"><?php echo $error; ?></h3>
-<?php } ?>
-
-<?php if(@!$success) { ?>
-	<h3>Восстановление пароля</h3> 
-	<form method="POST" action="/user/forgot/send">
-		<input style="width:250px;" class="form-control" type="text" name="email" value="" placeholder="Введите Email" size="50" /><br>
-		<input type="submit" class="art-button"  value="Восстановить"/>
-	</form>
-<?php } ?>
-
-<?php if(@$entry) { ?>
-	<h3 style="text-align: center;">Изменение пароля</h3> <br>
-	<form method="POST">
-		<div class="row bestmedia-input">
-			<div class="col-md-6">
-				<label class="control-label">Введите новый пароль</label>
-				<input type="text" name="newpassword" class="form-control" style="width:100%;">
-			</div>
-			<div class="col-md-6">
-					<label class="control-label">Повторите новый пароль</label>
-					<input type="text" name="renewpassword" class="form-control" style="width:100%;">
-			</div>
-		</div>
-		<br />
-		<center>
-			<input type="submit" name="submit" value="Отправить">
-		</center>
-	</form>
-
-<?php } ?>
+	<div class="row">
+		<?php echo $this->session->flashdata('msg'); ?>
+	</div>
+	<div class="wrapper">
+		<?php
+			if(!isset($entry)) {
+				$attributes = array("class" => "form-signin");
+				echo form_open("/user/forgot/send", $attributes);
+		?>
+				<h2 class="form-signin-heading">Восстановление пароля</h2>
+				<?php
+					if(isset($msg) && $msg) echo "<div class='alert alert-success text-center'>".$msg."</div>";
+					if(isset($error) && $error) echo "<div class='alert alert-danger text-center'>".$error."</div>";
+				?>
+				<input type="text" class="form-control" name="email" placeholder="Введите Email" size="50" autofocus="" />
+				<button class="btn btn-success btn-block" type="submit">Восстановить</button>
+		<?php   echo form_close();
+			} else {
+				$attributes = array("class" => "form-signin");
+				echo form_open("", $attributes);
+				?>
+				<h2 class="form-signin-heading">Изменение пароля</h2>
+				<?php
+				    echo $this->session->flashdata('verify_msg');
+					if(isset($msg) && $msg) echo "<div class='alert alert-success text-center'>".$msg."</div>";
+					if(isset($error) && $error) echo "<div class='alert alert-danger text-center'>".$error."</div>";
+				?>
+				<input type="password" class="form-control" name="newpassword" placeholder="Введите новый пароль" required/>
+				<input type="password" class="form-control" name="renewpassword" placeholder="Повторите новый пароль" required/>
+				<button class="btn btn-success btn-block" type="submit">Отправить</button>
+				<?php   echo form_close();
+			} ?>
+	</div>
 
 </div>
+

@@ -12,28 +12,6 @@ class Profile extends MY_Controller {
 			redirect("user/auth");
 		}
 
-
-//		$this->load->library('session');
-//		$cj=$this->session->userdata('email');
-//
-//		if($cj==false) {
-//			header('Location: /user/auth');
-//		}
-//
-//		$this->load->model('users');
-//
-//		$data['data'] = $this->users->profile($cj);
-//
-//		$this->load->library('session');
-//		$cj = $this->session->userdata('mail');
-//
-//		$header_param = array();
-//
-//		$header_param['is_auth'] = false;
-//		if($cj == true) {
-//			$header_param['is_auth'] = true;
-//		}
-
 	}
 		
 	function save()

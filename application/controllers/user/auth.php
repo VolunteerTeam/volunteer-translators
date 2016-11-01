@@ -2,18 +2,6 @@
 class Auth extends My_Controller {
 
 	function index() {
-//		$this->load->library('session');
-//		$cj=$this->session->userdata('mail');
-//
-//		if($cj==true) {
-//			header('Location: /user/profile');
-//		}
-//
-//		$this->load->view('front/common/header');
-//
-//		$this->load->view('front/reg/auth');
-//		$this->load->view('front/common/footer');
-
 		$this->form_validation->set_rules('email', 'Email', 'required|xss_clean');
 		$this->form_validation->set_rules('password', 'Пароль', 'required|xss_clean');
 
