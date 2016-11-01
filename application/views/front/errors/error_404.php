@@ -1,4 +1,3 @@
-
-<section class="error_page">
-    <h2>Страница не найдена</h2>
-</section>
+<div class="container main" role="main">
+    <h2>Страница не найдена.</h2>
+</div>
