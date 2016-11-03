@@ -342,7 +342,7 @@
         // Проверка пользовательского соглашения
         $("input[name='agreement']").change(function(){
             if(!$("input[name='agreement']:checked").length){
-//                $("input[type='submit']").attr("disabled","disabled");
+                $("input[type='submit']").attr("disabled","disabled");
             } else {
                 $("input[type='submit']").removeAttr("disabled");
             }
