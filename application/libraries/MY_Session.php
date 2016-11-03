@@ -57,7 +57,7 @@ class MY_Session extends CI_Session
             $this->CI->db->query($this->CI->db->update_string($this->sess_table_name, array('last_activity' => $this->now, 'session_id' => $new_sessid), array('session_id' => $old_sessid)));
 
             /*SPECIAL FOR TASHA - Содержимое корзины привязывается к идентификатору сессии. При обновлении глобального id - меняем его в таблице cart*/
-            $this->CI->db->query($this->CI->db->update_string($this->cart_table_name, array('session_id' => $new_sessid), array('session_id' => $old_sessid)));
+//            $this->CI->db->query($this->CI->db->update_string($this->cart_table_name, array('session_id' => $new_sessid), array('session_id' => $old_sessid)));
         }
 
         // Write the cookie
