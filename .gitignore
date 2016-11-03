@@ -2,3 +2,4 @@ application/config/*
 !application/config/routes.php
 .htaccess
 .idea
+migrate.php
