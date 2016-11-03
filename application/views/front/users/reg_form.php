@@ -228,13 +228,13 @@
                 <p><b>Ваша роль <span class="required">*</span>:</b></p>
                 <div class="btn-group <?php if(!empty(form_error('group'))){echo "error";} ?>" data-toggle="buttons">
                     <label class="btn btn-default <?php if(@$_POST['group'] == '7') { echo "active"; } ?>">
-                        <input type="radio" name="group" value="7"  <?php if(@$_POST['group'] == '7') { echo "checked"; } ?>/> Заказчик
+                        <input type="radio" data-href="/ustav#client" name="group" value="7"  <?php if(@$_POST['group'] == '7') { echo "checked"; } ?>/> Заказчик
                     </label>
                     <label class="btn btn-default <?php if(@$_POST['group'] == '4') { echo "active"; } ?>">
-                        <input type="radio" name="group" value="4"  <?php if(@$_POST['group'] == '4') { echo "checked"; } ?>/> Волонтёр
+                        <input type="radio" data-href="/ustav#translator" name="group" value="4"  <?php if(@$_POST['group'] == '4') { echo "checked"; } ?>/> Волонтёр
                     </label>
                     <label class="btn btn-default <?php if(@$_POST['group'] == '3') { echo "active"; } ?>">
-                        <input type="radio" name="group" value="3"  <?php if(@$_POST['group'] == '3') { echo "checked"; } ?>/> Менеджер
+                        <input type="radio" data-href="/ustav#manager" name="group" value="3"  <?php if(@$_POST['group'] == '3') { echo "checked"; } ?>/> Менеджер
                     </label>
                 </div>
                 <span class="text-danger"><?php echo form_error('group'); ?></span>
@@ -245,6 +245,14 @@
                 </select>*/
                 ?>
 
+            </div>
+        </div>
+        <div class="row bestmedia-input">
+            <div class="col-md-12">
+                <div class="checkbox">
+                    <label><input type="checkbox" name="agreement" value="agreement" checked>Нажимая кнопку «Зарегистрироваться», я принимаю условия <a id="agreement_link" href="/ustav" target="_blank">Пользовательского соглашения</a> и даю своё согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ «О персональных данных».</label>
+                </div>
+                <span class="text-danger"><?php echo form_error('agreement'); ?></span>
             </div>
         </div>
         <div style="height: 30px;"></div>
@@ -329,6 +337,18 @@
             if($.inArray(value.length, hyphens) != -1) {
                 $(this).val(value+"-");
             }
+        });
+
+        // Проверка пользовательского соглашения
+        $("input[name='agreement']").change(function(){
+            if(!$("input[name='agreement']:checked").length){
+//                $("input[type='submit']").attr("disabled","disabled");
+            } else {
+                $("input[type='submit']").removeAttr("disabled");
+            }
+        });
+        $("input[name='group']").change(function(){
+            $("#agreement_link").attr("href",$(this).attr("data-href"));
         });
 
         // Подключение геокодера к поиску по городам

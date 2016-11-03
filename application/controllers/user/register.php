@@ -57,6 +57,7 @@ class Register extends CI_Controller
         $this->form_validation->set_rules('in_profile', 'IN profile', 'callback_valid_in_profile');
         $this->form_validation->set_rules('lj_profile', 'LJ profile', 'callback_valid_lj_profile');
         $this->form_validation->set_rules('li_profile', 'LI profile', 'callback_valid_li_profile');
+        $this->form_validation->set_rules('agreement', 'Agreement', 'callback_agreement');
 
         $this->form_validation->set_message('regex_match', 'поле должно быть заполнено в формате +7-ххх-ххх-хх-хх');
         $this->form_validation->set_message('required', 'поле обязательно для заполнения');
@@ -163,6 +164,14 @@ class Register extends CI_Controller
     function group_required($str) {
         if(!$str){
             $this->form_validation->set_message('group_required', 'выберите Вашу роль');
+            return false;
+        }
+        return true;
+    }
+
+    function agreement($str) {
+        if(!$str){
+            $this->form_validation->set_message('agreement', 'для регистрации на портале Вы должны принять условия Пользовательского соглашения');
             return false;
         }
         return true;
