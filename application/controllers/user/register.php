@@ -221,7 +221,7 @@ class Register extends CI_Controller
     }
 
     function valid_gp_profile($str){
-        if(!$str || preg_match('/^(http:\/\/|https:\/\/)?(www\.)?plus\.google\.com\/(\w|\d)+?\/?$/',$str)){
+        if(!$str || preg_match('/^(http:\/\/|https:\/\/)?(www\.)?plus\.google\.com\/.+$/',$str)){
             return true;
         } else {
             $this->form_validation->set_message('valid_gp_profile', 'неверно указан URL к профилю');
