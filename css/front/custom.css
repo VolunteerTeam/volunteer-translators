@@ -195,7 +195,8 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
 .test_mode {
     text-align: center;
     background: #eab551;
-    padding: 10px;
-    font-weight: bold;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 12px;
 }
 
