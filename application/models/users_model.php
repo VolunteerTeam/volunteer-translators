@@ -18,6 +18,52 @@ class Users_model extends MY_Model {
         return $this->db->insert_id();
     }
 
+    function socialUserExists($social_id, $provider){
+        $provider_id = $this->getProviderId($provider);
+
+        $this->db->select('id');
+        $this->db->from('users');
+        $this->db->where("social_id = '" . $social_id . "' and provider = '" . $provider_id . "'");
+        return $this->db->get()->row();
+    }
+
+    function getProviderId($provider){
+        $this->db->select('id');
+        $this->db->from('providers');
+        $this->db->where("name = '" . $provider . "'");
+        return intval($this->db->get()->row()->id);
+    }
+
+    function getSexTypeId($sex){
+        $this->db->select('id');
+        $this->db->from('sex');
+        $this->db->where("name_ru = '" . $sex . "' or name_en = '" . $sex . "'");
+        return intval($this->db->get()->row()->id);
+    }
+
+    function socialUserData($auther){
+        return array(
+            'ip_address' => $_SERVER['REMOTE_ADDR'],
+            "active" => 1,
+            "provider" => $this->getProviderId($auther->getProviderShortName()),
+            "social_id" => $auther->getSocialId(),
+            "first_name" => $auther->getFirstName(),
+            "last_name" => $auther->getLastName(),
+            "email" => $auther->getEmail(),
+            $auther->getProviderShortName()."_profile" => $auther->getSocialPage(),
+            "sex_type" => $this->getSexTypeId($auther->getSex()),
+            "dob" => $auther->getBirthday() ? date('Y-m-d', strtotime($auther->getBirthday())) : NULL,
+            "avatar" => $auther->getAvatar()
+        );
+    }
+
+    function createSocialUser($auther){
+        $data = $this->socialUserData($auther);
+        $data['created_on'] = time();
+        $this->db->insert('users', $data);
+        return $this->db->insert_id();
+    }
+
     //activate user account
     function verifyEmailID($params)
     {

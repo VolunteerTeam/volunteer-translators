@@ -20,8 +20,9 @@
     </div>
 
     <div class="wrapper">
+        <div class="form-signin">
         <?php
-            $attributes = array("id" => "auth","class" => "form-signin");
+            $attributes = array("id" => "auth");
             echo form_open("user/auth", $attributes);
         ?>
             <h2 class="form-signin-heading">Вход в Личный кабинет</h2>
@@ -35,8 +36,16 @@
             </label>
             <input type="text" name="do_login" value="true" hidden>
             <button class="btn btn-success btn-block" type="submit">Войти</button>
-            <a href="/user/forgot">Забыли пароль?</a>
         <?php echo form_close(); ?>
+            <div class="social">
+                Войти через соцсети:
+                <a href="<?= $odnoklassniki ?>" class="si si-ok"></a>
+                <a href="<?= $google ?>" class="si si-gp"></a>
+                <a href="<?= $facebook ?>" class="si si-fb"></a>
+                <a href="<?= $vk ?>" class="si si-vk"></a>
+            </div>
+            <a href="/user/forgot">Забыли пароль?</a>
+        </div>
     </div>
 
 </div>

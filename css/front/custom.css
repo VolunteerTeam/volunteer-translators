@@ -120,6 +120,14 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
 .si-ig {background-position:-180px 0;}
 .si-tw {background-position:-200px 0;}
 .si-sk {background-position:-220px 0;}
+.form-signin .si {
+    display:inline-block;
+    float:right;
+    margin:.1em 0 0 .2em;
+}
+.form-signin .social {
+    margin-bottom: 5px;
+}
 
 .text-grey{color:#737373;}
 .navbar-collapse { padding-right: 0; padding-left: 0; margin-left: -15px !important;  }
