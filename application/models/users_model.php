@@ -53,7 +53,7 @@ class Users_model extends MY_Model {
             $auther->getProviderShortName()."_profile" => $auther->getSocialPage(),
             "sex_type" => $this->getSexTypeId($auther->getSex()),
             "dob" => $auther->getBirthday() ? date('Y-m-d', strtotime($auther->getBirthday())) : NULL,
-            "avatar" => $auther->getAvatar()
+//            "avatar" => $auther->getAvatar()
         );
     }
 
