@@ -109,6 +109,14 @@ class Users_model extends MY_Model {
         }
     }
 
+    function getCity($city_id){
+        $this->db->select('*');
+        $this->db->from('locations_google_api');
+        $this->db->where("id = '" . $city_id . "'");
+        $query = $this->db->get();
+        return $query->result_array()[0];
+    }
+
     function getUserName($email){
         $this->db->select('first_name, last_name');
         $this->db->from('users');
