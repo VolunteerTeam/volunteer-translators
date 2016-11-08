@@ -65,27 +65,26 @@
     <!-- /FACEBOOK JavaScript SDK -->
     <div class="test_mode">Внимание! Это новый сайт сообщества. Мы постепенно на него переезжаем. Старый сайт тоже действует - <a href="http://volontery.perevodov.info" target="_blank">volontery.perevodov.info</a></div>
     <header>
-        <div class="container header_top_wrap" style="height: 40px;">
+        <div class="container header_top_wrap">
             <div class="row">
-                <div class="col-xs-12 header_city_wrap">
-                    <div class="text-center" style="position: absolute;width:100%;left:0;right:0;z-index:5;">
-                            <span style="color:#999"><small>Ваш город: </small></span>
-                            <nobr>
-                                <a href="#" id="choosecity" data-toggle="modal" data-target="#allCity">
-                                    <span id="yourcity"></span>
-                                </a>
-                            </nobr>
+                <div class="col-xs-12 col-sm-6 header_city_wrap">
+                    <span style="color:#999"><small>Ваш город: </small></span>
+                    <nobr>
+                        <a href="#" id="choosecity" data-toggle="modal" data-target="#allCity">
+                            <span id="yourcity"></span>
+                        </a>
+                    </nobr>
+                </div>
+                <div class="col-xs-12 col-sm-6 header_login_wrap">
+                    <?php
+                    if($this->ion_auth->logged_in()) {
+                        require_once "user_menu.php";
+                    } else { ?>
+                        <div class="pull-right">
+                            <a href="/user/auth">Вход</a> |
+                            <a href="/user/register">Регистрация</a>
                         </div>
-
-                        <div class="pull-right" style="z-index:6; position: absolute; right:0;">
-                            <?php
-                                if($this->ion_auth->logged_in()) {
-                                    require_once "user_menu.php";
-                                } else { ?>
-                                <a href="/user/auth">Вход</a> |
-                                <a href="/user/register">Регистрация</a>
-                            <?php } ?>
-                        </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>

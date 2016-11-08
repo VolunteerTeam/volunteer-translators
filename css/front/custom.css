@@ -56,7 +56,7 @@ table {font-size:1em;line-height:1.3em;}
 .dg-div-icon { border: 1px solid #444; background-color: #ddd; opacity: 0.7; color: #000; text-align:center; border-radius: 10px}
 
 header {}
-.header_top_wrap {color:#444; padding:.5em 1em;}
+.header_top_wrap {color:#444; padding:.5em 1em; margin-bottom: 10px;}
 .header_city_wrap a, .header_city_wrap a:visited {color:#000; border-bottom:1px dashed #999;}
 .header_city_wrap a:focus, .header_city_wrap a:active, .header_city_wrap a:hover{border-bottom:1px solid #444;text-decoration:none;}
 .header_lang_wrap {}
@@ -208,25 +208,20 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
     font-size: 12px;
 }
 /*---------------- Стили для меню пользователя [НАЧАЛО] -------------*/
-.navbar-login
-{
-    width: 305px;
-    padding: 10px;
-    padding-bottom: 0px;
+.header_login_wrap {
+    padding: 0;
 }
-
-.navbar-login-session
-{
-    padding: 10px;
-    padding-bottom: 0px;
-    padding-top: 0px;
+.header_login_wrap .pull-right {
+    margin-right: 15px;
 }
-
-.icon-size
-{
-    font-size: 87px;
+.header_login_wrap a {
+    text-decoration: none;
+    border-bottom: 1px dashed #444;
+    color: #000;
 }
-
+.header_login_wrap a:hover, .header_login_wrap a:active, .header_login_wrap a:focus {
+    border-bottom: 1px solid #444;
+}
 #user-topmenu a {
     color: #444;
 }
@@ -238,6 +233,7 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
 #user-topmenu .nav > li > a {
     padding:0;
     color: #444;
+    display: inline-block;
 }
 
 #user-topmenu .nav > li > a:hover, #user-topmenu .nav > li:hover > a, #user-topmenu .nav > li:active > a {
@@ -261,12 +257,26 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
     width:100%;
 }
 
+#user-topmenu .glyphicon-chevron-down {
+    font-size: 12px;
+}
+
 @-moz-document url-prefix() {
     #user-topmenu .glyphicon.pull-right {
         top:-15px;
     }
     #user-topmenu .dropdown-menu > li > a {
         padding: .9em;
+    }
+}
+
+@media (max-width: 768px) {
+    #user-topmenu {
+        margin-left: 30px;
+    }
+    .header_login_wrap .pull-right {
+        float: left !important;
+        margin-left: 15px;
     }
 }
 
