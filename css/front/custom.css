@@ -261,4 +261,13 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
     width:100%;
 }
 
+@-moz-document url-prefix() {
+    #user-topmenu .glyphicon.pull-right {
+        top:-15px;
+    }
+    #user-topmenu .dropdown-menu > li > a {
+        padding: .9em;
+    }
+}
+
 /*------------------ Стили для меню пользователя [КОНЕЦ] --------------*/
