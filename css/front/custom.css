@@ -274,7 +274,7 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
     #user-topmenu {
         margin-left: 30px;
     }
-    .header_login_wrap .pull-right {
+    .header_login_wrap div.pull-right {
         float: left !important;
         margin-left: 15px;
     }
