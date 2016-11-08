@@ -207,4 +207,58 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
     margin-bottom: 10px;
     font-size: 12px;
 }
+/*---------------- Стили для меню пользователя [НАЧАЛО] -------------*/
+.navbar-login
+{
+    width: 305px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
 
+.navbar-login-session
+{
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.icon-size
+{
+    font-size: 87px;
+}
+
+#user-topmenu a {
+    color: #444;
+}
+
+#user-topmenu a:hover {
+    color: #fff;
+}
+
+#user-topmenu .nav > li > a {
+    padding:0;
+    color: #444;
+}
+
+#user-topmenu .nav > li > a:hover, #user-topmenu .nav > li:hover > a, #user-topmenu .nav > li:active > a {
+    color: #439;
+}
+
+#user-topmenu ul li {
+    list-style: none;
+}
+
+#user-topmenu .navbar-right {
+    margin-right: 15px;
+}
+
+#user-topmenu .nav > li > a:hover,#user-topmenu .nav > li > a:focus {
+    background-color: white;
+}
+#user-topmenu .dropdown-menu {
+    background-color: white;
+    border: 1px solid #444;
+    width:100%;
+}
+
+/*------------------ Стили для меню пользователя [КОНЕЦ] --------------*/

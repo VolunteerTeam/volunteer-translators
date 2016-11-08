@@ -37,13 +37,13 @@
             <input type="text" name="do_login" value="true" hidden>
             <button class="btn btn-success btn-block" type="submit">Войти</button>
         <?php echo form_close(); ?>
-            <div class="social">
+            <?php /*<div class="social">
                 Войти через соцсети:
                 <a href="<?= $odnoklassniki ?>" class="si si-ok"></a>
                 <a href="<?= $google ?>" class="si si-gp"></a>
                 <a href="<?= $facebook ?>" class="si si-fb"></a>
                 <a href="<?= $vk ?>" class="si si-vk"></a>
-            </div>
+            </div>*/?>
             <a href="/user/forgot">Забыли пароль?</a>
         </div>
     </div>

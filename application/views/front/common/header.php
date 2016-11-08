@@ -17,7 +17,7 @@
     <meta name="description" content="Волонтёры Переводов — бесплатные переводы в благотворительных целях" />
     <link href="/css/front/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="/css/front/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="/css/front/custom.css?20161104" rel="stylesheet" type="text/css" />
+    <link href="/css/front/custom.css?20161107" rel="stylesheet" type="text/css" />
     <?php
         if(isset($css)){
             foreach($css as $css_link) {
@@ -80,11 +80,8 @@
                         <div class="pull-right" style="z-index:6; position: absolute; right:0;">
                             <?php
                                 if($this->ion_auth->logged_in()) {
-                                    $user_data = $this->ion_auth->user()->row();
-                                ?>
-                                <a href="/user/profile" role="button" aria-expanded="false"><?php echo $user_data->first_name ." ".$user_data->last_name; ?></a>
-                                <a href="/user/logout">(выход)</a>
-                            <?php } else { ?>
+                                    require_once "user_menu.php";
+                                } else { ?>
                                 <a href="/user/auth">Вход</a> |
                                 <a href="/user/register">Регистрация</a>
                             <?php } ?>
