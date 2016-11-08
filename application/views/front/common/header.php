@@ -17,7 +17,7 @@
     <meta name="description" content="Волонтёры Переводов — бесплатные переводы в благотворительных целях" />
     <link href="/css/front/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="/css/front/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="/css/front/custom.css?20161107" rel="stylesheet" type="text/css" />
+    <link href="/css/front/custom.css?20161108" rel="stylesheet" type="text/css" />
     <?php
         if(isset($css)){
             foreach($css as $css_link) {
