@@ -81,7 +81,7 @@
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Электронная почта <span class="required">*</span></label>
-					<input type="text" value="<?=$user['email'];?>" class="form-control" disabled>
+					<input type="text" value="<? if($user['email'] != "social_profile") echo $user['email']; ?>" class="form-control" <? if($user['email'] != "social_profile") echo "disabled";?>>
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Скайп</label>
@@ -146,14 +146,35 @@
 			<div style="height: 20px;"></div>
 			<div class="row bestmedia-input">
 				<div class="col-md-12">
-					<p><b>Ваша роль: </b>
-						<?php
+					<?if(empty($user['groups'])){
+						?>
+						<p><b>Ваша роль <span class="required">*</span>:</b></p>
+						<div class="btn-group <?php if(!empty(form_error('group'))){echo "error";} ?>" data-toggle="buttons">
+							<label class="btn btn-default <?php if(@$_POST['group'] == '7') { echo "active"; } ?>">
+								<input type="radio" data-href="/ustav#client" name="group" value="7"  <?php if(@$_POST['group'] == '7') { echo "checked"; } ?>/> Заказчик
+							</label>
+							<label class="btn btn-default <?php if(@$_POST['group'] == '4') { echo "active"; } ?>">
+								<input type="radio" data-href="/ustav#translator" name="group" value="4"  <?php if(@$_POST['group'] == '4') { echo "checked"; } ?>/> Волонтёр
+							</label>
+							<label class="btn btn-default <?php if(@$_POST['group'] == '3') { echo "active"; } ?>">
+								<input type="radio" data-href="/ustav#manager" name="group" value="3"  <?php if(@$_POST['group'] == '3') { echo "checked"; } ?>/> Менеджер
+							</label>
+						</div>
+						<span class="text-danger"><?php echo form_error('group'); ?></span>
+						<?
+					}else{
+						?>
+						<p><b>Ваша роль: </b>
+							<?php
 							foreach($user['groups'] as $key => $group){
 								echo $group['description'];
 								if($key != 0 && $key != (count($user['groups']) - 1)) echo ", ";
 							}
-						?>
-					</p>
+							?>
+						</p>
+						<?
+					}?>
+
 				</div>
 			</div>
 

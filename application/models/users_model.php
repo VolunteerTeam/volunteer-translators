@@ -21,10 +21,12 @@ class Users_model extends MY_Model {
     function socialUserExists($social_id, $provider){
         $provider_id = $this->getProviderId($provider);
 
-        $this->db->select('id');
+        $this->db->select('*');
         $this->db->from('users');
         $this->db->where("social_id = '" . $social_id . "' and provider = '" . $provider_id . "'");
-        return $this->db->get()->row();
+        $query = $this->db->get();
+        if(!empty($query->result_array())) return $query->result_array()[0];
+        return false;
     }
 
     function getProviderId($provider){
@@ -42,14 +44,19 @@ class Users_model extends MY_Model {
     }
 
     function socialUserData($auther){
+        $salt = rand(2589,195568);
+        $auther->getEmail() ? $email = $auther->getEmail() : $email = "social_profile";
         return array(
             'ip_address' => $_SERVER['REMOTE_ADDR'],
+            'password' => md5($salt.$email),
+            'secret_key' => sha1($salt.$email),
+            'salt' => $salt,
             "active" => 1,
             "provider" => $this->getProviderId($auther->getProviderShortName()),
             "social_id" => $auther->getSocialId(),
             "first_name" => $auther->getFirstName(),
             "last_name" => $auther->getLastName(),
-            "email" => $auther->getEmail(),
+            "email" => $email,
             $auther->getProviderShortName()."_profile" => $auther->getSocialPage(),
             "sex_type" => $this->getSexTypeId($auther->getSex()),
             "dob" => $auther->getBirthday() ? date('Y-m-d', strtotime($auther->getBirthday())) : NULL,
@@ -61,7 +68,7 @@ class Users_model extends MY_Model {
         $data = $this->socialUserData($auther);
         $data['created_on'] = time();
         $this->db->insert('users', $data);
-        return $this->db->insert_id();
+        return $data;
     }
 
     //activate user account
@@ -114,7 +121,18 @@ class Users_model extends MY_Model {
         $this->db->from('locations_google_api');
         $this->db->where("id = '" . $city_id . "'");
         $query = $this->db->get();
-        return $query->result_array()[0];
+        if(empty($query->result_array())){
+            return array(
+                "location" => "",
+                "country" => "",
+                "country_short" => "",
+                "latlng" => "",
+                "place_id" => "",
+                "city" => ""
+            );
+        } else {
+            return $query->result_array()[0];
+        }
     }
 
     function getUserName($email){

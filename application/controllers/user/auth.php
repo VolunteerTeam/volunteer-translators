@@ -19,37 +19,34 @@ class Auth extends My_Controller {
 			$provider = $this->input->get('provider');
 			$data = array();
 
-/*			require_once "/application/config/social.php";
-			require_once '/application/third_party/SocialAuther/autoload.php';
+			require_once APPPATH."config/social.php";
+			require_once APPPATH.'third_party/SocialAuther/autoload.php';
 			$adapters = array();
 			foreach ($adapterConfigs as $adapter => $settings) {
 				$class = 'SocialAuther\Adapter\\' . ucfirst($adapter);
 				$adapters[$adapter] = new $class($settings);
 				$data[$adapter] = $adapters[$adapter]->getAuthUrl();
-			}*/
+			}
 
 			if($provider) {
-				redirect('user/profile');
-//				if(array_key_exists($provider, $adapters)) {
-//					$auther = new SocialAuther\SocialAuther($adapters[$provider]);
-//					if ($auther->authenticate()) {
-//						$user = $this->users_model->socialUserExists($auther->getSocialId(),$provider);
-//						if(empty($user)){
-//							$user_id = $this->users_model->createSocialUser($auther);
-//							if(empty($user_id)){
-//								$data['msg'] = '<div class="alert alert-danger text-center">Приносим извинения. Произошла ошибка при записи данных. Попробуйте войти позже.</div>';
-//							}
-//						} else {
-//							$user_id = $user->id;
-//						}
-//						if($this->ion_auth->loginSocialUser($user_id)){
-//							$this->session->set_flashdata('msg', $this->ion_auth->messages());
-//							redirect('user/profile');
-//						} else {
-//							$data['msg'] = $this->ion_auth->errors();
-//						}
-//					}
-//				}
+				if(array_key_exists($provider, $adapters)) {
+					$auther = new SocialAuther\SocialAuther($adapters[$provider]);
+					if ($auther->authenticate()) {
+						$user = $this->users_model->socialUserExists($auther->getSocialId(),$provider);
+						if(empty($user)){
+							$user = $this->users_model->createSocialUser($auther);
+							if(empty($user)){
+								$data['msg'] = '<div class="alert alert-danger text-center">Приносим извинения. Произошла ошибка при записи данных. Попробуйте войти позже.</div>';
+							}
+						}
+						if($this->ion_auth->login($user['email'],$user['salt'].$user['email'])){
+							$this->session->set_flashdata('msg', $this->ion_auth->messages());
+							redirect('user/profile');
+						} else {
+							$data['msg'] = $this->ion_auth->errors();
+						}
+					}
+				}
 			} else if($this->input->post('do_login')
 				&& $this->form_validation->run()
 				&& $this->ion_auth->login($this->input->post('email'), $this->input->post('password'), $remember))
