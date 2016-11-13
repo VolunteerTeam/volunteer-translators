@@ -2,7 +2,7 @@
 
 namespace SocialAuther\Adapter;
 
-class Facebook extends AbstractAdapter
+class FB extends AbstractAdapter
 {
     public function __construct($config)
     {
