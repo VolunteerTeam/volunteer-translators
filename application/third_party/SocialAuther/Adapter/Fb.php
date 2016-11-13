@@ -58,12 +58,11 @@ class Fb extends AbstractAdapter
 
             parse_str($this->get('https://graph.facebook.com/oauth/access_token', $params, false), $tokenInfo);
 
-            var_dump($tokenInfo);
-            exit;
             if (count($tokenInfo) > 0 && isset($tokenInfo['access_token'])) {
                 $params = array('access_token' => $tokenInfo['access_token']);
                 $userInfo = $this->get('https://graph.facebook.com/me', $params);
-
+                var_dump($userInfo);
+                exit;
                 if (isset($userInfo['id'])) {
                     $this->userInfo = $userInfo;
                     $result = true;
