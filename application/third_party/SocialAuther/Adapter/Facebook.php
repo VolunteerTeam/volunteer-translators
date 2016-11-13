@@ -61,7 +61,8 @@ class Facebook extends AbstractAdapter
             if (count($tokenInfo) > 0 && isset($tokenInfo['access_token'])) {
                 $params = array('access_token' => $tokenInfo['access_token']);
                 $userInfo = $this->get('https://graph.facebook.com/me', $params);
-
+                var_dump($userInfo);
+                exit;
                 if (isset($userInfo['id'])) {
                     $this->userInfo = $userInfo;
                     $result = true;
