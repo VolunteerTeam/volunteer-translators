@@ -32,6 +32,10 @@ class Auth extends My_Controller {
 				if(array_key_exists($provider, $adapters)) {
 					$auther = new SocialAuther\SocialAuther($adapters[$provider]);
 					if ($auther->authenticate()) {
+						if($provider == "fb"){
+							var_dump($auther->getUserInfo());
+							exit;
+						}
 						$user = $this->users_model->socialUserExists($auther->getSocialId(),$provider);
 						if(empty($user)){
 							$user = $this->users_model->createSocialUser($auther);
