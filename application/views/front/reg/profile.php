@@ -81,7 +81,7 @@
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Электронная почта <span class="required">*</span></label>
-					<input type="text" value="<? if($user['email'] != "social_profile") echo $user['email']; ?>" class="form-control" <? if($user['email'] != "social_profile") echo "disabled";?>>
+					<input type="text" name="<? if($user['email'] == "social_profile") echo "email"; ?>" value="<? if($user['email'] != "social_profile") echo $user['email']; ?>" class="form-control" <? if($user['email'] != "social_profile") echo "disabled";?>>
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Скайп</label>
@@ -249,4 +249,4 @@
 	</div>
 </div>
 
-<?php require_once "/../users/user_form_js.php"; ?>
+<?php require_once APPPATH."views/front/users/user_form_js.php"; ?>
