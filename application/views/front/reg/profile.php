@@ -168,7 +168,7 @@
 							<?php
 							foreach($user['groups'] as $key => $group){
 								echo $group['description'];
-								if($key != 0 && $key != (count($user['groups']) - 1)) echo ", ";
+								if($key != (count($user['groups']) - 1)) echo ", ";
 							}
 							?>
 						</p>
