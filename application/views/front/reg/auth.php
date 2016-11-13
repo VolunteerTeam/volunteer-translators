@@ -39,9 +39,9 @@
         <?php echo form_close(); ?>
             <div class="social">
                 Войти через соцсети:
-                <a href="<?= $odnoklassniki ?>" class="si si-ok"></a>
+                <?/*<a href="<?= $odnoklassniki ?>" class="si si-ok"></a>
                 <a href="<?= $google ?>" class="si si-gp"></a>
-                <a href="<?= $facebook ?>" class="si si-fb"></a>
+                <a href="<?= $facebook ?>" class="si si-fb"></a>*/?>
                 <a href="<?= $vk ?>" class="si si-vk"></a>
             </div>
             <a href="/user/forgot">Забыли пароль?</a>
