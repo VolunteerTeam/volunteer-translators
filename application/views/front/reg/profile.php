@@ -81,7 +81,11 @@
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Электронная почта <span class="required">*</span></label>
-					<input type="text" name="<? if($user['email'] == "social_profile") echo "email"; ?>" value="<? if($user['email'] != "social_profile") echo $user['email']; ?>" class="form-control" <? if($user['email'] != "social_profile") echo "disabled";?>>
+					<?php if($user['email'] == 'social_profile') { ?>
+							<input type="text" name="email" value="" class="form-control">
+					<?php } else { ?>
+							<input type="text" value="<?= $user['email'] ?>" class="form-control" disabled>
+					<?php }?>
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Скайп</label>

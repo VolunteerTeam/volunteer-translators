@@ -101,7 +101,7 @@ class Register extends CI_Controller
                 'lj_profile' => $this->input->post('lj_profile'),
                 'gp_profile' => $this->input->post('gp_profile'),
                 'in_profile' => $this->input->post('in_profile'),
-                'dob' => $this->input->post('dob'),
+                'dob' => date('Y-m-d', strtotime($this->input->post('dob'))),
                 'sex_type' => $this->input->post('sex'),
                 'about' => $this->input->post('about'),
                 'city' => $city
