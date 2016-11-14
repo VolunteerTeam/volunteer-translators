@@ -2,7 +2,7 @@
 
 namespace SocialAuther\Adapter;
 
-class Google extends AbstractAdapter
+class Gp extends AbstractAdapter
 {
     public function __construct($config)
     {
@@ -12,6 +12,8 @@ class Google extends AbstractAdapter
             'socialId'   => 'id',
             'email'      => 'email',
             'name'       => 'name',
+            'first_name' => 'given_name',
+            'last_name'  => 'family_name',
             'socialPage' => 'link',
             'avatar'     => 'picture',
             'sex'        => 'gender'
@@ -29,7 +31,7 @@ class Google extends AbstractAdapter
     {
         if (isset($this->_userInfo['birthday'])) {
             $this->_userInfo['birthday'] = str_replace('0000', date('Y'), $this->_userInfo['birthday']);
-            $result = date('d.m.Y', strtotime($this->_userInfo['birthday']));
+            $result = date('Y-m-d', strtotime($this->_userInfo['birthday']));
         } else {
             $result = null;
         }

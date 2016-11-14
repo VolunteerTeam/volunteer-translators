@@ -40,7 +40,9 @@ class Users_model extends MY_Model {
         $this->db->select('id');
         $this->db->from('sex');
         $this->db->where("name_ru = '" . $sex . "' or name_en = '" . $sex . "'");
-        return intval($this->db->get()->row()->id);
+        $query = $this->db->get();
+        if(!empty($query->row())) return intval($query->row()->id);
+        return NULL;
     }
 
     function socialUserData($auther){
@@ -90,6 +92,15 @@ class Users_model extends MY_Model {
                 }
             }
         }
+        return false;
+    }
+
+    function emailExists($email){
+        $this->db->select('id');
+        $this->db->from('users');
+        $this->db->where("email = '".$email."'");
+        $query = $this->db->get();
+        if (!empty($query->result_array())) return true;
         return false;
     }
 

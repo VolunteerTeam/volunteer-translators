@@ -13,7 +13,7 @@ class Auth extends My_Controller {
 			redirect("user/profile");
 		} else {
 			$this->form_validation->set_rules('email', 'Email', 'required|xss_clean');
-			$this->form_validation->set_rules('password', 'Пароль', 'required|xss_clean');
+			$this->form_validation->set_rules('password', 'РџР°СЂРѕР»СЊ', 'required|xss_clean');
 
 			$remember = (bool) $this->input->post('remember');
 			$provider = $this->input->get('provider');
@@ -34,9 +34,16 @@ class Auth extends My_Controller {
 					if ($auther->authenticate()) {
 						$user = $this->users_model->socialUserExists($auther->getSocialId(),$provider);
 						if(empty($user)){
-							$user = $this->users_model->createSocialUser($auther);
-							if(empty($user)){
-								$data['msg'] = '<div class="alert alert-danger text-center">Приносим извинения. Произошла ошибка при записи данных. Попробуйте войти позже.</div>';
+							$email = $auther->getEmail();
+							if($email && $this->users_model->emailExists($email)){
+								$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">РЈС‡С‘С‚РЅР°СЏ Р·Р°РїРёСЃСЊ СЃ С‚Р°РєРёРј email СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚. Р’РѕР№РґРёС‚Рµ РІ Р»РёС‡РЅС‹Р№ РєР°Р±РёРЅРµС‚ РёСЃРїРѕР»СЊР·СѓСЏ С„РѕСЂРјСѓ РІС…РѕРґР°.</div>');
+								redirect('user/auth');
+							} else {
+								$user = $this->users_model->createSocialUser($auther);
+								if(empty($user)){
+									$this->session->set_flashdata('msg', '<div class="alert alert-danger text-center">РџСЂРёРЅРѕСЃРёРј РёР·РІРёРЅРµРЅРёСЏ. РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРё Р·Р°РїРёСЃРё РґР°РЅРЅС‹С…. РџРѕРїСЂРѕР±СѓР№С‚Рµ РІРѕР№С‚Рё РїРѕР·Р¶Рµ.</div>');
+									redirect('user/auth');
+								}
 							}
 						}
 						if($this->ion_auth->login($user['email'],$user['salt'].$user['email'])){

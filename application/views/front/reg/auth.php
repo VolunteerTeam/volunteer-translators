@@ -41,9 +41,9 @@
                 Войти через соцсети:
                 <?php
                 /*<a href="<?= $odnoklassniki ?>" class="si si-ok"></a>
-                <a href="<?= $google ?>" class="si si-gp"></a>
                 */
                 ?>
+                <a href="<?= $gp ?>" class="si si-gp"></a>
                 <a href="<?= $fb ?>" class="si si-fb"></a>
                 <a href="<?= $vk ?>" class="si si-vk"></a>
             </div>
