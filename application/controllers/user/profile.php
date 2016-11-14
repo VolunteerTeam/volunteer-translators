@@ -22,7 +22,8 @@ class Profile extends MY_Controller {
 				'/js/vendor/bootstrap/moment.min.js',
 				'/js/vendor/bootstrap/locale/ru.js',
 				'/js/vendor/bootstrap/bootstrap-datetimepicker.min.js',
-				'https://maps.google.com/maps/api/js?key=AIzaSyAcZF9a4bTTl7oT77NFJ3dozmSZNuISgA0&language=ru'
+				'https://maps.google.com/maps/api/js?key=AIzaSyAcZF9a4bTTl7oT77NFJ3dozmSZNuISgA0&language=ru',
+				'/js/cropit/dist/jquery.cropit.min.js'
 			);
 			$data['css'] = array('/css/vendor/bootstrap/bootstrap-datetimepicker.min.css');
 
