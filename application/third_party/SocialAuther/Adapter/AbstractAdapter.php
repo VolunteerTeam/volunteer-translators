@@ -129,6 +129,28 @@ abstract class AbstractAdapter implements AdapterInterface
         return $result;
     }
 
+    public function getFirstName()
+    {
+        $result = null;
+
+        if (isset($this->userInfo[$this->socialFieldsMap['first_name']])) {
+            $result = $this->userInfo[$this->socialFieldsMap['first_name']];
+        }
+
+        return $result;
+    }
+
+    public function getLastName()
+    {
+        $result = null;
+
+        if (isset($this->userInfo[$this->socialFieldsMap['last_name']])) {
+            $result = $this->userInfo[$this->socialFieldsMap['last_name']];
+        }
+
+        return $result;
+    }
+
     /**
      * Get user social page url or null if it is not set
      * @return string|null
