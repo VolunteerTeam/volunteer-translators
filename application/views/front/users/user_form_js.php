@@ -49,7 +49,7 @@
             },1);
         });
 
-        var dob = '<?php if(isset($user) && isset($user['dob'])){echo $user['dob'];} else {echo @$_POST['dob'];} ?>';
+        var dob = '<?php if(isset($user) && isset($user['dob'])){echo date('d.m.Y', strtotime($user["dob"]));} else {echo @$_POST['dob'];} ?>';
         if(!dob){
             datepicker1.data('DateTimePicker').date(null);
         } else {

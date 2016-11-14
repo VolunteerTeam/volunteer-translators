@@ -150,8 +150,7 @@
 			<div style="height: 20px;"></div>
 			<div class="row bestmedia-input">
 				<div class="col-md-12">
-					<?if(empty($user['groups'])){
-						?>
+					<?php if(empty($user['groups'])){ ?>
 						<p><b>Ваша роль <span class="required">*</span>:</b></p>
 						<div class="btn-group <?php if(!empty(form_error('group'))){echo "error";} ?>" data-toggle="buttons">
 							<label class="btn btn-default <?php if(@$_POST['group'] == '7') { echo "active"; } ?>">
@@ -165,9 +164,7 @@
 							</label>
 						</div>
 						<span class="text-danger"><?php echo form_error('group'); ?></span>
-						<?
-					}else{
-						?>
+					<?php } else { ?>
 						<p><b>Ваша роль: </b>
 							<?php
 							foreach($user['groups'] as $key => $group){
@@ -176,8 +173,7 @@
 							}
 							?>
 						</p>
-						<?
-					}?>
+					<?php }?>
 
 				</div>
 			</div>
