@@ -38,6 +38,7 @@ class Profile extends MY_Controller {
 		
 	function save()
 	{
+		redirect("user/profile");
 		$this->load->library('session');
 
 		$name       = $this->input->post('name');

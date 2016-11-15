@@ -228,9 +228,10 @@
 						</div>
 					</div>
 				</div>
+				<span style="color:red;font-weight:bold;">Извините, сохранение профиля пока не работает</span>
 				<div>
 					<div class="text-center">
-						<input type="submit" name="do" onclick="return based64();" value="Сохранить" class="btn btn-success">
+						<input type="submit" name="do" onclick="return based64();" value="Сохранить" class="btn btn-success" disabled>
 					</div>
 				</div>
 
