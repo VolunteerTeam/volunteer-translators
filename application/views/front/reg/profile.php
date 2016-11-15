@@ -223,12 +223,10 @@
 								Выберите файлы .JPG или .PNG не более 5 мегабайт
 								<br>
 							</div>
-
-
 						</div>
 					</div>
 				</div>
-				<span style="color:red;font-weight:bold;">Извините, сохранение профиля пока не работает</span>
+			</div>
 				<div>
 					<div class="text-center">
 						<input type="submit" name="do" onclick="return based64();" value="Сохранить" class="btn btn-success" disabled>
