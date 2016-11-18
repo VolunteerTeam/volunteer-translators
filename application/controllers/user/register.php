@@ -45,7 +45,7 @@ class Register extends CI_Controller
         $this->form_validation->set_rules('job_post', 'Job Post', 'trim|required|xss_clean');
         $this->form_validation->set_rules('dob', 'Date of Birth', 'required');
         $this->form_validation->set_rules('sex', 'Sex', 'required');
-        $this->form_validation->set_rules('group', 'Grcallback_llback_group_required');
+        $this->form_validation->set_rules('group','Group' ,'callback_group_required');
         $this->form_validation->set_rules('city', 'City', 'required|callback_check_coordinates');
         $this->form_validation->set_rules('phone', 'Phone', 'trim|required|regex_match[/^\+7\-\d{3}\-\d{3}\-\d{2}\-\d{2}$/]');
         $this->form_validation->set_rules('soc_profiles', 'Social profiles', 'callback_social_required');
@@ -155,7 +155,7 @@ class Register extends CI_Controller
         redirect('user/auth');
     }
 
-    function check_coordinates() {
+    public function check_coordinates() {
         return $this->input->post('latlng') ? TRUE : FALSE;
     }
 
