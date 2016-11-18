@@ -47,7 +47,13 @@ class Users_model extends MY_Model {
 
     function socialUserData($auther){
         $salt = rand(2589,195568);
-        $auther->getEmail() ? $email = $auther->getEmail() : $email = "social_profile";
+        if($auther->getEmail()){
+            $email = $auther->getEmail();
+            $email_confirm = 1;
+        } else {
+            $email = "social_profile";
+            $email_confirm = 0;
+        }
         return array(
             'ip_address' => $_SERVER['REMOTE_ADDR'],
             'password' => md5($salt.$email),
@@ -59,6 +65,7 @@ class Users_model extends MY_Model {
             "first_name" => $auther->getFirstName(),
             "last_name" => $auther->getLastName(),
             "email" => $email,
+            "email_confirm" => $email_confirm,
             $auther->getProviderShortName()."_profile" => $auther->getSocialPage(),
             "sex_type" => $this->getSexTypeId($auther->getSex()),
             "dob" => $auther->getBirthday() ? date('Y-m-d', strtotime($auther->getBirthday())) : NULL,

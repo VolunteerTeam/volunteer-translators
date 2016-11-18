@@ -174,6 +174,11 @@
 							</label>
 						</div>
 						<span class="text-danger"><?php echo form_error('group'); ?></span>
+						<div class="row bestmedia-input">
+							<div class="col-md-12">
+								<a id="agreement_link" href="/ustav" target="_blank">Пользовательское соглашение</a>
+							</div>
+						</div>
 					<?php } else { ?>
 						<p><b>Ваша роль: </b>
 							<?php

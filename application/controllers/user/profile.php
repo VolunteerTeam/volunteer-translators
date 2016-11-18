@@ -53,7 +53,6 @@ class Profile extends MY_Controller {
 		}
 		if (empty($this->ion_auth->get_users_groups()->result_array())) {
 			$this->form_validation->set_rules('group', 'Group', 'callback_group_required');
-			$this->form_validation->set_rules('agreement', 'Agreement', 'callback_agreement');
 		}
 		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required|alpha|min_length[3]|max_length[30]|xss_clean');
 		$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required|alpha|min_length[3]|max_length[30]|xss_clean');
@@ -130,7 +129,8 @@ class Profile extends MY_Controller {
 			if ($this->input->post('email')) {
 				$data['email'] = $this->input->post('email');
 			}
-
+			var_dump($data);
+			exit;
 			// insert form data into database
 			$user_id = $this->users_model->update_user($user->id, $data);
 			if ($this->input->post('group')) $this->users_model->setGroup($user_id, $this->input->post('group'));
