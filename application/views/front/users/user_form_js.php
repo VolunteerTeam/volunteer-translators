@@ -4,7 +4,7 @@
     var marker;
 
     function initMap(){
-        //Определение карты
+        //РћРїСЂРµРґРµР»РµРЅРёРµ РєР°СЂС‚С‹
         var latlng = "";
         var myLatLng = "";
         var coordinates = $("#latlng").val();
@@ -13,7 +13,7 @@
             myLatLng = {lat: parseFloat(coordinates[0]), lng: parseFloat(coordinates[1])};
             latlng = new google.maps.LatLng(myLatLng['lat'],myLatLng['lng']);
         } else {
-            latlng = new google.maps.LatLng(55.7494733,37.3523255); // Москва
+            latlng = new google.maps.LatLng(55.7494733,37.3523255); // РњРѕСЃРєРІР°
         }
         var options = {
             zoom: 10,
@@ -23,7 +23,7 @@
 
         map = new google.maps.Map(document.getElementById("map_canvas"), options);
 
-        //Определение геокодера
+        //РћРїСЂРµРґРµР»РµРЅРёРµ РіРµРѕРєРѕРґРµСЂР°
         geocoder = new google.maps.Geocoder();
 
         marker = new google.maps.Marker({
@@ -34,7 +34,7 @@
     }
 
     $(document).ready(function(){
-        // Подключение Datepicker для выбора даты рождения
+        // РџРѕРґРєР»СЋС‡РµРЅРёРµ Datepicker РґР»СЏ РІС‹Р±РѕСЂР° РґР°С‚С‹ СЂРѕР¶РґРµРЅРёСЏ
         var datepicker1 = $("#datepicker1");
         datepicker1.datetimepicker({
             format: 'DD.MM.YYYY',
@@ -56,7 +56,7 @@
             datepicker1.data('DateTimePicker').date(dob);
         }
 
-        // Создание маски ввода номера телефона
+        // РЎРѕР·РґР°РЅРёРµ РјР°СЃРєРё РІРІРѕРґР° РЅРѕРјРµСЂР° С‚РµР»РµС„РѕРЅР°
         var phone_field = $("input[name='phone']");
         phone_field.on('focus',function(){
             if(!$(this).val()){
@@ -65,14 +65,14 @@
         });
         phone_field.keypress(function() {
             if (this.value.length >= 16) return false;
-            var hyphens = [6,10,13]; // длина ввода, после которой нужно вставить дефис
-            var value = $(this).val(); // текущее значение поля Телефон
+            var hyphens = [6,10,13]; // РґР»РёРЅР° РІРІРѕРґР°, РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕР№ РЅСѓР¶РЅРѕ РІСЃС‚Р°РІРёС‚СЊ РґРµС„РёСЃ
+            var value = $(this).val(); // С‚РµРєСѓС‰РµРµ Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ РўРµР»РµС„РѕРЅ
             if($.inArray(value.length, hyphens) != -1) {
                 $(this).val(value+"-");
             }
         });
 
-        // Проверка пользовательского соглашения
+        // РџСЂРѕРІРµСЂРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРѕРіРѕ СЃРѕРіР»Р°С€РµРЅРёСЏ
         $("input[name='agreement']").change(function(){
             if(!$("input[name='agreement']:checked").length){
                 $("input[type='submit']").attr("disabled","disabled");
@@ -84,7 +84,7 @@
             $("#agreement_link").attr("href",$(this).attr("data-href"));
         });
 
-        // Подключение геокодера к поиску по городам
+        // РџРѕРґРєР»СЋС‡РµРЅРёРµ РіРµРѕРєРѕРґРµСЂР° Рє РїРѕРёСЃРєСѓ РїРѕ РіРѕСЂРѕРґР°Рј
         var city_field = $("input[name='city']");
         var place_id = '<?php if(isset($user) && isset($user['place_id'])){echo $user['place_id'];} else {echo @$_POST['place_id'];} ?>';
         var latlng_field = $("#latlng");
@@ -129,7 +129,7 @@
         });
 
         city_field.autocomplete({
-            //Определяем значение для адреса при геокодировании
+            //РћРїСЂРµРґРµР»СЏРµРј Р·РЅР°С‡РµРЅРёРµ РґР»СЏ Р°РґСЂРµСЃР° РїСЂРё РіРµРѕРєРѕРґРёСЂРѕРІР°РЅРёРё
             source: function(request, response) {
                 geocoder.geocode( {'address': request.term}, function(results, status) {
                     response($.map(results, function(item) {
@@ -144,10 +144,10 @@
                     }));
                 })
             },
-            //Выполняется при выборе конкретного адреса
+            //Р’С‹РїРѕР»РЅСЏРµС‚СЃСЏ РїСЂРё РІС‹Р±РѕСЂРµ РєРѕРЅРєСЂРµС‚РЅРѕРіРѕ Р°РґСЂРµСЃР°
             select: function(event, ui) {
                 if(ui.item.address_components[0]['types'][0] != 'locality'){
-                    $("#city-error").text("Нужно выбрать только населённый пункт (город, пгт и т.п.)").show();
+                    $("#city-error").text("РќСѓР¶РЅРѕ РІС‹Р±СЂР°С‚СЊ С‚РѕР»СЊРєРѕ РЅР°СЃРµР»С‘РЅРЅС‹Р№ РїСѓРЅРєС‚ (РіРѕСЂРѕРґ, РїРіС‚ Рё С‚.Рї.)").show();
                 } else {
                     var address_length = ui.item.address_components.length;
                     latlng_field.val(ui.item.latitude + "," + ui.item.longitude);

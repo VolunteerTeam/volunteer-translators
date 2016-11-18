@@ -1,6 +1,16 @@
 <div class="container main" role="main">
 	<div class="row">
-		<?php echo $this->session->flashdata('verify_msg'); ?>
+		<?php
+			echo $this->session->flashdata('verify_msg');
+			if(isset($status)){
+				switch($status){
+					case "ok": echo "<p>Ваш профиль был успешно обновлён.</p>";
+						break;
+					case "DB fail": echo "<p>Извините, при сохранении данных произошла ошибка. Попробуйте изменить профиль позже.</p>";
+						break;
+				}
+			}
+		?>
 	</div>
 	<div class="row user_form">
 		<h1>Профиль</h1>
@@ -50,15 +60,15 @@
 				</div>
 				<div class="col-md-3">
 					<label class="control-label">Пол <span class="required">*</span></label>
-					<div class="btn-group <?php if(!empty(form_error('sex_type'))){echo "error";} ?>" data-toggle="buttons" style="display:block;">
+					<div class="btn-group <?php if(!empty(form_error('sex'))){echo "error";} ?>" data-toggle="buttons" style="display:block;">
 						<label class="btn btn-default <?php if($user['sex_type'] == '1') { echo "active"; } ?>" style="width:50%">
-							<input type="radio" name="sex" value="1"  <?php if($user['sex'] == '1') { echo "checked"; } ?>/> мужской
+							<input type="radio" name="sex" value="1"  <?php if($user['sex_type'] == '1') { echo "checked"; } ?>/> мужской
 						</label>
 						<label class="btn btn-default <?php if($user['sex_type'] == '2') { echo "active"; } ?>" style="width:50%">
-							<input type="radio" name="sex" value="2"  <?php if($user['sex'] == '2') { echo "checked"; } ?>/> женский
+							<input type="radio" name="sex" value="2"  <?php if($user['sex_type'] == '2') { echo "checked"; } ?>/> женский
 						</label>
 					</div>
-					<span class="text-danger"><?php echo form_error('sex_type'); ?></span>
+					<span class="text-danger"><?php echo form_error('sex'); ?></span>
 				</div>
 				<div class="col-md-5">
 					<label class="control-label">Город <span class="required">*</span></label>
@@ -229,7 +239,7 @@
 			</div>
 				<div>
 					<div class="text-center">
-						<input type="submit" name="do" onclick="return based64();" value="Сохранить" class="btn btn-success" disabled>
+						<input type="submit" name="do" onclick="return based64();" value="Сохранить" class="btn btn-success">
 					</div>
 				</div>
 
