@@ -46,7 +46,7 @@ class Profile extends MY_Form {
 		$user = $this->ion_auth->user()->row();
 
 		//set validation rules
-		if (!$user->email_confirm) {
+		if ($user->email == 'social_profile') {
 			$this->form_validation->set_rules('email', 'Email ID', 'trim|required|valid_email|is_unique[users.email]');
 		}
 		if (empty($this->ion_auth->get_users_groups()->result_array())) {
@@ -126,18 +126,18 @@ class Profile extends MY_Form {
 			if ($this->input->post('password')) $data['password'] = $this->input->post('password');
 			if ($this->input->post('email')) {
 				$data['email'] = $this->input->post('email');
+				$data['secret_key'] = sha1($user->salt.$this->input->post('email'));
 			}
-			var_dump($data);
-			exit;
+
 			// insert form data into database
-			$user_id = $this->users_model->update_user($user->id, $data);
-			if ($this->input->post('group')) $this->users_model->setGroup($user_id, $this->input->post('group'));
+			$this->users_model->update_user($user->id, $data);
+			if ($this->input->post('group')) $this->users_model->setGroup($user->id, $this->input->post('group'));
 
 			//send verification email to user's email id
 			if ($this->input->post('email')) {
 				$this->load->library('email');
 				$subject = 'Подтверждение адреса E-mail';
-				$message = '<p>Здравствуйте, ' . $this->input->post('first_name') . '!</p>В Вашем личном кабинете на сайте https://v2.perevodov.info/ был изменён адрес E-mail. Для подтверждения нового адреса перейдите по <a href="' . $this->config->base_url() . 'user/activate?s=' . $secret . '&email=' . $this->input->post('email') . '">ссылке</a>. Если Вы не имеете отношения к сайту Волонтёры переводов и это письмо является ошибкой, можете не обращать внимания.';
+				$message = '<p>Здравствуйте, ' . $this->input->post('first_name') . '!</p>В Вашем личном кабинете на сайте https://v2.perevodov.info/ был изменён адрес E-mail. Для подтверждения нового адреса перейдите по <a href="' . $this->config->base_url() . 'user/activate?s=' . $data['secret_key'] . '&email=' . $this->input->post('email') . '">ссылке</a>.<br/>Если Вы не имеете отношения к сайту Волонтёры переводов и это письмо является ошибкой, можете не обращать внимания.';
 				$from_email = 'system@perevodov.info';
 
 				$result = $this->email
@@ -148,13 +148,11 @@ class Profile extends MY_Form {
 					->message($message)
 					->send();
 				if ($result) {
-					// successfully sent mail
-					$this->load_view('front/reg/profile', array('status' => 'ok'));
+					$this->session->set_flashdata('msg','<div class="alert alert-success text-center">Ваш профиль успешно обновлён.<br/>На электронную почту '.$this->input->post('email').' выслано письмо для подтверждения Вашего нового E-mail.</div>');
 				} else {
-					$this->users_model->remove_user($user_id);
-					$data['email_msg'] = '<div class="alert alert-danger text-center">Письмо на Вашу электронную почту не было отправлено. Проверьте, пожалуйста, ещё раз правильность указания E-mail или попробуйте позже.</div>';
-					$this->load_view('front/reg/profile', $data);
+					$this->session->set_flashdata('<div class="alert alert-danger text-center">Письмо на указанную электронную почту '.$this->input->post('email').' не было отправлено. Проверьте, пожалуйста, ещё раз правильность указания E-mail или попробуйте позже.</div>');
 				}
+				redirect("user/profile");
 			}
 			$this->session->set_flashdata('msg','<div class="alert alert-success text-center">Ваш профиль успешно обновлён.</div>');
 			redirect("user/profile");
