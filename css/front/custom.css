@@ -333,3 +333,15 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
     margin-bottom: 10px;
 }
 /*------------------ Стили для Форм пользователя [КОНЕЦ] -------------*/
+
+/*------------- Стили для Списка автозаполнения Карта [НАЧАЛО] -------*/
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
+    background-color: #ffffff;
+    border: 1px solid #CCCCCC;
+    padding: 10px;
+}
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li {
+    list-style: none;
+    cursor: pointer;
+}
+/*------------- Стили для Списка автозаполнения Карта [КОНЕЦ] --------*/

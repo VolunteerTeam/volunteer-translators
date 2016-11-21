@@ -46,7 +46,7 @@ class Auth extends My_Controller {
 								}
 							}
 						}
-						if($this->ion_auth->login($user['email'],$user['salt'].$user['email'])){
+						if($this->ion_auth->login($user['email'],$user['salt']."social_profile".$user['salt'])){
 							$this->session->set_flashdata('msg', $this->ion_auth->messages());
 							redirect('user/profile');
 						} else {

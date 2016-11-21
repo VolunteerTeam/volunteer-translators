@@ -56,7 +56,7 @@ class Users_model extends MY_Model {
         }
         return array(
             'ip_address' => $_SERVER['REMOTE_ADDR'],
-            'password' => md5($salt.$email),
+            'password' => md5($salt."social_profile".$salt),
             'secret_key' => sha1($salt.$email),
             'salt' => $salt,
             "active" => 1,

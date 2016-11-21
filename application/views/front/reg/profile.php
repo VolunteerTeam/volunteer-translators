@@ -92,9 +92,10 @@
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Электронная почта <span class="required">*</span></label>
-					<?php if($user['email'] == 'social_profile') { ?>
-							<input type="text" name="email" value="<?= @$_POST['email'] ?>" class="form-control <?php if(!empty(form_error('email'))){echo "error";} ?>">
-						    <span class="text-danger"><?php echo form_error('email'); ?></span>
+					<?php if(!$user['email_confirm']) { ?>
+							<input type="text" name="email" value="<?= @$_POST['email'] ? @$_POST['email'] : ($user['email'] == 'social_profile' ? '' : $user['email']) ?>" class="form-control <?php if(!empty(form_error('email'))){echo "error";} ?>">
+							<span class="glyphicons glyphicons-exclamation-sign"></span>
+							<span class="text-danger"><?php echo form_error('email'); ?></span>
 					<?php } else { ?>
 							<input type="text" value="<?=$user['email'] ?>" class="form-control" disabled>
 					<?php }?>

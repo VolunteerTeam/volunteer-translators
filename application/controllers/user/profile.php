@@ -46,7 +46,7 @@ class Profile extends MY_Form {
 		$user = $this->ion_auth->user()->row();
 
 		//set validation rules
-		if ($user->email == 'social_profile') {
+		if ($user->email == 'social_profile' || $user->email != $this->input->post('email')) {
 			$this->form_validation->set_rules('email', 'Email ID', 'trim|required|valid_email|is_unique[users.email]');
 		}
 		if (empty($this->ion_auth->get_users_groups()->result_array())) {
@@ -134,7 +134,7 @@ class Profile extends MY_Form {
 			if ($this->input->post('group')) $this->users_model->setGroup($user->id, $this->input->post('group'));
 
 			//send verification email to user's email id
-			if ($this->input->post('email')) {
+			if ($this->input->post('email') && $user->email != $this->input->post('email')) {
 				$this->load->library('email');
 				$subject = 'Подтверждение адреса E-mail';
 				$message = '<p>Здравствуйте, ' . $this->input->post('first_name') . '!</p>В Вашем личном кабинете на сайте https://v2.perevodov.info/ был изменён адрес E-mail. Для подтверждения нового адреса перейдите по <a href="' . $this->config->base_url() . 'user/activate?s=' . $data['secret_key'] . '&email=' . $this->input->post('email') . '">ссылке</a>.<br/>Если Вы не имеете отношения к сайту Волонтёры переводов и это письмо является ошибкой, можете не обращать внимания.';
