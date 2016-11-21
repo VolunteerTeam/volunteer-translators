@@ -138,11 +138,18 @@ class Register extends MY_Form
     }
 
     function activate(){
-        if($this->users_model->verifyEmailID($this->input->get())){
-            $this->session->set_flashdata('msg','<div class="alert alert-success text-center">Ваш электронный адресс успешно подтверждён. Теперь Вы можете войти в личный кабинет.</div>');
+        $params = $this->input->get();
+        $reset = $this->security->xss_clean($params["reset"]);
+        if($this->users_model->verifyEmailID($params)){
+            if($reset == true && $this->ion_auth->logged_in()) {
+                $this->session->set_flashdata('msg','<div class="alert alert-success text-center">Ваш электронный адресс успешно подтверждён.</div>');
+            } else {
+                $this->session->set_flashdata('msg','<div class="alert alert-success text-center">Ваш электронный адресс успешно подтверждён. Теперь Вы можете войти в личный кабинет.</div>');
+            }
         } else {
             $this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Секретный ключ не совпадает с ключом, высланным на Вашу электронную почту.</div>');
         }
+        if($reset == true && $this->ion_auth->logged_in()) redirect('user/profile');
         redirect('user/auth');
     }
 }

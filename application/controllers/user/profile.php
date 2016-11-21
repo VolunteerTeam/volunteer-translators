@@ -137,7 +137,7 @@ class Profile extends MY_Form {
 			if ($this->input->post('email') && $user->email != $this->input->post('email')) {
 				$this->load->library('email');
 				$subject = 'Подтверждение адреса E-mail';
-				$message = '<p>Здравствуйте, ' . $this->input->post('first_name') . '!</p>В Вашем личном кабинете на сайте https://v2.perevodov.info/ был изменён адрес E-mail. Для подтверждения нового адреса перейдите по <a href="' . $this->config->base_url() . 'user/activate?s=' . $data['secret_key'] . '&email=' . $this->input->post('email') . '">ссылке</a>.<br/>Если Вы не имеете отношения к сайту Волонтёры переводов и это письмо является ошибкой, можете не обращать внимания.';
+				$message = '<p>Здравствуйте, ' . $this->input->post('first_name') . '!</p>В Вашем личном кабинете на сайте https://v2.perevodov.info/ был изменён адрес E-mail. Для подтверждения нового адреса перейдите по <a href="' . $this->config->base_url() . 'user/activate?s=' . $data['secret_key'] . '&email=' . $this->input->post('email') . '&reset=true">ссылке</a>.<br/>Если Вы не имеете отношения к сайту Волонтёры переводов и это письмо является ошибкой, можете не обращать внимания.';
 				$from_email = 'system@perevodov.info';
 
 				$result = $this->email

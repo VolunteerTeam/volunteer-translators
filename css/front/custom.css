@@ -332,6 +332,39 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
 .user_form .bestmedia-input {
     margin-bottom: 10px;
 }
+.left-inner-addon {
+    position: relative;
+}
+.left-inner-addon input {
+    padding-left: 30px;
+}
+.left-inner-addon i {
+    position: absolute;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+
+.right-inner-addon {
+    position: relative;
+}
+.right-inner-addon input {
+    padding-right: 30px;
+}
+.right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px;
+    pointer-events: none;
+}
+.fa-warning {
+    color: red;
+}
+.fa-warning.email {
+    cursor:pointer;
+}
+.fa-check {
+    color:green;
+}
 /*------------------ Стили для Форм пользователя [КОНЕЦ] -------------*/
 
 /*------------- Стили для Списка автозаполнения Карта [НАЧАЛО] -------*/

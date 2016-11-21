@@ -93,11 +93,18 @@
 				<div class="col-md-4">
 					<label class="control-label">Электронная почта <span class="required">*</span></label>
 					<?php if(!$user['email_confirm']) { ?>
-							<input type="text" name="email" value="<?= @$_POST['email'] ? @$_POST['email'] : ($user['email'] == 'social_profile' ? '' : $user['email']) ?>" class="form-control <?php if(!empty(form_error('email'))){echo "error";} ?>">
-							<span class="glyphicons glyphicons-exclamation-sign"></span>
-							<span class="text-danger"><?php echo form_error('email'); ?></span>
+						<div class="right-inner-addon ">
+							<?php if($user['email'] != 'social_profile') { ?>
+								<i class="fa fa-warning email"></i>
+							<?php } ?>
+							<input type="text" title="E-mail ещё не подтверждён" name="email" value="<?= @$_POST['email'] ? @$_POST['email'] : ($user['email'] == 'social_profile' ? '' : $user['email']) ?>" class="form-control <?php if(!empty(form_error('email'))){echo "error";} ?>">
+						</div>
+						<span class="text-danger"><?php echo form_error('email'); ?></span>
 					<?php } else { ?>
+						<div class="right-inner-addon">
+							<i class="fa fa-check"></i>
 							<input type="text" value="<?=$user['email'] ?>" class="form-control" disabled>
+						</div>
 					<?php }?>
 				</div>
 				<div class="col-md-4">
