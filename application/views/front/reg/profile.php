@@ -22,28 +22,28 @@
 			<div class="row bestmedia-input">
 				<div class="col-md-4">
 					<label class="control-label">Фамилия <span class="required">*</span></label>
-					<input type="text" name="last_name" value="<?=$user['last_name'];?>" class="form-control <?php if(!empty(form_error('last_name'))){echo "error";} ?>">
+					<input type="text" name="last_name" value="<?=@$_POST['last_name'] ? @$_POST['last_name'] : $user['last_name'];?>" class="form-control <?php if(!empty(form_error('last_name'))){echo "error";} ?>">
 					<span class="text-danger"><?php echo form_error('last_name'); ?></span>
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Имя <span class="required">*</span></label>
-					<input type="text" name="first_name" value="<?=$user['first_name'];?>" class="form-control <?php if(!empty(form_error('first_name'))){echo "error";} ?>">
+					<input type="text" name="first_name" value="<?=@$_POST['first_name'] ? @$_POST['first_name'] : $user['first_name'];?>" class="form-control <?php if(!empty(form_error('first_name'))){echo "error";} ?>">
 					<span class="text-danger"><?php echo form_error('first_name'); ?></span>
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Отчество</label>
-					<input type="text" name="patro_name" value="<?=$user['patro_name'];?>" class="form-control">
+					<input type="text" name="patro_name" value="<?=@$_POST['patro_name'] ? @$_POST['patro_name'] : $user['patro_name'];?>" class="form-control">
 				</div>
 			</div>
 			<div class="row bestmedia-input">
 				<div class="col-md-6">
 					<label class="control-label">Представление (вкратце о себе) <span class="required">*</span></label>
-					<input type="text" name="about" value="<?=$user['about'];?>" class="form-control <?php if(!empty(form_error('about'))){echo "error";} ?>">
+					<input type="text" name="about" value="<?=@$_POST['about'] ? @$_POST['about'] : $user['about'];?>" class="form-control <?php if(!empty(form_error('about'))){echo "error";} ?>">
 					<span class="text-danger"><?php echo form_error('about'); ?></span>
 				</div>
 				<div class="col-md-6">
 					<label class="control-label">Должность (кем работаете) <span class="required">*</span></label>
-					<input type="text" name="job_post" value="<?=$user['job_post'];?>" class="form-control <?php if(!empty(form_error('job_post'))){echo "error";} ?>">
+					<input type="text" name="job_post" value="<?=@$_POST['job_post'] ? @$_POST['job_post'] : $user['job_post'];?>" class="form-control <?php if(!empty(form_error('job_post'))){echo "error";} ?>">
 					<span class="text-danger"><?php echo form_error('job_post'); ?></span>
 				</div>
 			</div>
@@ -51,7 +51,7 @@
 				<div class="col-md-4">
 					<label class="control-label">Дата рождения <span class="required">*</span></label>
 					<div class='input-group date' id='datepicker1'>
-						<input type='text' class="form-control <?php if(!empty(form_error('dob'))){echo "error";} ?>" name="dob" value="<?=$user['dob'];?>"/>
+						<input type='text' class="form-control <?php if(!empty(form_error('dob'))){echo "error";} ?>" name="dob" value="<?=@$_POST['dob'] ? @$_POST['dob'] : $user['dob'];?>"/>
 						<span class="input-group-addon">
 							<span class="glyphicon glyphicon-calendar"></span>
 						</span>
@@ -59,24 +59,25 @@
 					<span class="text-danger"><?php echo form_error('dob'); ?></span>
 				</div>
 				<div class="col-md-3">
-					<label class="control-label">Пол <span class="required">*</span></label>
-					<div class="btn-group <?php if(!empty(form_error('sex'))){echo "error";} ?>" data-toggle="buttons" style="display:block;">
-						<label class="btn btn-default <?php if($user['sex_type'] == '1') { echo "active"; } ?>" style="width:50%">
-							<input type="radio" name="sex" value="1"  <?php if($user['sex_type'] == '1') { echo "checked"; } ?>/> мужской
+					<label class="control-label">Пол <span class="required">*</span></label><br/>
+					<div class="btn-group <?php if(!empty(form_error('sex'))){echo "error";} ?>" data-toggle="buttons" style="width:100%">
+						<?php @$_POST['sex'] ? $sex = @$_POST['sex'] : $sex = $user['sex_type'] ?>
+						<label class="btn btn-default <?php if($sex == '1') { echo "active"; } ?>" style="width:50%">
+							<input type="radio" name="sex" value="1"  <?php if($sex == '1') { echo "checked"; } ?>/> мужской
 						</label>
-						<label class="btn btn-default <?php if($user['sex_type'] == '2') { echo "active"; } ?>" style="width:50%">
-							<input type="radio" name="sex" value="2"  <?php if($user['sex_type'] == '2') { echo "checked"; } ?>/> женский
+						<label class="btn btn-default <?php if($sex == '2') { echo "active"; } ?>" style="width:50%">
+							<input type="radio" name="sex" value="2"  <?php if($sex == '2') { echo "checked"; } ?>/> женский
 						</label>
 					</div>
 					<span class="text-danger"><?php echo form_error('sex'); ?></span>
 				</div>
 				<div class="col-md-5">
 					<label class="control-label">Город <span class="required">*</span></label>
-					<input type="text" name="city" value="<?=$user['city']['location'];?>" class="form-control <?php if(!empty(form_error('city'))){echo "error";} ?>">
-					<input id="country" name="country" type="text" value="<?=$user['city']['country'];?>" hidden/>
-					<input id="country_short" name="country_short" type="text" value="<?=$user['city']['country_short'];?>" hidden/>
-					<input id="latlng" name="latlng" type="text" value="<?=$user['city']['latlng'];?>" hidden/>
-					<input id="place_id" name="place_id" type="text" value="<?=$user['city']['place_id'];?>" hidden/>
+					<input type="text" name="city" value="<?=@$_POST['city'] ? @$_POST['city'] : $user['city']['location'];?>" class="form-control <?php if(!empty(form_error('city'))){echo "error";} ?>">
+					<input id="country" name="country" type="text" value="<?=@$_POST['country'] ? @$_POST['country'] : $user['city']['country'];?>" hidden/>
+					<input id="country_short" name="country_short" type="text" value="<?=@$_POST['country_short'] ? @$_POST['country_short'] : $user['city']['country_short'];?>" hidden/>
+					<input id="latlng" name="latlng" type="text" value="<?=@$_POST['latlng'] ? @$_POST['latlng'] : $user['city']['latlng'];?>" hidden/>
+					<input id="place_id" name="place_id" type="text" value="<?=@$_POST['place_id'] ? @$_POST['place_id'] : $user['city']['place_id'];?>" hidden/>
 					<span class="text-danger" id="city-error"><?php echo form_error('city'); ?></span>
 				</div>
 			</div>
@@ -86,20 +87,20 @@
 			<div class="row bestmedia-input">
 				<div class="col-md-4">
 					<label class="control-label">Сотовый телефон <span class="required">*</span></label>
-					<input type="text" name="phone" value="<?=$user['phone'];?>" placeholder="+7-ххх-ххх-хх-хх" class="form-control <?php if(!empty(form_error('phone'))){echo "error";} ?>" max="16">
+					<input type="text" name="phone" value="<?=@$_POST['phone'] ? @$_POST['phone'] : $user['phone'];?>" placeholder="+7-ххх-ххх-хх-хх" class="form-control <?php if(!empty(form_error('phone'))){echo "error";} ?>" max="16">
 					<span class="text-danger"><?php echo form_error('phone'); ?></span>
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Электронная почта <span class="required">*</span></label>
 					<?php if($user['email'] == 'social_profile') { ?>
-							<input type="text" name="email" value="" class="form-control">
+							<input type="text" name="email" value="<?=@$_POST['email'] ?>" class="form-control">
 					<?php } else { ?>
-							<input type="text" value="<?= $user['email'] ?>" class="form-control" disabled>
+							<input type="text" value="<?=$user['email'] ?>" class="form-control" disabled>
 					<?php }?>
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Скайп</label>
-					<input type="text" name="skype" value="<?=$user['skype'];?>" class="form-control" >
+					<input type="text" name="skype" value="<?=@$_POST['skype'] ? @$_POST['skype'] : $user['skype'];?>" class="form-control" >
 				</div>
 			</div>
 			<div style="height: 50px;"></div>
@@ -112,48 +113,48 @@
 			<div class="row bestmedia-input">
 				<div class="col-md-6">
 					<label class="control-label">Facebook</label>
-					<input type="text" name="fb_profile" value="<?=$user['fb_profile'];?>" class="form-control" >
+					<input type="text" name="fb_profile" value="<?=@$_POST['fb_profile'] ? @$_POST['fb_profile'] : $user['fb_profile'];?>" class="form-control" >
 					<span class="text-danger"><?php echo form_error('fb_profile'); ?></span>
 				</div>
 				<div class="col-md-6">
 					<label class="control-label">Вконтакте</label>
-					<input type="text" name="vk_profile" value="<?=$user['vk_profile'];?>" class="form-control" >
+					<input type="text" name="vk_profile" value="<?=@$_POST['vk_profile'] ? @$_POST['vk_profile'] : $user['vk_profile'];?>" class="form-control" >
 					<span class="text-danger"><?php echo form_error('vk_profile'); ?></span>
 				</div>
 			</div>
 			<div class="row bestmedia-input">
 				<div class="col-md-6">
 					<label class="control-label">Одноклассники</label>
-					<input type="text" name="od_profile" value="<?=$user['od_profile'];?>" class="form-control" >
+					<input type="text" name="od_profile" value="<?=@$_POST['od_profile'] ? @$_POST['od_profile'] : $user['od_profile'];?>" class="form-control" >
 					<span class="text-danger"><?php echo form_error('od_profile'); ?></span>
 				</div>
 				<div class="col-md-6">
 					<label class="control-label">Google+</label>
-					<input type="text" name="gp_profile" value="<?=$user['gp_profile'];?>" class="form-control" >
+					<input type="text" name="gp_profile" value="<?=@$_POST['gp_profile'] ? @$_POST['gp_profile'] : $user['gp_profile'];?>" class="form-control" >
 					<span class="text-danger"><?php echo form_error('gp_profile'); ?></span>
 				</div>
 			</div>
 			<div class="row bestmedia-input">
 				<div class="col-md-6">
 					<label class="control-label">Twitter</label>
-					<input type="text" name="tw_profile" value="<?=$user['tw_profile'];?>" class="form-control" >
+					<input type="text" name="tw_profile" value="<?=@$_POST['tw_profile'] ? @$_POST['tw_profile'] : $user['tw_profile'];?>" class="form-control" >
 					<span class="text-danger"><?php echo form_error('tw_profile'); ?></span>
 				</div>
 				<div class="col-md-6">
 					<label class="control-label">Instagram</label>
-					<input type="text" name="in_profile" value="<?=$user['in_profile'];?>" class="form-control" >
+					<input type="text" name="in_profile" value="<?=@$_POST['in_profile'] ? @$_POST['in_profile'] : $user['in_profile'];?>" class="form-control" >
 					<span class="text-danger"><?php echo form_error('in_profile'); ?></span>
 				</div>
 			</div>
 			<div class="row bestmedia-input">
 				<div class="col-md-6">
 					<label class="control-label">Livejournal</label>
-					<input type="text" name="lj_profile" value="<?=$user['lj_profile'];?>" class="form-control" >
+					<input type="text" name="lj_profile" value="<?=@$_POST['lj_profile'] ? @$_POST['lj_profile'] : $user['lj_profile'];?>" class="form-control" >
 					<span class="text-danger"><?php echo form_error('lj_profile'); ?></span>
 				</div>
 				<div class="col-md-6">
 					<label class="control-label">LinkenId</label>
-					<input type="text" name="li_profile" value="<?=$user['li_profile'];?>" class="form-control" >
+					<input type="text" name="li_profile" value="<?=@$_POST['li_profile'] ? @$_POST['li_profile'] : $user['li_profile'];?>" class="form-control" >
 					<span class="text-danger"><?php echo form_error('li_profile'); ?></span>
 				</div>
 			</div>
@@ -221,7 +222,7 @@
 							<label style="font-weight: bold; display: inline-block;margin-bottom: 5px;font-size: 15px; float: right;" for="index_file">Текущее фото</label><br >
 
 							<div style="float:right;" class="cropit-image-preview">
-								<img src="<?php echo $user['avatar']; ?>">
+								<img src="<?= $user['avatar']; ?>">
 							</div>
 
 							<div id="image-cropper" style="width: 119px;">

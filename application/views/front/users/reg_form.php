@@ -74,7 +74,7 @@
             </div>
             <div class="col-md-3">
                 <label class="control-label">Пол <span class="required">*</span></label>
-                <div class="btn-group <?php if(!empty(form_error('sex'))){echo "error";} ?>" data-toggle="buttons" style="display:block;">
+                <div class="btn-group <?php if(!empty(form_error('sex'))){echo "error";} ?>" data-toggle="buttons" style="width:100%">
                     <label class="btn btn-default <?php if(@$_POST['sex'] == '1') { echo "active"; } ?>" style="width:50%">
                         <input type="radio" name="sex" value="1"  <?php if(@$_POST['sex'] == '1') { echo "checked"; } ?>/> мужской
                     </label>

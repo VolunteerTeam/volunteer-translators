@@ -1,13 +1,11 @@
 <?php
-class Profile extends MY_Controller {
+require_once(APPPATH.'core/MY_Form.php');
+
+class Profile extends MY_Form {
 
 	public function __construct()
 	{
 		parent::__construct();
-		$this->load->helper(array('form','url'));
-		$this->load->library(array('form_validation', 'email'));
-		$this->load->database();
-		$this->load->model('users_model');
 	}
 
 	function load_view($content,$custom_data=array()){
