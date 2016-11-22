@@ -87,17 +87,38 @@
 			<div class="row bestmedia-input">
 				<div class="col-md-4">
 					<label class="control-label">Сотовый телефон <span class="required">*</span></label>
-					<input type="text" name="phone" value="<?=@$_POST['phone'] ? @$_POST['phone'] : $user['phone'];?>" placeholder="+7-ххх-ххх-хх-хх" class="form-control <?php if(!empty(form_error('phone'))){echo "error";} ?>" max="16">
-					<span class="text-danger"><?php echo form_error('phone'); ?></span>
+					<?php if(!$user['phone_confirm']) { ?>
+						<?php if($user['phone']) { ?>
+							<div class = "input-group">
+								<input type="text" name="phone" value="<?=@$_POST['phone'] ? @$_POST['phone'] : $user['phone'];?>" placeholder="+7-ххх-ххх-хх-хх" class="form-control <?php if(!empty(form_error('phone'))){echo "error";} ?>" max="16">
+								<span class = "input-group-btn">
+									<a href="#" id="phone_confirm" data-toggle="modal" data-target="#phone_confirm_dialog" class="btn btn-default" type="button" title="Телефон не подтверждён. Нажмите, чтобы подтвердить.">
+										<i class="fa fa-warning confirm"></i>
+									</a>
+								</span>
+<!--								<span class = "input-group-btn">-->
+<!--								    <a id="phone_confirm" class="btn btn-default" type="button" title="Телефон не подтверждён. Нажмите, чтобы подтвердить."><i class="fa fa-warning confirm"></i></a>-->
+<!--							   </span>-->
+							</div>
+						<?php } else { ?>
+							<input type="text" name="phone" value="<?=@$_POST['phone'] ? @$_POST['phone'] : $user['phone'];?>" placeholder="+7-ххх-ххх-хх-хх" class="form-control <?php if(!empty(form_error('phone'))){echo "error";} ?>" max="16">
+						<?php } ?>
+						<span class="text-danger"><?php echo form_error('phone'); ?></span>
+					<?php } else { ?>
+						<div class="right-inner-addon">
+							<i class="fa fa-check"></i>
+							<input type="text" value="<?=$user['phone'];?>" class="form-control" disabled>
+						</div>
+					<?php }?>
 				</div>
 				<div class="col-md-4">
 					<label class="control-label">Электронная почта <span class="required">*</span></label>
 					<?php if(!$user['email_confirm']) { ?>
 						<div class="right-inner-addon ">
 							<?php if($user['email'] != 'social_profile') { ?>
-								<i class="fa fa-warning email"></i>
+								<i class="fa fa-warning confirm"></i>
 							<?php } ?>
-							<input type="text" title="E-mail ещё не подтверждён" name="email" value="<?= @$_POST['email'] ? @$_POST['email'] : ($user['email'] == 'social_profile' ? '' : $user['email']) ?>" class="form-control <?php if(!empty(form_error('email'))){echo "error";} ?>">
+							<input type="text" title="E-mail не подтверждён." name="email" value="<?= @$_POST['email'] ? @$_POST['email'] : ($user['email'] == 'social_profile' ? '' : $user['email']) ?>" class="form-control <?php if(!empty(form_error('email'))){echo "error";} ?>">
 						</div>
 						<span class="text-danger"><?php echo form_error('email'); ?></span>
 					<?php } else { ?>
@@ -274,3 +295,24 @@
 </div>
 
 <?php require_once APPPATH."views/front/users/user_form_js.php"; ?>
+
+<!-- Modal -->
+<div class="modal fade" id="phone_confirm_dialog" role="dialog">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Подтвердить номер телефона</h4>
+			</div>
+			<div class="modal-body">
+				<p>Извините, этот сервис пока не работает.</p>
+				<p>На Вашу работу с личным кабинетом это никак не повлияет.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+			</div>
+		</div>
+	</div>
+</div>
+

@@ -46,7 +46,7 @@ class Profile extends MY_Form {
 		$user = $this->ion_auth->user()->row();
 
 		//set validation rules
-		if ($user->email == 'social_profile' || $user->email != $this->input->post('email')) {
+		if ($user->email == 'social_profile' || (!$user->email_confirm && $user->email != $this->input->post('email'))) {
 			$this->form_validation->set_rules('email', 'Email ID', 'trim|required|valid_email|is_unique[users.email]');
 		}
 		if (empty($this->ion_auth->get_users_groups()->result_array())) {

@@ -329,6 +329,11 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
     text-decoration: none;
     color: #3C2A94;
 }
+a.ui-state-focus{
+    background-color: transparent !important;
+    border: none !important;
+    color: #3C2A94 !important;
+}
 .user_form .bestmedia-input {
     margin-bottom: 10px;
 }
@@ -359,11 +364,20 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
 .fa-warning {
     color: red;
 }
-.fa-warning.email {
+.fa-warning.confirm {
     cursor:pointer;
 }
 .fa-check {
     color:green;
+}
+#phone_confirm_dialog {
+    display: none;
+}
+#phone_confirm_dialog .modal-body p {
+    text-align: center;
+}
+#phone_confirm_dialog .modal-body > p:first-child {
+    color: red;
 }
 /*------------------ Стили для Форм пользователя [КОНЕЦ] -------------*/
 

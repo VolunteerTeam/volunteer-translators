@@ -17,7 +17,6 @@
     <meta name="description" content="Волонтёры Переводов — бесплатные переводы в благотворительных целях" />
     <link href="/css/front/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
     <link href="/css/front/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    <link href="/css/front/custom.css?20161121" rel="stylesheet" type="text/css" />
     <?php
         if(isset($css)){
             foreach($css as $css_link) {
@@ -25,6 +24,7 @@
             }
         }
     ?>
+    <link href="/css/front/custom.css?20161121" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
