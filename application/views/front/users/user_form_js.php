@@ -86,7 +86,7 @@
 
         // Подключение геокодера к поиску по городам
         var city_field = $("input[name='city']");
-        var place_id = '<?php if(isset($user) && isset($user['place_id'])){echo $user['place_id'];} else {echo @$_POST['place_id'];} ?>';
+        var place_id = '<?php if(isset($user) && isset($user['city']['place_id'])){echo $user['city']['place_id'];} else {echo @$_POST['place_id'];} ?>';
         var latlng_field = $("#latlng");
         var place_id_field = $("#place_id");
         var country_field = $("#country");
