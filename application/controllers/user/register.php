@@ -139,7 +139,8 @@ class Register extends MY_Form
 
     function activate(){
         $params = $this->input->get();
-        $reset = $this->security->xss_clean($params["reset"]);
+        $reset = false;
+        if($params["reset"]) $reset = $this->security->xss_clean($params["reset"]);
         if($this->users_model->verifyEmailID($params)){
             if($reset == true && $this->ion_auth->logged_in()) {
                 $this->session->set_flashdata('msg','<div class="alert alert-success text-center">Ваш электронный адресс успешно подтверждён.</div>');
