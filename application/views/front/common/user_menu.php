@@ -12,7 +12,7 @@ $user_data = $this->ion_auth->user()->row();
             </a>
             <ul class="dropdown-menu">
                 <li><a href="/user/profile">Профиль<span class="glyphicon glyphicon-cog pull-right"></span></a></li>
-                <li><a href="#">Переводы<span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+                <li><a href="/user/orders">Заказы<span class="glyphicon glyphicon-stats pull-right"></span></a></li>
                 <li><a href="/user/logout">Выход<span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
             </ul>
         </li>
