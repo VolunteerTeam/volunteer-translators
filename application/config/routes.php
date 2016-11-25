@@ -38,32 +38,34 @@
 |
 */
 
-$route['404_override']          = 'front/errors/error_404';
-$route['default_controller']    = "front/index/index";
+$route['404_override']                  = 'front/errors/error_404';
+$route['default_controller']            = "front/index/index";
 
-$route['login/(.*)']            = 'login/$1';
-$route['login']                 = 'login/index';
-$route['cpanel/(.*)']           = 'cpanel/$1';
-$route['cpanel']                = 'cpanel/main';
+$route['login/(.*)']                    = 'login/$1';
+$route['login']                         = 'login/index';
+$route['cpanel/(.*)']                   = 'cpanel/$1';
+$route['cpanel']                        = 'cpanel/main';
 
-$route['user/reg']                = 'user/register';
-$route['user/register']                = 'user/register';
-$route['user/forgot']                = 'user/forgot';
-$route['user/forgot/send']		= 'user/forgot/send';
+$route['user/reg']                      = 'user/register';
+$route['user/register']                 = 'user/register';
+$route['user/forgot']                   = 'user/forgot';
+$route['user/forgot/send']		        = 'user/forgot/send';
 $route['user/forgot/restore/(.*)/(.*)']	= 'user/forgot/restore/$1/$2';
 
-$route['user/reg/active/(.*)']           = 'user/reg/active/$1';
-$route['user/reg/regmail']                = 'user/reg/regmail';
-$route['user/activate']                = 'user/register/activate';
-$route['user/auth']                = 'user/auth';
-$route['user/logout']                = 'user/logout';
+$route['user/reg/active/(.*)']          = 'user/reg/active/$1';
+$route['user/reg/regmail']              = 'user/reg/regmail';
+$route['user/activate']                 = 'user/register/activate';
+$route['user/auth']                     = 'user/auth';
+$route['user/logout']                   = 'user/logout';
 $route['user/auth/ajax']                = 'user/auth/ajax';
-$route['user/auth/log']                = 'user/auth/log';
-$route['user/profile']                = 'user/profile';
-$route['user/profile/save']                = 'user/profile/save';
-$route['user/orders']                = 'user/orders';
+$route['user/auth/log']                 = 'user/auth/log';
+$route['user/profile']                  = 'user/profile';
+$route['user/profile/save']             = 'user/profile/save';
+$route['user/orders']                   = 'user/orders';
+$route['user/orders/list']              = 'user/orders/getOrders';
+$route['user/orders/create']              = 'user/orders/createOrder';
 
-$route['images/front']                = '/';
+$route['images/front']                  = '/';
 
 
 

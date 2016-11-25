@@ -283,6 +283,12 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
 /*------------------ Стили для меню пользователя [КОНЕЦ] --------------*/
 
 /*------------------ Стили для Форм пользователя [НАЧАЛО] -------------*/
+.user_form {
+    padding: 10px;
+}
+.user_form label{
+    font-size: 14px;
+}
 .user_form .form-control:focus {
     border-color: #F70707;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(247, 7, 7, 1);
@@ -392,3 +398,20 @@ a.ui-state-focus{
     cursor: pointer;
 }
 /*------------- Стили для Списка автозаполнения Карта [КОНЕЦ] --------*/
+.modal-header {
+    background-color: #3C2A94;
+    color:#ffffff;
+}
+.modal-header button.close {
+    color:#ffffff;
+}
+.modal-body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.jtable-goto-page select, .jtable-page-size-change select {
+    color: #3C2A94;
+}
+.modal-footer button[type="submit"] {
+    margin-top: 0;
+}
