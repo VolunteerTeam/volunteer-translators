@@ -109,4 +109,16 @@ class MY_Form extends CI_Controller
             return false;
         }
     }
+
+    function file_required($file){
+        if(!$file){
+            $this->form_validation->set_message('file_required', 'нужно выбрать хотя бы один файл для перевода');
+            return false;
+        }
+        return true;
+    }
+
+    function file_size($files,$size){
+
+    }
 }

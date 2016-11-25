@@ -13,31 +13,28 @@
                 <h4 class="modal-title">Создать заказ</h4>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <?php echo $this->session->flashdata('verify_msg'); ?>
-                </div>
                 <div class="row user_form">
                     <?php
-                        echo $this->session->flashdata('msg');
                         $attributes = array("name" => "create_order", "enctype" => "multipart/form-data");
                         echo form_open("user/orders/create", $attributes);
                     ?>
                     <div>
                         <label class="control-label" style="font-weight:bold;">Назначение перевода <span class="required">*</span></label>
-                        <textarea type="textarea" rows="5" name="purpose" value="<?php echo @$_POST['purpose']; ?>" class="form-control <?php if(!empty(form_error('purpose'))){echo "error";} ?>"></textarea>
-                        <span class="text-danger"><?php echo form_error('purpose'); ?></span>
+                        <span class="text-danger" data-error="purpose"></span>
+                        <textarea type="textarea" rows="5" name="purpose" value="" class="form-control"></textarea>
                     </div>
                     <div>
                         <label class="control-label" style="font-weight:bold;">Получатель перевода (организация, контакты) <span class="required">*</span></label>
-                        <textarea type="textarea" rows="3" name="receiver" value="<?php echo @$_POST['receiver']; ?>" class="form-control <?php if(!empty(form_error('receiver'))){echo "error";} ?>"></textarea>
-                        <span class="text-danger"><?php echo form_error('receiver'); ?></span>
+                        <span class="text-danger" data-error="receiver"></span>
+                        <textarea type="textarea" rows="3" name="receiver" value="" class="form-control"></textarea>
                     </div>
                     <div>
                         <label class="control-label" style="font-weight:bold;">Выберите файлы для перевода <span class="required">*</span></label>
+                        <span class="text-danger" data-error="files"></span>
                         <div class="input-group">
                             <label class="input-group-btn">
                                 <span class="btn btn-default">
-                                    Обзор&hellip; <input type="file" name="files[]" style="display: none;" multiple>
+                                    Обзор&hellip; <input type="file" name="files[]" id="uploadFiles" style="display: none;" multiple>
                                 </span>
                             </label>
                             <input type="text" class="form-control" readonly>
@@ -45,7 +42,6 @@
                         <span class="help-block">
                             Файлы должны быть формата ----- не более 5МБ.
                         </span>
-                        <span class="text-danger"><?php echo form_error('files'); ?></span>
                     </div>
                     <div class="form-group">
                         <label style="font-weight: bold; display: inline-block;margin-bottom: 5px;font-size: 15px;" for="index_file">Выберите одно фото для отбражения в списке переводов</label>
@@ -54,16 +50,15 @@
                             <br>
                             <input type="range" class="cropit-image-zoom-input" />
                             <br>
-                            <!-- The actual file input will be hidden -->
                             <div class="input-group">
                                 <label class="input-group-btn">
                                 <span class="btn btn-default">
                                     Обзор&hellip; <input type="file" name="photo_origin" style="display: none;" class="cropit-image-input"/>
+                                    <input type="hidden" name="photo" id="photo">
                                 </span>
                                 </label>
                                 <input type="text" class="form-control" readonly>
                             </div>
-                            <input type="hidden" name="photo" id="photo">
                         </div>
                         <span class="help-block">
                             Фото должно быть формата .jpg или .png не более 5МБ
@@ -147,8 +142,30 @@
             $('#photo').val(imageData);
         }
 
-        $("#submitCreateOrder").click(function(){
-            $("form[name='create_order']").submit();
+        $("#submitCreateOrder").click(function(e){
+            based64();
+            var form = $("form[name='create_order']");
+
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: "/user/orders/create",
+                data: form.serialize(),
+                dataType: "json",
+                success: function(data){
+                    if(data["errors"]){
+                        $.each(data["errors"], function(key, value) {
+                            $("span[data-error='"+key+"']").html(value);
+                        });
+                    } else {
+                        console.log("success");
+                    }
+                },
+                error: function() {
+                    console.log("error");
+                }
+            });
         })
     });
 

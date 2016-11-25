@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+require_once(APPPATH.'core/MY_Form.php');
 
-class Orders extends MY_Controller
+class Orders extends MY_Form
 {
 	function index() {
 		if($this->ion_auth->logged_in()){
@@ -31,9 +32,24 @@ class Orders extends MY_Controller
 	}
 
 	function createOrder(){
-		var_dump($this->input->post());
-		var_dump($_FILES);
-		exit;
+		$this->form_validation->set_rules('purpose', 'Purpose', 'trim|required|min_length[3]|max_length[500]|xss_clean');
+		$this->form_validation->set_rules('receiver', 'Receiver', 'trim|required|min_length[3]|max_length[500]|xss_clean');
+		$this->form_validation->set_rules('files', 'Files', 'callback_file_required|callback_file_size['.$_FILES.',5]'); // размер файла указывается в МБ
+
+		$this->form_validation->set_message('required', 'поле обязательно для заполнения');
+		$this->form_validation->set_message('min_length', 'поле должно быть не короче 3 символов');
+		$this->form_validation->set_message('max_length', 'поле должно быть не больше 500 символов');
+
+		$json_data = array();
+
+		if ($this->form_validation->run() == FALSE) {
+			$json_data["errors"] = array();
+			$json_data["errors"]['purpose'] = form_error('purpose');
+			$json_data["errors"]['receiver'] = form_error('receiver');
+			$json_data["errors"]['files'] = form_error('files');
+//			$json_data["errors"]['purpose'] = form_error('purpose');
+		}
+		echo json_encode($json_data);
 	}
 
 	function load_view($content,$data=array()){
