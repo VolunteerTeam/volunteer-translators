@@ -48,78 +48,94 @@ class Orders extends MY_Form
 		$this->form_validation->set_message('max_length', 'поле должно быть не больше 500 символов');
 
 		$json_data = array();
+		$json_data["errors"] = array();
 
 		if ($this->form_validation->run() == FALSE) {
-			$json_data["errors"] = array();
 			$json_data["errors"]['purpose'] = form_error('purpose');
 			$json_data["errors"]['receiver'] = form_error('receiver');
-		}
-		$data = array(
-			'purpose' => $this->input->post('purpose'),
-			'receiver' => $this->input->post('receiver'),
-			'client_user_id' => $this->ion_auth->get_user_id(),
-			'timestamp' => time(),
-		);
+		} else {
+			$data = array(
+				'purpose' => $this->input->post('purpose'),
+				'receiver' => $this->input->post('receiver'),
+				'client_user_id' => $this->ion_auth->get_user_id(),
+				'timestamp' => time(),
+			);
 
-		$uploaddir = './images/users/' . $this->ion_auth->get_user_id() . "/";
-		if (!file_exists($uploaddir)) {
-			mkdir($uploaddir, 0777, true);
-		}
-		if($_FILES["photo_origin"] && $_FILES["photo_origin"]["name"]){
-			$tmp_file = $_FILES["photo_origin"]["tmp_name"];
-			$info = pathinfo($_FILES["photo_origin"]["name"]);
-			$ext = $info['extension']; // get the extension of the file
-			$newname = md5(uniqid(rand(), true));
-
-			$data['photo'] = $uploaddir.$newname.".".$ext;
-			move_uploaded_file($tmp_file, $data['photo']);
-
-			$img = $this->input->post('photo');
-			if ($img != NULL) {
-				$img = str_replace('data:image/png;base64,', '', $img);
-				$img = str_replace(' ', '+', $img);
-				$dt = base64_decode($img);
-
-				$imgname = $newname . "_thumb.png";
-				$uploadfile = $uploaddir . basename($imgname);
-				file_put_contents($uploadfile, $dt);
-			}
-		}
-		$order = $this->orders_model->create($data);
-
-		if($order) {
-			// записать так же по таблицам файлы для перевода
-			$uploaddir = './uploads/users/' . $this->ion_auth->get_user_id() . "/";
+			$uploaddir = './images/users/' . $this->ion_auth->get_user_id() . "/";
 			if (!file_exists($uploaddir)) {
 				mkdir($uploaddir, 0777, true);
 			}
-			if($_FILES["files"] && $_FILES["files"]["name"][0]){
-				foreach($_FILES["files"]["name"] as $key => $value) {
-					$tmp_file = $_FILES["files"]["tmp_name"][$key];
-					$info = pathinfo($value);
-					$ext = $info['extension']; // get the extension of the file
-					$newname = md5(uniqid(rand(), true)).".".$ext;
+			if($_FILES["photo_origin"] && $_FILES["photo_origin"]["name"]){
+				$tmp_file = $_FILES["photo_origin"]["tmp_name"];
+				$info = pathinfo($_FILES["photo_origin"]["name"]);
+				$ext = $info['extension']; // get the extension of the file
+				$newname = md5(uniqid(rand(), true));
 
-					$target = $uploaddir.$newname;
-					move_uploaded_file($tmp_file, $target);
-					$data = array(
-						'timestamp' => time(),
-						'order_id' => $order,
-						'language_in' => $this->input->post("language_in"),
-						'language_out' => $this->input->post("language_out"),
-						'file_in' => $target,
-					);
-					$translation = $this->orders_model->addTranslation($data);
-					if(!$translation) {
-						$json_data["errors"]['addTranslation'] = "Один из файлов для перевода не был сохранён";
-					}
+				$data['photo'] = $uploaddir.$newname.".".$ext;
+				move_uploaded_file($tmp_file, $data['photo']);
+
+				$img = $this->input->post('photo');
+				if ($img != NULL) {
+					$img = str_replace('data:image/png;base64,', '', $img);
+					$img = str_replace(' ', '+', $img);
+					$dt = base64_decode($img);
+
+					$imgname = $newname . "_thumb.png";
+					$uploadfile = $uploaddir . basename($imgname);
+					file_put_contents($uploadfile, $dt);
 				}
 			}
-			// отправить на почту письмо, что был создан заказ
-		} else {
-			$json_data["errors"]['create'] = "Ошибка сохранения заказа";
+			$order = $this->orders_model->create($data);
+
+			if($order) {
+				// записать так же по таблицам файлы для перевода
+				$uploaddir = './uploads/users/' . $this->ion_auth->get_user_id() . "/";
+				if (!file_exists($uploaddir)) {
+					mkdir($uploaddir, 0777, true);
+				}
+				if($_FILES["files"] && $_FILES["files"]["name"][0]){
+					foreach($_FILES["files"]["name"] as $key => $value) {
+						$tmp_file = $_FILES["files"]["tmp_name"][$key];
+						$info = pathinfo($value);
+						$ext = $info['extension']; // get the extension of the file
+						$newname = md5(uniqid(rand(), true)).".".$ext;
+
+						$target = $uploaddir.$newname;
+						move_uploaded_file($tmp_file, $target);
+						$data = array(
+							'timestamp' => time(),
+							'order_id' => $order,
+							'language_in' => $this->input->post("language_in"),
+							'language_out' => $this->input->post("language_out"),
+							'file_in' => $target,
+						);
+						$translation = $this->orders_model->addTranslation($data);
+						if(!$translation) {
+							$json_data["errors"]['create'] = "Один из файлов для перевода не был сохранён";
+						}
+					}
+				}
+				// отправить на почту письмо, что был создан заказ
+//				$this->load->library('email');
+//				$subject = 'Создан заказ №'.$order;
+//				$message = 'Тестирование сервиса создания заказов на сайте Волонтёры переводов.';
+//				$from_email = 'system@perevodov.info';
+//
+//				$result = $this->email
+//					->from($from_email)
+//					->reply_to('volontery@perevodov.info')
+//					->to('volontery@perevodov.info')
+//					->subject($subject)
+//					->message($message)
+//					->send();
+//
+//				if (!$result) {
+//					$json_data["errors"]['sendEmail'] = "Письмо о заказе не было отправлено";
+//				}
+			} else {
+				$json_data["errors"]['create'] = "Ошибка сохранения заказа";
+			}
 		}
-		var_dump($order);
 
 		echo json_encode($json_data);
 	}

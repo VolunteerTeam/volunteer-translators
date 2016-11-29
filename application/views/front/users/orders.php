@@ -66,7 +66,7 @@
                             <input type="text" class="form-control" readonly>
                         </div>
                         <span class="help-block">
-                            Файлы должны быть формата ----- не более 5МБ.
+                            Файлы должны быть формата .doc, .docx, .xls, .xlsx, .pdf, .rtf, .jpg, .jpeg, .png не более 5МБ.
                         </span>
                     </div>
                     <div class="form-group form-item">
@@ -91,6 +91,9 @@
                             Фото должно быть формата .jpg или .png не более 5МБ
                         </span>
                     </div>
+                    <div>
+                        <span class="text-danger" data-error="total"></span>
+                    </div>
                     <?php echo form_close(); ?>
                 </div>
             </div>
@@ -103,6 +106,12 @@
 </div>
 
 <script type="text/javascript">
+
+    var accepted_format = {
+        "files": [],
+        "photo_origin": ["png", "jpg", "jpeg"]
+    };
+
     $(document).ready(function () {
         var ordersTable = $('#ordersTable');
 
@@ -186,7 +195,7 @@
                     $("span[data-error='" + field + "']").html('<p>Размер файла "' + files[i].name + '" превышает размер 5МБ.</p>');
                     return false;
                 }
-                if(field == "photo_origin" && $.inArray(file_extension(files[i].name), ["png", "jpg", "jpeg"]) == -1) {
+                if($.inArray(file_extension(files[i].name), accepted_format[field]) == -1) {
                     $("span[data-error='" + field + "']").html('<p>Неверный формат файла "' + files[i].name + '".</p>');
                     return false;
                 }
@@ -219,34 +228,48 @@
             var textarea_empty1 = textarea_empty("purpose");
             var textarea_empty2 = textarea_empty("receiver");
             var check_languages1 = check_languages();
-            return checked_files1 && checked_files2 && textarea_empty1 && textarea_empty2 && check_languages1;
+            return checked_files1 && checked_files2 && !textarea_empty1 && !textarea_empty2 && check_languages1;
         }
 
         $("#submitCreateOrder").click(function(e){
             based64();
-            var form = $("form[name='create_order']");
-            form.submit();
-//            e.preventDefault();
-//            if(validate_form()){
-//                $.ajax({
-//                    type: "POST",
-//                    url: "/user/orders/create",
-//                    data: form.serialize(),
-//                    dataType: "json",
-//                    success: function(data){
-//                        if(data["errors"]){
-//                            $.each(data["errors"], function(key, value) {
-//                                $("span[data-error='"+key+"']").html(value);
-//                            });
-//                        } else {
-//                            console.log("success");
-//                        }
-//                    },
-//                    error: function() {
-//                        console.log("error");
-//                    }
-//                });
-//            }
+
+            var form_data = new FormData($("form[name='create_order']")[0]);
+            var file_data = $('input[name="photo_origin"]').prop('files');
+            form_data.append('file', file_data);
+            file_data = $('input[name="files"]').prop('files');
+            form_data.append('file', file_data);
+//            console.log(form_data);
+//            form.submit();
+            e.preventDefault();
+            if(validate_form()){
+                $.ajax({
+                    type: "POST",
+                    url: "/user/orders/create",
+                    data: form_data,
+                    dataType: "json",
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function(data){
+                        console.log(data);
+                        if(data["errors"]){
+                            if(data["errors"]["create"]){
+                                $("span[data-error='total']").html('<p>'+ data["errors"]["create"] +'</p>');
+                            } else {
+                                $.each(data["errors"], function(key, value) {
+                                    $("span[data-error='"+key+"']").html(value);
+                                });
+                            }
+                        } else {
+                            console.log("success");
+                        }
+                    },
+                    error: function() {
+                        console.log("error");
+                    }
+                });
+            }
         })
     });
 
