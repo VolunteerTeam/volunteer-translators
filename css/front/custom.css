@@ -335,6 +335,12 @@ footer ul {padding:0; margin-left:20px; font-size:13px; }
     text-decoration: none;
     color: #3C2A94;
 }
+.user_form .form-item {
+    margin-bottom: 10px;
+}
+.user_form .form-item label {
+    font-weight:bold;
+}
 a.ui-state-focus{
     background-color: transparent !important;
     border: none !important;

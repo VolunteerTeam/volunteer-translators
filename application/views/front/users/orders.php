@@ -18,19 +18,45 @@
                         $attributes = array("name" => "create_order", "enctype" => "multipart/form-data");
                         echo form_open("user/orders/create", $attributes);
                     ?>
-                    <div>
-                        <label class="control-label" style="font-weight:bold;">Назначение перевода <span class="required">*</span></label>
+                    <div class="form-item">
+                        <label class="control-label">Назначение перевода <span class="required">*</span></label>
                         <span class="text-danger" data-error="purpose"></span>
                         <textarea type="textarea" rows="5" name="purpose" value="" class="form-control"></textarea>
                     </div>
-                    <div>
+                    <div class="form-item">
                         <label class="control-label" style="font-weight:bold;">Получатель перевода (организация, контакты) <span class="required">*</span></label>
                         <span class="text-danger" data-error="receiver"></span>
                         <textarea type="textarea" rows="3" name="receiver" value="" class="form-control"></textarea>
                     </div>
-                    <div>
-                        <label class="control-label" style="font-weight:bold;">Выберите файлы для перевода <span class="required">*</span></label>
-                        <span class="text-danger" data-error="files"></span>
+                    <div class="form-item">
+                        <label class="control-label">Перевести <span class="required">*</span></label>
+                        <span class="text-danger" data-error="languages"></span>
+                        <div class="form-inline">
+                            <div class="input-group">
+                                <span class="input-group-addon">с</span>
+                                <select name="language_in" class="form-control" style="width:246px;">
+                                    <option value="">Выберите язык...</option>
+                                    <?php if(isset($languages) && !empty($languages)){
+                                        foreach($languages as $value){
+                                            echo "<option value='".$value->code."'>".$value->name_ru."</option>";
+                                        }
+                                    }?>
+                                </select>
+                                <span class="input-group-addon">на</span>
+                                <select name="language_out" class="form-control" style="width:247px;">
+                                    <option value="">Выберите язык...</option>
+                                    <?php if(isset($languages) && !empty($languages)){
+                                        foreach($languages as $value){
+                                            echo "<option value='".$value->code."'>".$value->name_ru."</option>";
+                                        }
+                                    }?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <label class="control-label">Выберите файлы для перевода <span class="required">*</span></label>
+                        <span class="text-danger" data-error="files[]"></span>
                         <div class="input-group">
                             <label class="input-group-btn">
                                 <span class="btn btn-default">
@@ -43,8 +69,9 @@
                             Файлы должны быть формата ----- не более 5МБ.
                         </span>
                     </div>
-                    <div class="form-group">
-                        <label style="font-weight: bold; display: inline-block;margin-bottom: 5px;font-size: 15px;" for="index_file">Выберите одно фото для отбражения в списке переводов</label>
+                    <div class="form-group form-item">
+                        <label style="display: inline-block;margin-bottom: 5px;font-size: 15px;" for="index_file">Выберите одно фото для отбражения в списке переводов</label>
+                        <span class="text-danger" data-error="photo_origin"></span>
                         <div id="image-cropper">
                             <div class="cropit-image-preview"></div>
                             <br>
@@ -142,30 +169,84 @@
             $('#photo').val(imageData);
         }
 
+        function file_extension(filename){
+            var ext = (/[.]/.exec(filename)) ? /[^.]+$/.exec(filename) : null;
+            if(ext) return ext[0];
+            return ext;
+        }
+
+        function checked_files(field){
+            var files = $("input[name='" + field + "']").get(0).files;
+            if(field == "files[]" && files.length <= 0) {
+                $("span[data-error='" + field + "']").html('<p>Нужно добавить хотя бы один файл для перевода.</p>');
+                return false;
+            }
+            for (i = 0; i < files.length; i++) {
+                if (files[i].size > 5*1024*1024) { // 5МБ
+                    $("span[data-error='" + field + "']").html('<p>Размер файла "' + files[i].name + '" превышает размер 5МБ.</p>');
+                    return false;
+                }
+                if(field == "photo_origin" && $.inArray(file_extension(files[i].name), ["png", "jpg", "jpeg"]) == -1) {
+                    $("span[data-error='" + field + "']").html('<p>Неверный формат файла "' + files[i].name + '".</p>');
+                    return false;
+                }
+            }
+            $("span[data-error='" + field + "']").html('');
+            return true;
+        }
+
+        function textarea_empty(field) {
+            if(!$("textarea[name='" + field + "']").val()) {
+                $("span[data-error='" + field + "']").html('<p>Поле обязательно для заполнения</p>');
+                return true;
+            }
+            $("span[data-error='" + field + "']").html('');
+            return false;
+        }
+
+        function check_languages(){
+            if(!$("select[name='language_in']").val() || !$("select[name='language_out']").val()) {
+                $("span[data-error='languages']").html('<p>Выберите языки для перевода.</p>');
+                return false;
+            }
+            $("span[data-error='languages']").html('');
+            return true;
+        }
+
+        function validate_form(){
+            var checked_files1 = checked_files('files[]');
+            var checked_files2 = checked_files('photo_origin');
+            var textarea_empty1 = textarea_empty("purpose");
+            var textarea_empty2 = textarea_empty("receiver");
+            var check_languages1 = check_languages();
+            return checked_files1 && checked_files2 && textarea_empty1 && textarea_empty2 && check_languages1;
+        }
+
         $("#submitCreateOrder").click(function(e){
             based64();
             var form = $("form[name='create_order']");
-
-            e.preventDefault();
-
-            $.ajax({
-                type: "POST",
-                url: "/user/orders/create",
-                data: form.serialize(),
-                dataType: "json",
-                success: function(data){
-                    if(data["errors"]){
-                        $.each(data["errors"], function(key, value) {
-                            $("span[data-error='"+key+"']").html(value);
-                        });
-                    } else {
-                        console.log("success");
-                    }
-                },
-                error: function() {
-                    console.log("error");
-                }
-            });
+            form.submit();
+//            e.preventDefault();
+//            if(validate_form()){
+//                $.ajax({
+//                    type: "POST",
+//                    url: "/user/orders/create",
+//                    data: form.serialize(),
+//                    dataType: "json",
+//                    success: function(data){
+//                        if(data["errors"]){
+//                            $.each(data["errors"], function(key, value) {
+//                                $("span[data-error='"+key+"']").html(value);
+//                            });
+//                        } else {
+//                            console.log("success");
+//                        }
+//                    },
+//                    error: function() {
+//                        console.log("error");
+//                    }
+//                });
+//            }
         })
     });
 
