@@ -391,6 +391,38 @@ a.ui-state-focus{
 #phone_confirm_dialog .modal-body > p:first-child {
     color: red;
 }
+/*------------------ Стили для Форм пользователя [КОНЕЦ] -------------*/
+
+/*------------- Стили для Списка автозаполнения Карта [НАЧАЛО] -------*/
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
+    background-color: #ffffff;
+    border: 1px solid #CCCCCC;
+    padding: 10px;
+}
+.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li {
+    list-style: none;
+    cursor: pointer;
+}
+/*------------- Стили для Списка автозаполнения Карта [КОНЕЦ] --------*/
+
+/*------------------ Стили для Таблицы Заказов [НАЧАЛО] --------------*/
+.modal-header {
+    background-color: #3C2A94;
+    color:#ffffff;
+}
+.modal-header button.close {
+    color:#ffffff;
+}
+.modal-body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.jtable-goto-page select, .jtable-page-size-change select {
+    color: #3C2A94;
+}
+.modal-footer button[type="submit"] {
+    margin-top: 0;
+}
 #loading {
     display:none;
     position:absolute;
@@ -418,33 +450,27 @@ a.ui-state-focus{
 .status.done {
     background: -webkit-radial-gradient(30% 30%, #008000, #004D00);
 }
-/*------------------ Стили для Форм пользователя [КОНЕЦ] -------------*/
-
-/*------------- Стили для Списка автозаполнения Карта [НАЧАЛО] -------*/
-.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all {
-    background-color: #ffffff;
-    border: 1px solid #CCCCCC;
+div.filtering{
+    border: 1px solid #9e6fd4;
+    margin-bottom: 5px;
     padding: 10px;
+    background-color: #d0cde2;
+    display:none;
 }
-.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content.ui-corner-all li {
-    list-style: none;
-    cursor: pointer;
-}
-/*------------- Стили для Списка автозаполнения Карта [КОНЕЦ] --------*/
-.modal-header {
-    background-color: #3C2A94;
-    color:#ffffff;
-}
-.modal-header button.close {
-    color:#ffffff;
-}
-.modal-body {
-    padding-top: 0;
-    padding-bottom: 0;
-}
-.jtable-goto-page select, .jtable-page-size-change select {
-    color: #3C2A94;
-}
-.modal-footer button[type="submit"] {
+div.filtering button[type="submit"] {
     margin-top: 0;
 }
+div.filtering label {
+    font-size: 12px;
+    font-weight: bold;
+}
+a#extended_search {
+    margin-bottom: 10px;
+    display: inline-block;
+    font-weight: bold;
+    text-decoration: none;
+}
+a#extended_search:hover,a#extended_search:focus,a#extended_search:active{
+    text-decoration: none;
+}
+/*------------------ Стили для Таблицы Заказов [КОНЕЦ] --------------*/
