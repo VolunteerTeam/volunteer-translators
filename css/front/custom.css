@@ -391,6 +391,33 @@ a.ui-state-focus{
 #phone_confirm_dialog .modal-body > p:first-child {
     color: red;
 }
+#loading {
+    display:none;
+    position:absolute;
+    top:40%;
+    left:40%;
+    width:106px;
+    height: 106px;
+    background-image: url("/images/front/loading.gif");
+    z-index: 2;
+}
+.status {
+    width: 10px;
+    height: 10px;
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    cursor: help;
+}
+.status.new {
+    background: -webkit-radial-gradient(30% 30%, #FF0000, #8C0000);
+}
+.status.in_process {
+    background: -webkit-radial-gradient(30% 30%, #FFFF00, #818100);
+}
+.status.done {
+    background: -webkit-radial-gradient(30% 30%, #008000, #004D00);
+}
 /*------------------ Стили для Форм пользователя [КОНЕЦ] -------------*/
 
 /*------------- Стили для Списка автозаполнения Карта [НАЧАЛО] -------*/

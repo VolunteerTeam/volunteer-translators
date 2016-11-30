@@ -95,6 +95,7 @@
                         <span class="text-danger" data-error="total"></span>
                     </div>
                     <?php echo form_close(); ?>
+                    <div id="loading"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -108,7 +109,7 @@
 <script type="text/javascript">
 
     var accepted_format = {
-        "files": [],
+        "files[]": ["doc", "docx", "xls", "xlsx", "pdf", "rtf", "jpg", "jpeg", "png"],
         "photo_origin": ["png", "jpg", "jpeg"]
     };
 
@@ -118,9 +119,9 @@
         ordersTable.jtable({
             title: 'Заказы',
             paging: true, //Enable paging
-//            pageSize: 25, //Set page size (default: 10)
+//            pageSize: 5, //Set page size (default: 10)
             sorting: true, //Enable sorting
-            defaultSorting: 'first_name ASC', //Set default sorting
+            defaultSorting: 'o.created_on DESC', //Set default sorting
             actions: {
                 listAction: '/user/orders/list',
                 createAction: '/user/orders/create',
@@ -128,27 +129,56 @@
                 deleteAction: '/GettingStarted/DeletePerson'
             },
             fields: {
-                id: {
+                created_on: {
+                    title: 'Дата создания',
+                    width: '18%',
+                    display: function (data) {
+                        var localTime = moment.utc(data.record.created_on).toDate();
+                        localTime = moment(localTime).format('DD.MM.YYYY HH:mm:ss');
+                        return localTime;
+                    }
+                },
+                order_id: {
                     key: true,
-                    create: false,
-                    edit: false,
-                    list: false
+                    title: 'Номер',
+                    width: '8%',
+                    display: function (data) {
+                        return "<a href='/orders?id=" + data.record.order_id + "' target='_blank'>" + data.record.order_id + "</a>";
+                    }
                 },
-                first_name: {
-                    title: 'Имя',
-                    width: '40%'
+                user_name: {
+                    title: 'Заказчик',
+                    width: '20%',
+                    display: function (data) {
+                        return "<a href='/users/profile?id=" + data.record.client_user_id + "' target='_blank'>" + data.record.last_name + " " + data.record.first_name + "</a>";
+                    }
                 },
-//                Age: {
-//                    title: 'Age',
-//                    width: '20%'
-//                },
-//                RecordDate: {
-//                    title: 'Record date',
-//                    width: '30%',
-//                    type: 'date',
-//                    create: false,
-//                    edit: false
-//                }
+                language_in: {
+                    title: 'Язык оригинала',
+                    width: '16%'
+                },
+                language_out: {
+                    title: 'Язык перевода',
+                    width: '15%'
+                },
+                manager_name: {
+                    title: 'Менеджер',
+                    width: '20%',
+                    display: function (data) {
+                        if(data.record.manager_last_name) return "<a href='/users/profile?id=" + data.record.client_user_id + "' target='_blank'>" + data.record.manager_last_name + " " + data.record.manager_first_name + "</a>";
+                        return "";
+                    }
+                },
+                status: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    display: function (data) {
+                        if(!data.record.date_in) return "<div class='status new' title='Новый'></div>";
+                        if(!data.record.date_out) return "<div class='status in_process' title='В работе'></div>";
+                        return "<div class='status done' title='Выполнен'></div>";
+                    }
+                },
             }
         });
 
@@ -231,6 +261,15 @@
             return checked_files1 && checked_files2 && !textarea_empty1 && !textarea_empty2 && check_languages1;
         }
 
+        $(document).ajaxStart(function(){
+            $("#loading").css("display", "block");
+            $("#submitCreateOrder").attr("disabled",true);
+        });
+        $(document).ajaxComplete(function(){
+            $("#loading").css("display", "none");
+            $("#submitCreateOrder").attr("disabled",false);
+        });
+
         $("#submitCreateOrder").click(function(e){
             based64();
 
@@ -252,8 +291,7 @@
                     contentType: false,
                     processData: false,
                     success: function(data){
-                        console.log(data);
-                        if(data["errors"]){
+                        if(data["errors"] && data["errors"].length > 0){
                             if(data["errors"]["create"]){
                                 $("span[data-error='total']").html('<p>'+ data["errors"]["create"] +'</p>');
                             } else {
@@ -262,7 +300,12 @@
                                 });
                             }
                         } else {
-                            console.log("success");
+                            $('#createOrderDialog').modal('hide');
+                            ordersTable.jtable('addRecord', {
+                                record: data["order"],
+                                clientOnly: true,
+                                animationsEnabled: true
+                            });
                         }
                     },
                     error: function() {

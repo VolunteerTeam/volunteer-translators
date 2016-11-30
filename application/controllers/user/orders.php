@@ -21,21 +21,16 @@ class Orders extends MY_Form
 
 	function getOrders() {
 		//Get records from database
-		$this->input->get("jtSorting") ? $jtSorting = $this->input->get("jtSorting") : $jtSorting = "first_name ASC";
+		$this->input->get("jtSorting") ? $jtSorting = $this->input->get("jtSorting") : $jtSorting = "o.created_on DESC";
 		$this->input->get("jtStartIndex") ? $jtStartIndex = $this->input->get("jtStartIndex") : $jtStartIndex = 0;
 		$this->input->get("jtPageSize") ? $jtPageSize = $this->input->get("jtPageSize") : $jtPageSize = 10;
-		$sql = "SELECT id, first_name FROM users ORDER BY ".$jtSorting." LIMIT ".$jtStartIndex.",".$jtPageSize;
-		$query = $this->db->query($sql);
-		$rows = $query->result();
-
-		$queryCount = $this->db->get("users");
-		$totalCount = $queryCount->num_rows();
+		$orders = $this->orders_model->getOrdersPortion($jtSorting,$jtStartIndex,$jtPageSize);
 
 		//Return result to jTable
 		$jTableResult = array();
 		$jTableResult['Result'] = "OK";
-		$jTableResult['TotalRecordCount'] = $totalCount;
-		$jTableResult['Records'] = $rows;
+		$jTableResult['TotalRecordCount'] = $this->orders_model->getOrdersCount();
+		$jTableResult['Records'] = $orders;
 		echo json_encode($jTableResult);
 	}
 
@@ -54,11 +49,14 @@ class Orders extends MY_Form
 			$json_data["errors"]['purpose'] = form_error('purpose');
 			$json_data["errors"]['receiver'] = form_error('receiver');
 		} else {
+			date_default_timezone_set("Europe/London");
 			$data = array(
 				'purpose' => $this->input->post('purpose'),
 				'receiver' => $this->input->post('receiver'),
 				'client_user_id' => $this->ion_auth->get_user_id(),
-				'timestamp' => time(),
+				'created_on' => date("Y-m-d H:i:s"),
+				'language_in' => $this->input->post("language_in"),
+				'language_out' => $this->input->post("language_out"),
 			);
 
 			$uploaddir = './images/users/' . $this->ion_auth->get_user_id() . "/";
@@ -103,10 +101,7 @@ class Orders extends MY_Form
 						$target = $uploaddir.$newname;
 						move_uploaded_file($tmp_file, $target);
 						$data = array(
-							'timestamp' => time(),
 							'order_id' => $order,
-							'language_in' => $this->input->post("language_in"),
-							'language_out' => $this->input->post("language_out"),
 							'file_in' => $target,
 						);
 						$translation = $this->orders_model->addTranslation($data);
@@ -115,6 +110,7 @@ class Orders extends MY_Form
 						}
 					}
 				}
+				$json_data["order"] = $this->orders_model->getOrder($order);
 				// отправить на почту письмо, что был создан заказ
 //				$this->load->library('email');
 //				$subject = 'Создан заказ №'.$order;
@@ -144,6 +140,7 @@ class Orders extends MY_Form
 		$sources = array();
 		$sources['js'] = array(
 			'/js/vendor/jquery-ui.min.js',
+			'/js/vendor/bootstrap/moment.min.js',
 			'/js/vendor/jtable.2.4.0/jquery.jtable.js',
 			'/js/vendor/jtable.2.4.0/localization/jquery.jtable.ru.js',
 			'/js/cropit/dist/jquery.cropit.min.js',
