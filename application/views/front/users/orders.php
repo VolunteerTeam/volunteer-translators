@@ -1,4 +1,7 @@
-<?php //require_once APPPATH."views/front/users/order_filter.php"; ?>
+<div class="container main" role="main">
+    <?php //require_once APPPATH."views/front/users/order_filter.php"; ?>
+    <div id="ordersTable"></div>
+</div>
 
 <a href="#" id="createOrderButton" data-toggle="modal" data-target="#createOrderDialog" type="button" style="display:none;"></a>
 <!-- Modal -->
@@ -150,6 +153,10 @@
                     display: function (data) {
                         return "<a href='/users/profile?id=" + data.record.client_user_id + "' target='_blank'>" + data.record.last_name + " " + data.record.first_name + "</a>";
                     }
+                },
+                city: {
+                    title: 'Город',
+                    width: '20%'
                 },
                 language_in: {
                     title: 'Язык оригинала',
