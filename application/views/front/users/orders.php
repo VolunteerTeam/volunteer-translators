@@ -1,49 +1,4 @@
-<div class="container main" role="main">
-    <a href="#" id="extended_search">Расширенный поиск&nbsp;&nbsp;<i class="fa fa-chevron-right"></i></a>
-    <div class="filtering">
-        <form class="">
-            <div class="form-item">
-                <label class="control-label">Дата заказа</label>
-
-            </div>
-            <div class="form-item">
-                <label class="control-label">Перевод</label>
-                <div class="form-inline">
-                    <div class="input-group">
-                        <span class="input-group-addon">с</span>
-                        <select name="language_in" class="form-control" style="width:246px;">
-                            <option value="">Выберите язык...</option>
-                            <?php if(isset($languages) && !empty($languages)){
-                                foreach($languages as $value){
-                                    echo "<option value='".$value->code."'>".$value->name_ru."</option>";
-                                }
-                            }?>
-                        </select>
-                        <span class="input-group-addon">на</span>
-                        <select name="language_out" class="form-control" style="width:247px;">
-                            <option value="">Выберите язык...</option>
-                            <?php if(isset($languages) && !empty($languages)){
-                                foreach($languages as $value){
-                                    echo "<option value='".$value->code."'>".$value->name_ru."</option>";
-                                }
-                            }?>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="exampleInputName2">Name</label>
-                <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputEmail2">Email</label>
-                <input type="email" class="form-control" id="exampleInputEmail2" placeholder="jane.doe@example.com">
-            </div>
-            <button type="submit" id="LoadRecordsButton" class="btn btn-success">Поиск</button>
-        </form>
-    </div>
-    <div id="ordersTable"></div>
-</div>
+<?php //require_once APPPATH."views/front/users/order_filter.php"; ?>
 
 <a href="#" id="createOrderButton" data-toggle="modal" data-target="#createOrderDialog" type="button" style="display:none;"></a>
 <!-- Modal -->
@@ -356,18 +311,8 @@
                     }
                 });
             }
-        })
+        });
 
-        $("#extended_search").click(function(){
-            var _this = $(this);
-            if(_this.hasClass("show")){
-                _this.removeClass("show").html('Расширенный поиск&nbsp;&nbsp;<i class="fa fa-chevron-right"></i>');
-                $(".filtering").slideUp();
-            } else {
-                _this.addClass("show").html('Расширенный поиск&nbsp;&nbsp;<i class="fa fa-chevron-down"></i>');
-                $(".filtering").slideDown();
-            }
-        })
     });
 
     $(document).on('change', ':file', function() {

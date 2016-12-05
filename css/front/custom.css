@@ -473,4 +473,19 @@ a#extended_search {
 a#extended_search:hover,a#extended_search:focus,a#extended_search:active{
     text-decoration: none;
 }
+.filtering {
+    min-width: 380px;
+}
+.filtering .form-inline input{
+    width:98%;
+}
+
+.filtering .input-group.date, .filtering select {
+    width:47%!important;
+}
+.filtering .table th, .table td {
+    border-top: none !important;
+    border-bottom: 1px solid #ddd;
+}
+
 /*------------------ Стили для Таблицы Заказов [КОНЕЦ] --------------*/
