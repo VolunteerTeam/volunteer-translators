@@ -151,7 +151,7 @@
                     title: 'Заказчик',
                     width: '20%',
                     display: function (data) {
-                        return "<a href='/users/profile?id=" + data.record.client_user_id + "' target='_blank'>" + data.record.last_name + " " + data.record.first_name + "</a>";
+                        return "<a href='/user/profile/" + data.record.client_user_id + "' target='_blank'>" + data.record.last_name + " " + data.record.first_name + "</a>";
                     }
                 },
                 city: {

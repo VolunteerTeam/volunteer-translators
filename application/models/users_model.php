@@ -36,6 +36,14 @@ class Users_model extends MY_Model {
         return intval($this->db->get()->row()->id);
     }
 
+    function getUserGroups($id){
+        $this->db->select('groups.description');
+        $this->db->from('users_groups');
+        $this->db->where("user_id = '" . $id . "'");
+        $this->db->join("groups","users_groups.group_id=groups.id","left");
+        return $this->db->get()->result();
+    }
+
     function getSexTypeId($sex){
         $this->db->select('id');
         $this->db->from('sex');

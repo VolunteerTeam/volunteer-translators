@@ -61,6 +61,7 @@ $route['user/auth/ajax']                = 'user/auth/ajax';
 $route['user/auth/log']                 = 'user/auth/log';
 $route['user/profile']                  = 'user/profile';
 $route['user/profile/save']             = 'user/profile/save';
+$route['user/profile/(:num)']           = 'user/profile/show/$1';
 $route['user/orders']                   = 'user/orders';
 $route['user/orders/list']              = 'user/orders/getOrders';
 $route['user/orders/create']              = 'user/orders/createOrder';

@@ -158,5 +158,21 @@ class Profile extends MY_Form {
 			redirect("user/profile");
 		}
 	}
+
+	function show($id){
+		$user = $this->users_model->get_user_info($id);
+		if($user){
+			$data = array();
+			$data['user'] = $user[0];
+			$data['user']->city = $this->users_model->getCity($data['user']->city);
+			$data['user']->groups = $this->users_model->getUserGroups($id);
+
+			$this->load->view('front/common/header');
+			$this->load->view('front/users/profile',$data);
+			$this->load->view('front/common/footer');
+		} else {
+			show_404();
+		}
+	}
 }     
 ?>
