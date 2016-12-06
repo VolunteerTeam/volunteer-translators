@@ -126,8 +126,8 @@
             actions: {
                 listAction: '/user/orders/list',
                 createAction: '/user/orders/create',
-                updateAction: '/GettingStarted/UpdatePerson',
-                deleteAction: '/GettingStarted/DeletePerson'
+//                updateAction: '/GettingStarted/UpdatePerson',
+//                deleteAction: '/GettingStarted/DeletePerson',
             },
             fields: {
                 created_on: {
@@ -184,6 +184,22 @@
                         return "<div class='status done' title='Выполнен'></div>";
                     }
                 },
+                edit: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    display: function (data) {
+                        return "<a href='/user/orders/edit/" + data.record.order_id + "'><i class='fa fa-lg fa-edit'></i></a>";
+                    }
+                },
+                remove: {
+                    title: '',
+                    width: '1%',
+                    sorting: false,
+                    display: function (data) {
+                        return "<a href='/user/orders/delete/" + data.record.order_id + "'><i class='fa fa-lg fa-remove'></i></a>";
+                    }
+                }
             }
         });
 

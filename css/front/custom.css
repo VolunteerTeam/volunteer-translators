@@ -391,6 +391,9 @@ a.ui-state-focus{
 #phone_confirm_dialog .modal-body > p:first-child {
     color: red;
 }
+.user_form.order_edit .form-item {
+    padding: 10px;
+}
 /*------------------ Стили для Форм пользователя [КОНЕЦ] -------------*/
 
 /*------------- Стили для Списка автозаполнения Карта [НАЧАЛО] -------*/

@@ -278,4 +278,14 @@ class Users_model extends MY_Model {
         }
     }
 
+    function getUsersByGroup($group_id){
+        $this->db->select('first_name, last_name, patro_name, users.id, email');
+        $this->db->from('users');
+        $this->db->join('users_groups', 'users_groups.user_id=users.id');
+        $this->db->where('users_groups.group_id', $group_id);
+        $this->db->order_by("users.last_name", "asc");
+        $this->db->group_by("users.id");
+        return $this->db->get()->result();
+    }
+
 }

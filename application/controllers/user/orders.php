@@ -174,4 +174,27 @@ class Orders extends MY_Form
 		}
 	}
 
+	function edit($id){
+		$order = $this->orders_model->getOrder($id);
+		if($order){
+			$data["order"] = $order[0];
+			$data["languages"] = $this->orders_model->getLanguages();
+			$data["managers"] = $this->users_model->getUsersByGroup(3);
+			$data["translators"] = $this->users_model->getUsersByGroup(4);
+
+			$sources['js'] = array(
+				'/js/vendor/bootstrap/moment.min.js',
+				'/js/cropit/dist/jquery.cropit.min.js',
+			);
+			$sources['css'] = array(
+				'/css/vendor/cropit.css'
+			);
+			$this->load->view('front/common/header',$sources);
+			$this->load->view('front/users/order_edit',$data);
+			$this->load->view('front/common/footer');
+		} else {
+			show_404();
+		}
+	}
+
 }
