@@ -50,16 +50,17 @@ class Orders extends MY_Form
 			$json_data["errors"]['receiver'] = form_error('receiver');
 		} else {
 			date_default_timezone_set("Europe/London");
+			$user_id = $this->ion_auth->get_user_id();
 			$data = array(
 				'purpose' => $this->input->post('purpose'),
 				'receiver' => $this->input->post('receiver'),
-				'client_user_id' => $this->ion_auth->get_user_id(),
+				'client_user_id' => $user_id,
 				'created_on' => date("Y-m-d H:i:s"),
 				'language_in' => $this->input->post("language_in"),
 				'language_out' => $this->input->post("language_out"),
 			);
 
-			$uploaddir = './images/users/' . $this->ion_auth->get_user_id() . "/";
+			$uploaddir = './images/users/' . $user_id . "/";
 			if (!file_exists($uploaddir)) {
 				mkdir($uploaddir, 0777, true);
 			}
@@ -69,7 +70,7 @@ class Orders extends MY_Form
 				$ext = $info['extension']; // get the extension of the file
 				$newname = md5(uniqid(rand(), true));
 
-				$data['photo'] = $uploaddir.$newname.".".$ext;
+				$data['photo'] = '/images/users/' . $user_id . "/".$newname.".".$ext;
 				move_uploaded_file($tmp_file, $data['photo']);
 
 				$img = $this->input->post('photo');
@@ -81,13 +82,14 @@ class Orders extends MY_Form
 					$imgname = $newname . "_thumb.png";
 					$uploadfile = $uploaddir . basename($imgname);
 					file_put_contents($uploadfile, $dt);
+					$data['photo_thumb'] = '/images/users/' . $user_id . "/".$imgname;
 				}
 			}
 			$order = $this->orders_model->create($data);
 
 			if($order) {
 				// записать так же по таблицам файлы для перевода
-				$uploaddir = './uploads/users/' . $this->ion_auth->get_user_id() . "/";
+				$uploaddir = './uploads/users/' . $user_id . "/";
 				if (!file_exists($uploaddir)) {
 					mkdir($uploaddir, 0777, true);
 				}
@@ -102,6 +104,7 @@ class Orders extends MY_Form
 						move_uploaded_file($tmp_file, $target);
 						$data = array(
 							'order_id' => $order,
+							'name_in' => $_FILES['files']['name'][$key],
 							'file_in' => $target,
 						);
 						$translation = $this->orders_model->addTranslation($data);
@@ -154,4 +157,21 @@ class Orders extends MY_Form
 		$this->load->view($content,$data);
 		$this->load->view('front/common/footer');
 	}
+
+	function show($id){
+		$order = $this->orders_model->getOrder($id);
+		if($order){
+			$data["order"] = $order[0];
+
+			$sources['js'] = array(
+				'/js/vendor/bootstrap/moment.min.js'
+			);
+			$this->load->view('front/common/header',$sources);
+			$this->load->view('front/users/order',$data);
+			$this->load->view('front/common/footer');
+		} else {
+			show_404();
+		}
+	}
+
 }

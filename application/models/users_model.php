@@ -161,10 +161,10 @@ class Users_model extends MY_Model {
         }
     }
 
-    function getUserName($email){
+    function getUserName($id){
         $this->db->select('first_name, last_name');
         $this->db->from('users');
-        $this->db->where("email = '" . $email . "'");
+        $this->db->where("id = '" . $id . "'");
         $query = $this->db->get();
         $result = $query->row();
         return $result->first_name . " " . $result->last_name;

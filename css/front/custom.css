@@ -441,6 +441,11 @@ a.ui-state-focus{
     border-radius: 50px;
     cursor: help;
 }
+.status.order{
+    margin-top: 7px;
+    margin-right: 5px;
+    display: inline-block;
+}
 .status.new {
     background: -webkit-radial-gradient(30% 30%, #FF0000, #8C0000);
 }

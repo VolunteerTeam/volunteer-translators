@@ -73,4 +73,21 @@ class Orders_model extends MY_Model {
         $result = $this->db->get()->result();
         return $result;
     }
+
+    function getLanguageName($code){
+        $this->db->select('name_ru');
+        $this->db->from('languages');
+        $this->db->where("code = '" . $code . "'");
+        $query = $this->db->get();
+        $result = $query->row();
+        return $result->name_ru;
+    }
+
+    function getFiles($order_id){
+        $this->db->select('*');
+        $this->db->from('translations');
+        $this->db->where("order_id = '" . $order_id . "'");
+        $result = $this->db->get()->result_array();
+        return $result;
+    }
 }

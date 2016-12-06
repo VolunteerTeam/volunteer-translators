@@ -144,7 +144,7 @@
                     title: 'Номер',
                     width: '8%',
                     display: function (data) {
-                        return "<a href='/orders?id=" + data.record.order_id + "' target='_blank'>" + data.record.order_id + "</a>";
+                        return "<a href='/user/orders/" + data.record.order_id + "' target='_blank'>" + data.record.order_id + "</a>";
                     }
                 },
                 user_name: {
@@ -170,7 +170,7 @@
                     title: 'Менеджер',
                     width: '20%',
                     display: function (data) {
-                        if(data.record.manager_last_name) return "<a href='/users/profile?id=" + data.record.client_user_id + "' target='_blank'>" + data.record.manager_last_name + " " + data.record.manager_first_name + "</a>";
+                        if(data.record.manager_last_name) return "<a href='/user/profile/" + data.record.client_user_id + "' target='_blank'>" + data.record.manager_last_name + " " + data.record.manager_first_name + "</a>";
                         return "";
                     }
                 },
