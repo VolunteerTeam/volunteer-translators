@@ -394,6 +394,13 @@ a.ui-state-focus{
 .user_form.order_edit .form-item {
     padding: 10px;
 }
+.form-item table thead th {
+    text-align: center;
+}
+.form-item table thead {
+    background-color: #3C2A94;
+    color: white;
+}
 /*------------------ Стили для Форм пользователя [КОНЕЦ] -------------*/
 
 /*------------- Стили для Списка автозаполнения Карта [НАЧАЛО] -------*/

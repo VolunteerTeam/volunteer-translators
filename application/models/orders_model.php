@@ -21,6 +21,16 @@ class Orders_model extends MY_Model {
         return $this->db->insert_id();
     }
 
+    function update($data, $order_id){
+        $this->db->where('id', $order_id);
+        $this->db->update('orders', $data);
+    }
+
+    function updateTranslation($data, $translation_id){
+        $this->db->where('id', $translation_id);
+        $this->db->update('translations', $data);
+    }
+
     function addTranslation($data){
         $this->db->insert('translations', $data);
         return $this->db->insert_id();

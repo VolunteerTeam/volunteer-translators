@@ -9,6 +9,25 @@ class Orders extends MY_Form
 		$this->load->model('orders_model');
 	}
 
+	function load_view($content,$data=array()){
+		$sources = array();
+		$sources['js'] = array(
+			'/js/vendor/jquery-ui.min.js',
+			'/js/vendor/bootstrap/moment.min.js',
+			'/js/vendor/jtable.2.4.0/jquery.jtable.js',
+			'/js/vendor/jtable.2.4.0/localization/jquery.jtable.ru.js',
+			'/js/cropit/dist/jquery.cropit.min.js',
+		);
+		$sources['css'] = array(
+			'/js/vendor/jtable.2.4.0/themes/metro/purple/jtable.min.css',
+			'/css/vendor/cropit.css'
+		);
+
+		$this->load->view('front/common/header',$sources);
+		$this->load->view($content,$data);
+		$this->load->view('front/common/footer');
+	}
+
 	function index() {
 		if($this->ion_auth->logged_in()){
 			$data = array();
@@ -139,25 +158,6 @@ class Orders extends MY_Form
 		echo json_encode($json_data);
 	}
 
-	function load_view($content,$data=array()){
-		$sources = array();
-		$sources['js'] = array(
-			'/js/vendor/jquery-ui.min.js',
-			'/js/vendor/bootstrap/moment.min.js',
-			'/js/vendor/jtable.2.4.0/jquery.jtable.js',
-			'/js/vendor/jtable.2.4.0/localization/jquery.jtable.ru.js',
-			'/js/cropit/dist/jquery.cropit.min.js',
-		);
-		$sources['css'] = array(
-			'/js/vendor/jtable.2.4.0/themes/metro/purple/jtable.min.css',
-			'/css/vendor/cropit.css'
-		);
-
-		$this->load->view('front/common/header',$sources);
-		$this->load->view($content,$data);
-		$this->load->view('front/common/footer');
-	}
-
 	function show($id){
 		$order = $this->orders_model->getOrder($id);
 		if($order){
@@ -172,6 +172,58 @@ class Orders extends MY_Form
 		} else {
 			show_404();
 		}
+	}
+
+	function update(){
+		$order_id = $this->input->post("order_id");
+		$client_user_id = $this->input->post("client_user_id");
+		$data = array(
+			'purpose' => $this->input->post('purpose'),
+			'receiver' => $this->input->post('receiver'),
+			'language_in' => $this->input->post("language_in"),
+			'language_out' => $this->input->post("language_out"),
+		);
+		$uploaddir = './images/users/' . $client_user_id . "/";
+		if (!file_exists($uploaddir)) {
+			mkdir($uploaddir, 0777, true);
+		}
+		if($_FILES["photo_origin"] && $_FILES["photo_origin"]["name"]){
+			$tmp_file = $_FILES["photo_origin"]["tmp_name"];
+			$info = pathinfo($_FILES["photo_origin"]["name"]);
+			$ext = $info['extension']; // get the extension of the file
+			$newname = md5(uniqid(rand(), true));
+
+			$data['photo'] = '/images/users/' . $client_user_id . "/".$newname.".".$ext;
+			move_uploaded_file($tmp_file, $data['photo']);
+
+			$img = $this->input->post('photo');
+			if ($img != NULL) {
+				$img = str_replace('data:image/png;base64,', '', $img);
+				$img = str_replace(' ', '+', $img);
+				$dt = base64_decode($img);
+
+				$imgname = $newname . "_thumb.png";
+				$uploadfile = $uploaddir . basename($imgname);
+				file_put_contents($uploadfile, $dt);
+				$data['photo_thumb'] = '/images/users/' . $client_user_id . "/".$imgname;
+			}
+		}
+		$this->orders_model->update($data, $order_id);
+
+		if($this->input->post("translations")){
+			foreach($this->input->post("translations") as $key => $value){
+				$data = array();
+				$data = array(
+					'name_in' => $value["name_in"].".".$value["name_in_ext"],
+					'name_out' => $value["name_out"].".".$value["name_out_ext"],
+					'volume_in' => $value["volume_in"],
+					'volume_out' => $value["volume_out"],
+					'translator_user_id' => $value["translator_user_id"],
+				);
+				$this->orders_model->updateTranslation($data, $key);
+			}
+		}
+		redirect('user/orders/edit/'.$order_id);
 	}
 
 	function edit($id){
@@ -195,6 +247,84 @@ class Orders extends MY_Form
 		} else {
 			show_404();
 		}
+	}
+
+	function addFileOut(){
+		$translation_id = intval($this->input->post("translation_id"));
+		$json_data = array();
+
+		$user_id = $this->ion_auth->get_user_id();
+		$uploaddir = './uploads/users/' . $user_id . "/";
+		if (!file_exists($uploaddir)) {
+			mkdir($uploaddir, 0777, true);
+		}
+
+		if($translation_id && $_FILES["file_out"] && $_FILES["file_out"]["name"]){
+			$tmp_file = $_FILES["file_out"]["tmp_name"];
+			$info = pathinfo($_FILES["file_out"]["name"]);
+			$ext = $info['extension']; // get the extension of the file
+			$newname = md5(uniqid(rand(), true)).".".$ext;
+
+			$target = $uploaddir.$newname;
+			move_uploaded_file($tmp_file, $target);
+			$data = array(
+				'name_out' => $_FILES['file_out']['name'],
+				'file_out' => $target,
+				'date_out' => date("Y-m-d H:i:s")
+			);
+			$this->orders_model->updateTranslation($data,$translation_id);
+
+			$json_data["name_out"] = explode(".".$ext,$_FILES['file_out']['name'])[0];
+			$json_data["ext"] = $ext;
+			$json_data["file_out"] = $target;
+			$json_data["translation_id"] = $translation_id;
+		}
+		echo json_encode($json_data);
+	}
+
+	function changeStatus(){
+		$translation_id = intval($this->input->post("translation_id"));
+
+		$data = array();
+		date_default_timezone_set("Europe/London");
+		$data["date_in"] = date("Y-m-d H:i:s");
+		$this->orders_model->updateTranslation($data,$translation_id);
+
+		echo json_encode(array("translation_id" => $translation_id));
+	}
+
+	function changeOrderStatus(){
+		$order_id = intval($this->input->post("order_id"));
+
+		$data = array();
+		$json_data = array();
+		date_default_timezone_set("Europe/London");
+		switch($this->input->post("order_status")){
+			case "done":
+				$data["date_out"] = date("Y-m-d H:i:s");
+				$this->orders_model->update($data,$order_id);
+				break;
+			case "in_process":
+				$order_id = $this->input->post("order_id");
+				$this->db->trans_start();
+				$query = $this->db->query("SELECT * FROM orders WHERE id='".$order_id."'");
+				$order = $query->row();
+				if($order->manager_user_id){
+					$this->db->trans_complete();
+					$json_data["error"] = '<div class="alert alert-error text-center">Извините, у этого заказа уже есть менеджер <a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>.</div>';
+				} else {
+					$user_id = $this->ion_auth->get_user_id();
+					$data["date_in"] = date("Y-m-d H:i:s");
+					$data["manager_user_id"] = $this->ion_auth->get_user_id();
+					$this->orders_model->update($data,$order_id);
+					$this->db->trans_complete();
+					$json_data["manager"] = '<a href="/user/profile/'.$user_id.'">'.$this->users_model->getUserName($user_id).'</a>';
+					// ОТПРАВИТЬ ПИСЬМО НА ПОЧТУ О ЗАКРЕПЛЕНИИ ЗАКАЗА ЗА МЕНЕДЖЕРОМ!!!
+				}
+				break;
+		}
+
+		echo json_encode($json_data);
 	}
 
 }

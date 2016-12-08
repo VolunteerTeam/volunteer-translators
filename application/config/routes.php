@@ -65,9 +65,13 @@ $route['user/profile/(:num)']           = 'user/profile/show/$1';
 $route['user/orders']                   = 'user/orders';
 $route['user/orders/(:num)']            = 'user/orders/show/$1';
 $route['user/orders/edit/(:num)']       = 'user/orders/edit/$1';
-$route['user/orders/delete/(:num)']       = 'user/orders/delete/$1';
+$route['user/orders/update']            = 'user/orders/update';
+$route['user/orders/delete/(:num)']     = 'user/orders/delete/$1';
+$route['user/orders/add/file_out']      = 'user/orders/addFileOut';
 $route['user/orders/list']              = 'user/orders/getOrders';
-$route['user/orders/create']              = 'user/orders/createOrder';
+$route['user/orders/create']            = 'user/orders/createOrder';
+$route['user/orders/translation/change_status'] = 'user/orders/changeStatus';
+$route['user/orders/translation/change_order_status'] = 'user/orders/changeOrderStatus';
 
 $route['images/front']                  = '/';
 

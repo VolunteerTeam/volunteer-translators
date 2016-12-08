@@ -8,9 +8,13 @@
 
 <div class="container main" role="main">
     <? if(isset($order)) {?>
-        <div style="float:left;padding-top:10px;margin-right:10px;">
-            <img alt="" src="<?= $order->photo_thumb ?>">
-        </div>
+        <?php if($order->photo_thumb){
+            ?>
+            <div style="float:left;padding-top:10px;margin-right:10px;">
+                <img alt="" src="<?= $order->photo_thumb ?>">
+            </div>
+            <?php
+        } ?>
         <div class="profile_info" style="padding-top:10px;float:left;">
             <span style="font-weight:bold;font-size:18px;">Заказ №<?= $order->id ?></span><br/>
             от
