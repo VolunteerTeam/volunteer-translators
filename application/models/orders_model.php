@@ -26,6 +26,14 @@ class Orders_model extends MY_Model {
         $this->db->update('orders', $data);
     }
 
+    function delete($order_id){
+        $this->db->where('id', $order_id);
+        $this->db->delete('orders');
+
+        $this->db->where('order_id', $order_id);
+        $this->db->delete('translations');
+    }
+
     function updateTranslation($data, $translation_id){
         $this->db->where('id', $translation_id);
         $this->db->update('translations', $data);

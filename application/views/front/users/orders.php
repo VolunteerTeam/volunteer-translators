@@ -107,6 +107,34 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="deleteOrder" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Удалить Заказ</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row user_form">
+                    <?php
+                    $attributes = array("name" => "delete_order");
+                    echo form_open("user/orders/delete", $attributes);
+                    ?>
+                    <input type="number" name="order_id" class="form-control" style="display:none;">
+                    <p class="notice">Вы подтверждаете, что хотите удалить Заказ?<br/>Это так же удалит все, прикреплённые к нему, файлы.</p>
+                    <?php echo form_close(); ?>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="submitDeleteOrder" class="btn btn-success">Удалить</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 
     var accepted_format = {
@@ -197,7 +225,7 @@
                     width: '1%',
                     sorting: false,
                     display: function (data) {
-                        return "<a href='/user/orders/delete/" + data.record.order_id + "'><i class='fa fa-lg fa-remove'></i></a>";
+                        return "<a data-toggle='modal' data-target='#deleteOrder' type='button' data-orderid='" + data.record.order_id + "' style='cursor:pointer;'><i class='fa fa-lg fa-remove'></i></a>";
                     }
                 }
             }
@@ -334,6 +362,33 @@
                     }
                 });
             }
+        });
+
+        $('#deleteOrder').on('show.bs.modal', function(e) {
+            $("form[name='delete_order'] input[name='order_id']").val($(e.relatedTarget).attr("data-orderid"));
+        });
+
+        $("#submitDeleteOrder").click(function(e){
+            var order_id = $("input[name='order_id']").val();
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/user/orders/delete/"+order_id,
+                dataType: "json",
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data){
+                    $('#deleteOrder').modal('hide');
+                    ordersTable.jtable('deleteRecord', {
+                        key: order_id,
+                        clientOnly:true
+                    });
+                },
+                error: function() {
+                    console.log("error");
+                }
+            });
         });
 
     });

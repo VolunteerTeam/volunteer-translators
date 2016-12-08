@@ -226,6 +226,11 @@ class Orders extends MY_Form
 		redirect('user/orders/edit/'.$order_id);
 	}
 
+	function delete($id){
+		$this->orders_model->delete($id);
+		echo json_encode(array());
+	}
+
 	function edit($id){
 		$order = $this->orders_model->getOrder($id);
 		if($order){
