@@ -71,6 +71,8 @@ $route['user/translation/delete/(:num)']= 'user/orders/deleteTranslation/$1';
 $route['user/orders/add/file_out']      = 'user/orders/addFileOut';
 $route['user/orders/list']              = 'user/orders/getOrders';
 $route['user/orders/create']            = 'user/orders/createOrder';
+$route['user/translations']             = 'user/translations/index';
+$route['user/translations/list']        = 'user/translations/getList';
 $route['user/orders/translation/change_status'] = 'user/orders/changeStatus';
 $route['user/orders/translation/change_order_status'] = 'user/orders/changeOrderStatus';
 

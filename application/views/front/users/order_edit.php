@@ -22,7 +22,7 @@
             } else {
                 require_once APPPATH."views/front/users/order_edit_manager_new.php";
             }
-        } else if (in_array("7", $user_groups)) {
+        } else if ($user_id == $order->client_user_id) {
             require_once APPPATH."views/front/users/order_edit_client.php";
         }
 

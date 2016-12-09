@@ -29,9 +29,9 @@
                 <?php if($order->date_out) {
                     echo "выполнен";
                 } else if($order->date_in) { ?>
-                    в работе с
+                    <div class='status order in_process' title='Новый'></div> в работе с
                     <script type="text/javascript">
-                        <?php if($order->date_in) echo "getLocalDateTime(".$order->date_in.");"; ?>
+                        <?php if($order->date_in) echo "getLocalDateTime('".$order->date_in."');"; ?>
                     </script>
                     <?php
                 } else {
@@ -77,6 +77,8 @@
                                         echo "выполнен";
                                     } else if($files[$i]["date_in"]) {
                                         echo "в работе";
+                                    } else {
+                                        echo "новый";
                                     }
                                     ?></td>
                             </tr>

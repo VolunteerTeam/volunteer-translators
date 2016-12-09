@@ -126,6 +126,7 @@ class Orders extends MY_Form
 							'order_id' => $order,
 							'name_in' => $_FILES['files']['name'][$key],
 							'file_in' => $target,
+							'created_on' => date("Y-m-d H:i:s"),
 						);
 						$translation = $this->orders_model->addTranslation($data);
 						if(!$translation) {
@@ -240,10 +241,12 @@ class Orders extends MY_Form
 
 					$target = $uploaddir.$newname;
 					move_uploaded_file($tmp_file, $target);
+					date_default_timezone_set("Europe/London");
 					$data = array(
 						'order_id' => $order_id,
 						'name_in' => $_FILES['files']['name'][$key],
 						'file_in' => $target,
+						'created_on' => date("Y-m-d H:i:s"),
 					);
 					$translation = $this->orders_model->addTranslation($data);
 				}

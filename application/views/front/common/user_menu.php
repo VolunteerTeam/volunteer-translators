@@ -1,5 +1,10 @@
 <?php
-$user_data = $this->ion_auth->user()->row();
+    $user_data = $this->ion_auth->user()->row();
+    $user_groups_db = $this->ion_auth->get_users_groups()->result_array();
+    $user_groups = array();
+    foreach($user_groups_db as $key => $value){
+        array_push($user_groups, $value["id"]);
+    }
 ?>
 
 <div id="user-topmenu">
@@ -12,7 +17,8 @@ $user_data = $this->ion_auth->user()->row();
             </a>
             <ul class="dropdown-menu">
                 <li><a href="/user/profile">Профиль<span class="glyphicon glyphicon-cog pull-right"></span></a></li>
-                <li><a href="/user/orders">Заказы<span class="glyphicon glyphicon-stats pull-right"></span></a></li>
+                <li><a href="/user/orders">Заказы<span class="glyphicon glyphicon-shopping-cart pull-right"></span></a></li>
+                <?php if(in_array("4", $user_groups) || in_array("1", $user_groups)) echo '<li><a href="/user/translations">Переводы<span class="glyphicon glyphicon-list pull-right"></span></a></li>'; ?>
                 <li><a href="/user/logout">Выход<span class="glyphicon glyphicon-log-out pull-right"></span></a></li>
             </ul>
         </li>
