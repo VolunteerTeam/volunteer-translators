@@ -502,6 +502,9 @@ a#extended_search:hover,a#extended_search:focus,a#extended_search:active{
     border-top: none !important;
     border-bottom: 1px solid #ddd;
 }
+i.non-active {
+    color:#a9a9a9;
+}
 
 /*------------------ Стили для Таблицы Заказов [КОНЕЦ] --------------*/
 

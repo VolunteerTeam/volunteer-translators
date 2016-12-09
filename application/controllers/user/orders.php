@@ -50,6 +50,7 @@ class Orders extends MY_Form
 		$jTableResult['Result'] = "OK";
 		$jTableResult['TotalRecordCount'] = $this->orders_model->getOrdersCount();
 		$jTableResult['Records'] = $orders;
+		$jTableResult['User'] = $this->ion_auth->get_user_id();
 		echo json_encode($jTableResult);
 	}
 
@@ -227,8 +228,21 @@ class Orders extends MY_Form
 	}
 
 	function delete($id){
-		$this->orders_model->delete($id);
-		echo json_encode(array());
+		$json_data = array();
+
+		$this->db->trans_start();
+		$query = $this->db->query("SELECT * FROM orders WHERE id='".$id."' FOR UPDATE");
+		$order = $query->row();
+		if($order->manager_user_id){
+			$this->db->trans_complete();
+			$manager_email = $this->users_model->getUserEmail($order->manager_user_id);
+			$json_data["error"] = '<div class="alert alert-danger text-center">Извините, у заказа №'.$id.' уже есть менеджер <a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>, поэтому Вы не можете его удалить. Свяжитесь с менеджером <a href="mailto:'.$manager_email.'">'.$manager_email.'</a></div>';
+		} else {
+			$this->orders_model->delete($id);
+			$this->db->trans_complete();
+			// ОТПРАВИТЬ ПИСЬМО НА ПОЧТУ ОБ УДАЛЕНИИ ЗАКАЗА ЗА МЕНЕДЖЕРОМ!!!
+		}
+		echo json_encode($json_data);
 	}
 
 	function edit($id){
@@ -312,20 +326,22 @@ class Orders extends MY_Form
 			case "in_process":
 				$order_id = $this->input->post("order_id");
 				$this->db->trans_start();
-				$query = $this->db->query("SELECT * FROM orders WHERE id='".$order_id."'");
+				$query = $this->db->query("SELECT * FROM orders WHERE id='".$order_id."' FOR UPDATE");
 				$order = $query->row();
-				if($order->manager_user_id){
-					$this->db->trans_complete();
-					$json_data["error"] = '<div class="alert alert-error text-center">Извините, у этого заказа уже есть менеджер <a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>.</div>';
+				if(!$order){
+					$json_data["error"] = '<div class="alert alert-danger text-center">Заказ не найден в базе данных. Вероятно, его только что удалили.</div>';
+				} else if($order->manager_user_id){
+					$json_data["manager"] = '<a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>';
+					$json_data["error"] = '<div class="alert alert-danger text-center">Извините, этот заказ только что был взят в работу менеджером <a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>.</div>';
 				} else {
 					$user_id = $this->ion_auth->get_user_id();
 					$data["date_in"] = date("Y-m-d H:i:s");
 					$data["manager_user_id"] = $this->ion_auth->get_user_id();
 					$this->orders_model->update($data,$order_id);
-					$this->db->trans_complete();
 					$json_data["manager"] = '<a href="/user/profile/'.$user_id.'">'.$this->users_model->getUserName($user_id).'</a>';
 					// ОТПРАВИТЬ ПИСЬМО НА ПОЧТУ О ЗАКРЕПЛЕНИИ ЗАКАЗА ЗА МЕНЕДЖЕРОМ!!!
 				}
+				$this->db->trans_complete();
 				break;
 		}
 

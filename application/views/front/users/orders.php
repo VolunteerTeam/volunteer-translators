@@ -1,4 +1,9 @@
+<?php
+    $user_id = $this->ion_auth->get_user_id();
+?>
+
 <div class="container main" role="main">
+    <div id="error_block"></div>
     <?php //require_once APPPATH."views/front/users/order_filter.php"; ?>
     <div id="ordersTable"></div>
 </div>
@@ -198,7 +203,7 @@
                     title: 'Менеджер',
                     width: '20%',
                     display: function (data) {
-                        if(data.record.manager_last_name) return "<a href='/user/profile/" + data.record.client_user_id + "' target='_blank'>" + data.record.manager_last_name + " " + data.record.manager_first_name + "</a>";
+                        if(data.record.manager_last_name) return "<a href='/user/profile/" + data.record.manager_user_id + "' target='_blank'>" + data.record.manager_last_name + " " + data.record.manager_first_name + "</a>";
                         return "";
                     }
                 },
@@ -217,7 +222,20 @@
                     width: '1%',
                     sorting: false,
                     display: function (data) {
-                        return "<a href='/user/orders/edit/" + data.record.order_id + "'><i class='fa fa-lg fa-edit'></i></a>";
+                        var date_out_check = true;
+                        if(data.record.date_out) {
+                            // Менеджер имеет право редактировать заказ ещё в течении недели после его закрытия
+                            // Поэтому проверяем есть ли дата закрытия, добавляем к ней неделю, и сравниваем с текущей датой
+                            var now = new Date();
+                            var date_out = new Date(data.record.date_out);
+                            var date_plus_week = new Date(date_out.getTime() + 7 * 24 * 60 * 60 * 1000);
+                            var date_out_check = now.getTime() <= date_plus_week.getTime();
+                        }
+                        if((!data.record.manager_user_id && data.record.client_user_id == <?= $user_id ?>) ||
+                            (data.record.manager_user_id == <?= $user_id ?> && date_out_check)){
+                            return "<a href='/user/orders/edit/" + data.record.order_id + "' title='Редактировать'><i class='fa fa-lg fa-edit'></i></a>";
+                        }
+                        return "<i class='fa fa-lg fa-edit non-active'></i>";
                     }
                 },
                 remove: {
@@ -225,7 +243,8 @@
                     width: '1%',
                     sorting: false,
                     display: function (data) {
-                        return "<a data-toggle='modal' data-target='#deleteOrder' type='button' data-orderid='" + data.record.order_id + "' style='cursor:pointer;'><i class='fa fa-lg fa-remove'></i></a>";
+                        if(!data.record.manager_user_id && data.record.client_user_id == <?= $user_id ?>) return "<a data-toggle='modal' data-target='#deleteOrder' type='button' data-orderid='" + data.record.order_id + "' style='cursor:pointer;' title='Удалить'><i class='fa fa-lg fa-remove'></i></a>";
+                        return "<i class='fa fa-lg fa-remove non-active'></i>";
                     }
                 }
             }
@@ -380,10 +399,15 @@
                 processData: false,
                 success: function(data){
                     $('#deleteOrder').modal('hide');
-                    ordersTable.jtable('deleteRecord', {
-                        key: order_id,
-                        clientOnly:true
-                    });
+                    if(data["error"]) {
+                        $("#error_block").html(data["error"]);
+                        ordersTable.jtable('reload');
+                    } else {
+                        ordersTable.jtable('deleteRecord', {
+                            key: order_id,
+                            clientOnly:true
+                        });
+                    }
                 },
                 error: function() {
                     console.log("error");

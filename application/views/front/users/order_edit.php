@@ -6,7 +6,7 @@
     }
 </script>
 
-<div class="container main" role="main">
+<div class="container main" id="order_container" role="main">
     <? if(isset($order)) {?>
         <div class="profile_info" style="padding-top:10px;padding-left:10px;">
             <span style="font-weight:bold;font-size:18px;">Заказ №<?= $order->id ?></span><br/>
@@ -432,11 +432,14 @@
                 contentType: false,
                 processData: false,
                 success: function(data){
-                    if(data["error"]) {
-                        $("#error_block").html(data["error"]);
+                    var status = "";
+                    var order_id = "";
+                    if(data["error"]){
+                        $('#changeOrderStatus').modal('hide');
+                        $("#order_container").html("<div id='error_block'>" + data["error"] + "</div>");
                     } else {
-                        var status = $("form[name='change_order_status']  input[name='order_status']").val();
-                        var order_id = $("form[name='change_order_status']  input[name='order_id']").val();
+                        status = $("form[name='change_order_status']  input[name='order_status']").val();
+                        order_id = $("form[name='change_order_status']  input[name='order_id']").val();
                         $('#changeOrderStatus').modal('hide');
 
                         switch(status){

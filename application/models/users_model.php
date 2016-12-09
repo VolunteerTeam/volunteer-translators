@@ -170,6 +170,14 @@ class Users_model extends MY_Model {
         return $result->first_name . " " . $result->last_name;
     }
 
+    function getUserEmail($id){
+        $this->db->select('email');
+        $this->db->from('users');
+        $this->db->where("id = '" . $id . "'");
+        $query = $this->db->get();
+        $result = $query->row();
+        return $result->email;
+    }
 
     function setGroup($user_id,$group_id){
         $this->db->insert('users_groups', array("user_id" => $user_id, "group_id" => $group_id));
