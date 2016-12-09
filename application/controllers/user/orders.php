@@ -34,6 +34,7 @@ class Orders extends MY_Form
 			$data["languages"] = $this->orders_model->getLanguages();
 			$this->load_view('front/users/orders',$data);
 		} else {
+			$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Войдите, чтобы иметь возможность просматривать Заказы.</div>');
 			redirect("user/auth");
 		}
 	}
@@ -299,36 +300,41 @@ class Orders extends MY_Form
 	}
 
 	function edit($id){
-		$order = $this->orders_model->getOrder($id);
+		if($this->ion_auth->logged_in()){
+			$order = $this->orders_model->getOrder($id);
 
-		if($order){
-			$data["order"] = $order[0];
+			if($order){
+				$data["order"] = $order[0];
 
-			// если пользователь имеет только роль Заказчик, его нужно редиректить на страницу просмотра заказа
-			$user_id = $this->ion_auth->get_user_id();
-			$user_groups = $this->users_model->getUserGroupsId($user_id);
-			if($data["order"]->manager_user_id && !(in_array("1", $user_groups) || in_array("3", $user_groups))){
-				$manager_email = $this->users_model->getUserEmail($data["order"]->manager_user_id);
-				$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Извините, Ваш заказ был принят в работу менеджером <a href="/user/profile/'.$data["order"]->manager_user_id.'">'.$this->users_model->getUserName($data["order"]->manager_user_id).'</a>. Если Вам нужно что-то изменить в Заказе, свяжитесь с ним <a href="mailto:'.$manager_email.'">'.$manager_email.'</a></div>');
-				redirect('user/orders/'.$id);
+				// если пользователь имеет только роль Заказчик или роль Менеджер (но это не его заказ), его нужно редиректить на страницу просмотра заказа
+				$user_id = $this->ion_auth->get_user_id();
+				$user_groups = $this->users_model->getUserGroupsId($user_id);
+				if($data["order"]->manager_user_id && (!(in_array("1", $user_groups) || in_array("3", $user_groups)) || (in_array("3", $user_groups) && $user_id != $data["order"]->manager_user_id))){
+					$manager_email = $this->users_model->getUserEmail($data["order"]->manager_user_id);
+					$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Извините, Ваш заказ был принят в работу менеджером <a href="/user/profile/'.$data["order"]->manager_user_id.'">'.$this->users_model->getUserName($data["order"]->manager_user_id).'</a>. Если Вам нужно что-то изменить в Заказе, свяжитесь с ним <a href="mailto:'.$manager_email.'">'.$manager_email.'</a></div>');
+					redirect('user/orders/'.$id);
+				}
+
+				$data["languages"] = $this->orders_model->getLanguages();
+				$data["managers"] = $this->users_model->getUsersByGroup(3);
+				$data["translators"] = $this->users_model->getUsersByGroup(4);
+
+				$sources['js'] = array(
+					'/js/vendor/bootstrap/moment.min.js',
+					'/js/cropit/dist/jquery.cropit.min.js',
+				);
+				$sources['css'] = array(
+					'/css/vendor/cropit.css'
+				);
+				$this->load->view('front/common/header',$sources);
+				$this->load->view('front/users/order_edit',$data);
+				$this->load->view('front/common/footer');
+			} else {
+				show_404();
 			}
-
-			$data["languages"] = $this->orders_model->getLanguages();
-			$data["managers"] = $this->users_model->getUsersByGroup(3);
-			$data["translators"] = $this->users_model->getUsersByGroup(4);
-
-			$sources['js'] = array(
-				'/js/vendor/bootstrap/moment.min.js',
-				'/js/cropit/dist/jquery.cropit.min.js',
-			);
-			$sources['css'] = array(
-				'/css/vendor/cropit.css'
-			);
-			$this->load->view('front/common/header',$sources);
-			$this->load->view('front/users/order_edit',$data);
-			$this->load->view('front/common/footer');
 		} else {
-			show_404();
+			$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Войдите, чтобы иметь возможность редактировать Заказы.</div>');
+			redirect("user/auth");
 		}
 	}
 
@@ -393,23 +399,25 @@ class Orders extends MY_Form
 				$query = $this->db->query("SELECT * FROM orders WHERE id='".$order_id."' FOR UPDATE");
 				$order = $query->row();
 				if(!$order){
-					$json_data["error"] = '<div class="alert alert-danger text-center">Заказ не найден в базе данных. Вероятно, его только что удалили.</div>';
+					$this->db->trans_complete();
+					$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Заказ не найден в базе данных. Вероятно, его только что удалили.</div>');
+					redirect('user/orders');
 				} else if($order->manager_user_id){
-					$json_data["manager"] = '<a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>';
-					$json_data["error"] = '<div class="alert alert-danger text-center">Извините, этот заказ только что был взят в работу менеджером <a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>.</div>';
-				} else {
+					$this->db->trans_complete();
+					$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Извините, этот заказ только что был взят в работу менеджером <a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>.</div>');
+					redirect('user/orders/'.$order_id);} else {
 					$user_id = $this->ion_auth->get_user_id();
 					$data["date_in"] = date("Y-m-d H:i:s");
 					$data["manager_user_id"] = $this->ion_auth->get_user_id();
 					$this->orders_model->update($data,$order_id);
 					$json_data["manager"] = '<a href="/user/profile/'.$user_id.'">'.$this->users_model->getUserName($user_id).'</a>';
+					$this->db->trans_complete();
+					$this->session->set_flashdata('msg','<div class="alert alert-success text-center">Заказ был принят Вами в работу. Теперь Вы можете редактировать его.</div>');
+					redirect('user/orders/edit/'.$order_id);
 					// ОТПРАВИТЬ ПИСЬМО НА ПОЧТУ О ЗАКРЕПЛЕНИИ ЗАКАЗА ЗА МЕНЕДЖЕРОМ!!!
 				}
-				$this->db->trans_complete();
 				break;
 		}
-
-		echo json_encode($json_data);
 	}
 
 }

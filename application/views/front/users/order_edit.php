@@ -7,6 +7,9 @@
 </script>
 
 <div class="container main" id="order_container" role="main">
+    <?php
+        echo $this->session->flashdata('msg');
+    ?>
     <?php if(isset($order)) {
         $user_id = $this->ion_auth->get_user_id();
         $user_groups = $this->users_model->getUserGroupsId($user_id);
@@ -14,7 +17,11 @@
         if(in_array("1", $user_groups)) {
             require_once APPPATH."views/front/users/order_edit_admin.php";
         } else if (in_array("3", $user_groups)) {
-            require_once APPPATH."views/front/users/order_edit_manager.php";
+            if($order->date_in) {
+                require_once APPPATH."views/front/users/order_edit_manager.php";
+            } else {
+                require_once APPPATH."views/front/users/order_edit_manager_new.php";
+            }
         } else if (in_array("7", $user_groups)) {
             require_once APPPATH."views/front/users/order_edit_client.php";
         }
@@ -304,44 +311,45 @@
         });
 
         $("#submitOrderChangeStatus").click(function(e){
-            var form_data = new FormData($("form[name='change_order_status']")[0]);
-//            $("form[name='change_order_status']").submit();
-            e.preventDefault();
-            $.ajax({
-                type: "POST",
-                url: "/user/orders/translation/change_order_status",
-                data: form_data,
-                dataType: "json",
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(data){
-                    var status = "";
-                    var order_id = "";
-                    if(data["error"]){
-                        $('#changeOrderStatus').modal('hide');
-                        $("#order_container").html("<div id='error_block'>" + data["error"] + "</div>");
-                    } else {
-                        status = $("form[name='change_order_status']  input[name='order_status']").val();
-                        order_id = $("form[name='change_order_status']  input[name='order_id']").val();
-                        $('#changeOrderStatus').modal('hide');
+            $("form[name='change_order_status']").submit();
 
-                        switch(status){
-                            case "done": status = "<div class='status order done' style='margin: 0 auto;' title='Выполнен'></div> выполнен"; break;
-                            case "in_process":
-                                status = "<a href='#' class='orderStatusEditButton' data-toggle='modal' data-target='#changeOrderStatus' type='button' data-newstatus='done' data-translation='"+order_id+"'><div class='status order in_process' style='margin: 0 auto;cursor:pointer;' title='В работе'></div> в работе</a>";
-                                break;
-                        }
-                        $('#order_status').html(status);
-                        if(data["manager"]) {
-                            $("#manager").html(data["manager"]);
-                        }
-                    }
-                },
-                error: function() {
-                    console.log("error");
-                }
-            });
+//            e.preventDefault();
+//            var form_data = new FormData($("form[name='change_order_status']")[0]);
+//            $.ajax({
+//                type: "POST",
+//                url: "/user/orders/translation/change_order_status",
+//                data: form_data,
+//                dataType: "json",
+//                cache: false,
+//                contentType: false,
+//                processData: false,
+//                success: function(data){
+//                    var status = "";
+//                    var order_id = "";
+//                    if(data["error"]){
+//                        $('#changeOrderStatus').modal('hide');
+//                        $("#order_container").html("<div id='error_block'>" + data["error"] + "</div>");
+//                    } else {
+//                        status = $("form[name='change_order_status']  input[name='order_status']").val();
+//                        order_id = $("form[name='change_order_status']  input[name='order_id']").val();
+//                        $('#changeOrderStatus').modal('hide');
+//
+//                        switch(status){
+//                            case "done": status = "<div class='status order done' style='margin: 0 auto;' title='Выполнен'></div> выполнен"; break;
+//                            case "in_process":
+//                                status = "<a href='#' class='orderStatusEditButton' data-toggle='modal' data-target='#changeOrderStatus' type='button' data-newstatus='done' data-translation='"+order_id+"'><div class='status order in_process' style='margin: 0 auto;cursor:pointer;' title='В работе'></div> в работе</a>";
+//                                break;
+//                        }
+//                        $('#order_status').html(status);
+//                        if(data["manager"]) {
+//                            $("#manager").html(data["manager"]);
+//                        }
+//                    }
+//                },
+//                error: function() {
+//                    console.log("error");
+//                }
+//            });
         });
 
     });
