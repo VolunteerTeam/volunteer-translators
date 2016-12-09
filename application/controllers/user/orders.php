@@ -50,7 +50,6 @@ class Orders extends MY_Form
 		$jTableResult['Result'] = "OK";
 		$jTableResult['TotalRecordCount'] = $this->orders_model->getOrdersCount();
 		$jTableResult['Records'] = $orders;
-		$jTableResult['User'] = $this->ion_auth->get_user_id();
 		echo json_encode($jTableResult);
 	}
 
@@ -177,54 +176,94 @@ class Orders extends MY_Form
 
 	function update(){
 		$order_id = $this->input->post("order_id");
-		$client_user_id = $this->input->post("client_user_id");
-		$data = array(
-			'purpose' => $this->input->post('purpose'),
-			'receiver' => $this->input->post('receiver'),
-			'language_in' => $this->input->post("language_in"),
-			'language_out' => $this->input->post("language_out"),
-		);
-		$uploaddir = './images/users/' . $client_user_id . "/";
-		if (!file_exists($uploaddir)) {
-			mkdir($uploaddir, 0777, true);
-		}
-		if($_FILES["photo_origin"] && $_FILES["photo_origin"]["name"]){
-			$tmp_file = $_FILES["photo_origin"]["tmp_name"];
-			$info = pathinfo($_FILES["photo_origin"]["name"]);
-			$ext = $info['extension']; // get the extension of the file
-			$newname = md5(uniqid(rand(), true));
+		$user_id = $this->ion_auth->get_user_id();
 
-			$data['photo'] = '/images/users/' . $client_user_id . "/".$newname.".".$ext;
-			move_uploaded_file($tmp_file, $data['photo']);
+		$this->db->trans_start();
+		$query = $this->db->query("SELECT * FROM orders WHERE id='".$order_id."' FOR UPDATE");
+		$order = $query->row();
 
-			$img = $this->input->post('photo');
-			if ($img != NULL) {
-				$img = str_replace('data:image/png;base64,', '', $img);
-				$img = str_replace(' ', '+', $img);
-				$dt = base64_decode($img);
+		$user_groups = $this->users_model->getUserGroupsId($user_id);
 
-				$imgname = $newname . "_thumb.png";
-				$uploadfile = $uploaddir . basename($imgname);
-				file_put_contents($uploadfile, $dt);
-				$data['photo_thumb'] = '/images/users/' . $client_user_id . "/".$imgname;
+		if($order->manager_user_id && !(in_array("1", $user_groups) || in_array("3", $user_groups))){
+			// если пользователь имеет только роль Заказчик и пока он редактировал, заказ уже был принят в работу Менеджером, мы отталкиваем его попытку отредактировать заказ
+			$this->db->trans_complete();
+			$manager_email = $this->users_model->getUserEmail($order->manager_user_id);
+			$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Извините, Ваш заказ только что был принят в работу менеджером <a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>. Если Вам нужно что-то изменить в Заказе, свяжитесь с ним <a href="mailto:'.$manager_email.'">'.$manager_email.'</a></div>');
+			redirect('user/orders/'.$order_id);
+		} else {
+			$client_user_id = $this->input->post("client_user_id");
+			$data = array(
+				'purpose' => $this->input->post('purpose'),
+				'receiver' => $this->input->post('receiver'),
+				'language_in' => $this->input->post("language_in"),
+				'language_out' => $this->input->post("language_out"),
+			);
+			$uploaddir = './images/users/' . $client_user_id . "/";
+			if (!file_exists($uploaddir)) {
+				mkdir($uploaddir, 0777, true);
 			}
-		}
-		$this->orders_model->update($data, $order_id);
+			if($_FILES["photo_origin"] && $_FILES["photo_origin"]["name"]){
+				$tmp_file = $_FILES["photo_origin"]["tmp_name"];
+				$info = pathinfo($_FILES["photo_origin"]["name"]);
+				$ext = $info['extension']; // get the extension of the file
+				$newname = md5(uniqid(rand(), true));
 
-		if($this->input->post("translations")){
-			foreach($this->input->post("translations") as $key => $value){
-				$data = array();
-				$data = array(
-					'name_in' => $value["name_in"].".".$value["name_in_ext"],
-					'name_out' => $value["name_out"].".".$value["name_out_ext"],
-					'volume_in' => $value["volume_in"],
-					'volume_out' => $value["volume_out"],
-					'translator_user_id' => $value["translator_user_id"],
-				);
-				$this->orders_model->updateTranslation($data, $key);
+				$data['photo'] = '/images/users/' . $client_user_id . "/".$newname.".".$ext;
+				move_uploaded_file($tmp_file, $data['photo']);
+
+				$img = $this->input->post('photo');
+				if ($img != NULL) {
+					$img = str_replace('data:image/png;base64,', '', $img);
+					$img = str_replace(' ', '+', $img);
+					$dt = base64_decode($img);
+
+					$imgname = $newname . "_thumb.png";
+					$uploadfile = $uploaddir . basename($imgname);
+					file_put_contents($uploadfile, $dt);
+					$data['photo_thumb'] = '/images/users/' . $client_user_id . "/".$imgname;
+				}
 			}
+			$this->orders_model->update($data, $order_id);
+
+			// записать так же по таблицам файлы для перевода
+			$uploaddir = './uploads/users/' . $user_id . "/";
+			if (!file_exists($uploaddir)) {
+				mkdir($uploaddir, 0777, true);
+			}
+			if($_FILES["files"] && $_FILES["files"]["name"][0]){
+				foreach($_FILES["files"]["name"] as $key => $value) {
+					$tmp_file = $_FILES["files"]["tmp_name"][$key];
+					$info = pathinfo($value);
+					$ext = $info['extension']; // get the extension of the file
+					$newname = md5(uniqid(rand(), true)).".".$ext;
+
+					$target = $uploaddir.$newname;
+					move_uploaded_file($tmp_file, $target);
+					$data = array(
+						'order_id' => $order_id,
+						'name_in' => $_FILES['files']['name'][$key],
+						'file_in' => $target,
+					);
+					$translation = $this->orders_model->addTranslation($data);
+				}
+			}
+
+			if($this->input->post("translations")){
+				foreach($this->input->post("translations") as $key => $value){
+					$data = array();
+					$data = array(
+						'name_in' => $value["name_in"].".".$value["name_in_ext"],
+						'name_out' => $value["name_out"].".".$value["name_out_ext"],
+						'volume_in' => $value["volume_in"],
+						'volume_out' => $value["volume_out"],
+						'translator_user_id' => $value["translator_user_id"],
+					);
+					$this->orders_model->updateTranslation($data, $key);
+				}
+			}
+			$this->db->trans_complete();
+			redirect('user/orders/edit/'.$order_id);
 		}
-		redirect('user/orders/edit/'.$order_id);
 	}
 
 	function delete($id){
@@ -245,10 +284,35 @@ class Orders extends MY_Form
 		echo json_encode($json_data);
 	}
 
+	function deleteTranslation($id){
+		$json_data = array();
+
+		$this->db->trans_start();
+		$query = $this->db->query("SELECT * FROM translations WHERE id='".$id."' FOR UPDATE");
+		$translation = $query->row();
+		if($translation){
+			$this->orders_model->deleteTranslation($id);
+			$this->db->trans_complete();
+		}
+		$json_data["translation_id"] = $id;
+		echo json_encode($json_data);
+	}
+
 	function edit($id){
 		$order = $this->orders_model->getOrder($id);
+
 		if($order){
 			$data["order"] = $order[0];
+
+			// если пользователь имеет только роль Заказчик, его нужно редиректить на страницу просмотра заказа
+			$user_id = $this->ion_auth->get_user_id();
+			$user_groups = $this->users_model->getUserGroupsId($user_id);
+			if($data["order"]->manager_user_id && !(in_array("1", $user_groups) || in_array("3", $user_groups))){
+				$manager_email = $this->users_model->getUserEmail($data["order"]->manager_user_id);
+				$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Извините, Ваш заказ был принят в работу менеджером <a href="/user/profile/'.$data["order"]->manager_user_id.'">'.$this->users_model->getUserName($data["order"]->manager_user_id).'</a>. Если Вам нужно что-то изменить в Заказе, свяжитесь с ним <a href="mailto:'.$manager_email.'">'.$manager_email.'</a></div>');
+				redirect('user/orders/'.$id);
+			}
+
 			$data["languages"] = $this->orders_model->getLanguages();
 			$data["managers"] = $this->users_model->getUsersByGroup(3);
 			$data["translators"] = $this->users_model->getUsersByGroup(4);

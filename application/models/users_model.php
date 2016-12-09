@@ -296,4 +296,16 @@ class Users_model extends MY_Model {
         return $this->db->get()->result();
     }
 
+    function getUserGroupsId($user_id){
+        $this->db->select('group_id');
+        $this->db->from('users_groups');
+        $this->db->where('user_id', $user_id);
+        $user_groups_db = $this->db->get()->result_array();
+        $user_groups = array();
+        foreach($user_groups_db as $key => $value){
+            array_push($user_groups, $value["group_id"]);
+        }
+        return $user_groups;
+    }
+
 }

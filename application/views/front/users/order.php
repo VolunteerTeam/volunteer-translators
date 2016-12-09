@@ -8,6 +8,9 @@
 
 <div class="container main" role="main">
     <? if(isset($order)) {?>
+        <?php
+            echo $this->session->flashdata('msg');
+        ?>
         <?php if($order->photo_thumb){
             ?>
             <div style="float:left;padding-top:10px;margin-right:10px;">

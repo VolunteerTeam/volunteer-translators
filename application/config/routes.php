@@ -67,6 +67,7 @@ $route['user/orders/(:num)']            = 'user/orders/show/$1';
 $route['user/orders/edit/(:num)']       = 'user/orders/edit/$1';
 $route['user/orders/update']            = 'user/orders/update';
 $route['user/orders/delete/(:num)']     = 'user/orders/delete/$1';
+$route['user/translation/delete/(:num)']= 'user/orders/deleteTranslation/$1';
 $route['user/orders/add/file_out']      = 'user/orders/addFileOut';
 $route['user/orders/list']              = 'user/orders/getOrders';
 $route['user/orders/create']            = 'user/orders/createOrder';
