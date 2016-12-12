@@ -214,8 +214,8 @@ class Orders extends MY_Form
 				$ext = $info['extension']; // get the extension of the file
 				$newname = md5(uniqid(rand(), true));
 
-				$data['photo'] = '/images/users/' . $client_user_id . "/".$newname.".".$ext;
-				move_uploaded_file($tmp_file, $data['photo']);
+				move_uploaded_file($tmp_file, $uploaddir.$newname.".".$ext);
+				$data['photo'] = '/images/users/' . $user_id . "/".$newname.".".$ext;
 
 				$img = $this->input->post('photo');
 				if ($img != NULL) {
@@ -258,14 +258,21 @@ class Orders extends MY_Form
 
 			if($this->input->post("translations")){
 				foreach($this->input->post("translations") as $key => $value){
+					$query = $this->db->query("SELECT * FROM translations WHERE id='".$key."' FOR UPDATE");
+					$translation = $query->row();
 					$data = array();
 					$data = array(
 						'name_in' => $value["name_in"].".".$value["name_in_ext"],
 						'name_out' => $value["name_out"].".".$value["name_out_ext"],
 						'volume_in' => $value["volume_in"],
 						'volume_out' => $value["volume_out"],
-						'translator_user_id' => $value["translator_user_id"],
 					);
+					// Если файл уже взят в работу переводчиком, переназначить его на другого переводчика нельзя
+					if($translation->date_in && $translation->translator_user_id != $value["translator_user_id"]){
+						$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Извините, файл "'.$value["name_in"].".".$value["name_in_ext"].'" уже взят в работу переводчиком.</div>');
+					} else {
+						$data['translator_user_id'] = $value["translator_user_id"];
+					}
 					$this->orders_model->updateTranslation($data, $key);
 				}
 			}
@@ -280,7 +287,7 @@ class Orders extends MY_Form
 		$this->db->trans_start();
 		$query = $this->db->query("SELECT * FROM orders WHERE id='".$id."' FOR UPDATE");
 		$order = $query->row();
-		if($order->manager_user_id){
+		if($order->manager_user_id && !$this->ion_auth->is_admin()){
 			$this->db->trans_complete();
 			$manager_email = $this->users_model->getUserEmail($order->manager_user_id);
 			$json_data["error"] = '<div class="alert alert-danger text-center">Извините, у заказа №'.$id.' уже есть менеджер <a href="/user/profile/'.$order->manager_user_id.'">'.$this->users_model->getUserName($order->manager_user_id).'</a>, поэтому Вы не можете его удалить. Свяжитесь с менеджером <a href="mailto:'.$manager_email.'">'.$manager_email.'</a></div>';
@@ -379,14 +386,24 @@ class Orders extends MY_Form
 	}
 
 	function changeStatus(){
-		$translation_id = intval($this->input->post("translation_id"));
+		$translation_id = $this->input->post("translation_id");
+		$json_data = array();
+		$json_data["translation_id"] = $translation_id;
 
-		$data = array();
-		date_default_timezone_set("Europe/London");
-		$data["date_in"] = date("Y-m-d H:i:s");
-		$this->orders_model->updateTranslation($data,$translation_id);
+		$this->db->trans_start();
+		$query = $this->db->query("SELECT * FROM translations WHERE id='".$translation_id."' FOR UPDATE");
+		$translation = $query->row();
+		if($translation->translator_user_id != $this->ion_auth->get_user_id()){
+			$json_data["error"] = '<div class="alert alert-danger text-center">Извините, этот файл назначен другому переводчику.</div>';
+		} else {
+			$data = array();
+			date_default_timezone_set("Europe/London");
+			$data["date_in"] = date("Y-m-d H:i:s");
+			$this->orders_model->updateTranslation($data,$translation_id);
+		}
 
-		echo json_encode(array("translation_id" => $translation_id));
+		$this->db->trans_complete();
+		echo json_encode($json_data);
 	}
 
 	function changeOrderStatus(){

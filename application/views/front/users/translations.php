@@ -122,7 +122,6 @@
                     list: false
                 },
                 order_id: {
-                    key: true,
                     title: 'Заказ',
                     width: '8%',
                     display: function (data) {
@@ -244,11 +243,19 @@
                 processData: false,
                 success: function(data){
                     $('#changeStatus').modal('hide');
-                    $('#translation_status_'+data['translation_id']).html("<div class='status in_process' style='margin: 0 auto;' title='В работе'></div>");
-                    $('#translation_edit_'+data['translation_id']).html("<a href='#' class='fileEditButton' data-toggle='modal' data-target='#editFileOut' type='button' data-translation='" + data['translation_id'] + "'><i class='fa fa-edit'></i></a>");
+                    if(data["error"]) {
+                        $("#error_block").html(data["error"]);
+                        translationsTable.jtable('deleteRecord', {
+                            key: data['translation_id'],
+                            clientOnly:true
+                        });
+                    } else {
+                        $('#translation_status_'+data['translation_id']).html("<div class='status in_process' style='margin: 0 auto;' title='В работе'></div>");
+                        $('#translation_edit_'+data['translation_id']).html("<a href='#' class='fileEditButton' data-toggle='modal' data-target='#editFileOut' type='button' data-translation='" + data['translation_id'] + "'><i class='fa fa-edit'></i></a>");
+                    }
                 },
-                error: function() {
-                    console.log("error");
+                error: function(e) {
+                    console.log(e);
                 }
             });
         });

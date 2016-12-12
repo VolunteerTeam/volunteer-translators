@@ -15,7 +15,11 @@
         $user_groups = $this->users_model->getUserGroupsId($user_id);
         // перебираем группы пользователя от самой главной, и инклюдим соответствующий шаблон
         if(in_array("1", $user_groups)) {
-            require_once APPPATH."views/front/users/order_edit_admin.php";
+            if($order->date_in) {
+                require_once APPPATH."views/front/users/order_edit_admin.php";
+            } else {
+                require_once APPPATH."views/front/users/order_edit_admin_new.php";
+            }
         } else if (in_array("3", $user_groups)) {
             if($order->date_in) {
                 require_once APPPATH."views/front/users/order_edit_manager.php";

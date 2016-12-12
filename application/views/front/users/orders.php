@@ -235,7 +235,8 @@
                             var date_out_check = now.getTime() <= date_plus_week.getTime();
                         }
                         if((!data.record.manager_user_id && data.record.client_user_id == <?= $user_id ?>) ||
-                            (data.record.manager_user_id == <?= $user_id ?> && date_out_check)){
+                            (data.record.manager_user_id == <?= $user_id ?> && date_out_check) ||
+                            <?= $this->ion_auth->is_admin() ?>){
                             return "<a href='/user/orders/edit/" + data.record.order_id + "' title='Редактировать'><i class='fa fa-lg fa-edit'></i></a>";
                         }
                         return "<i class='fa fa-lg fa-edit non-active'></i>";
@@ -246,7 +247,7 @@
                     width: '1%',
                     sorting: false,
                     display: function (data) {
-                        if(!data.record.manager_user_id && data.record.client_user_id == <?= $user_id ?>) return "<a data-toggle='modal' data-target='#deleteOrder' type='button' data-orderid='" + data.record.order_id + "' style='cursor:pointer;' title='Удалить'><i class='fa fa-lg fa-remove'></i></a>";
+                        if((!data.record.manager_user_id && data.record.client_user_id == <?= $user_id ?>) || <?= $this->ion_auth->is_admin() ?>) return "<a data-toggle='modal' data-target='#deleteOrder' type='button' data-orderid='" + data.record.order_id + "' style='cursor:pointer;' title='Удалить'><i class='fa fa-lg fa-remove'></i></a>";
                         return "<i class='fa fa-lg fa-remove non-active'></i>";
                     }
                 }

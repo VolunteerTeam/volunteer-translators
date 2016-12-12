@@ -97,7 +97,7 @@
                         <?php } ?>
                     <td>
                         <?php if($files[$i]["date_in"]) {
-                            echo '<a href="/user/profile/'.$files[$i]["translator_user_id"].'" target="_blank">'.$this->users_model->getUserName($files[$i]["translator_user_id"]).'</a>';
+                            echo '<input type="number" name="translations['.$files[$i]['id'].'][translator_user_id]" value="'.$files[$i]["translator_user_id"].'" style="display:none;"><a href="/user/profile/'.$files[$i]["translator_user_id"].'" target="_blank">'.$this->users_model->getUserName($files[$i]["translator_user_id"]).'</a>';
                         } else {
                             echo '<select name="translations['.$files[$i]['id'].'][translator_user_id]" class="form-control" style="width:210px;">
                                   <option value="">Выберите переводчика...</option>';
