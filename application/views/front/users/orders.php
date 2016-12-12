@@ -347,9 +347,9 @@
             var form_data = new FormData($("form[name='create_order']")[0]);
             var file_data = $('input[name="photo_origin"]').prop('files');
             form_data.append('file', file_data);
+//            console.log(file_data);
             file_data = $('input[name="files"]').prop('files');
             form_data.append('file', file_data);
-//            console.log(form_data);
 //            form.submit();
             e.preventDefault();
             if(validate_form()){

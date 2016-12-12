@@ -149,8 +149,11 @@
                     width: '1%',
                     sorting: false,
                     display: function (data) {
-                        if(!data.record.order_date_out) return "<a href='#' class='fileEditButton' data-toggle='modal' data-target='#editFileOut' type='button' data-translation='" + data.record.id + "'><i class='fa fa-edit'></i></a>";
-                        return "<i class='fa fa-lg fa-edit non-active'></i>";
+                        if(!data.record.order_date_out){
+                            if(!data.record.date_in) return "<div id='translation_edit_" + data.record.id + "'><i class='fa fa-edit non-active' title='Возьмите заказ в работу, чтобы иметь возможность редактировать'></i></div>";
+                            return "<a href='#' class='fileEditButton' data-toggle='modal' data-target='#editFileOut' type='button' data-translation='" + data.record.id + "'><i class='fa fa-edit'></i></a>";
+                        }
+                        return "<i class='fa fa-edit non-active' title='Заказ уже закрыт, поэтому Вы не можете редактировать файл.'></i>";
                     }
                 },
                 language_in: {
@@ -241,7 +244,8 @@
                 processData: false,
                 success: function(data){
                     $('#changeStatus').modal('hide');
-                    $('#translation_'+data['translation_id']+' .td_status').html("<div class='status in_process' style='margin: 0 auto;' title='В работе'></div>");
+                    $('#translation_status_'+data['translation_id']).html("<div class='status in_process' style='margin: 0 auto;' title='В работе'></div>");
+                    $('#translation_edit_'+data['translation_id']).html("<a href='#' class='fileEditButton' data-toggle='modal' data-target='#editFileOut' type='button' data-translation='" + data['translation_id'] + "'><i class='fa fa-edit'></i></a>");
                 },
                 error: function() {
                     console.log("error");
@@ -273,7 +277,7 @@
                     success: function(data){
                         $('#editFileOut').modal('hide');
                         $('#translation_'+translation_id).html('<a href="/' + data["file_out"] + '" download="' + data["name_out"] + '">' + data["name_out"] + ' <i class="fa fa-download"></i></a>');
-                        $('#translation_status'+translation_id).html("<div class='status done' title='Выполнен'></div>");
+                        $('#translation_status_'+translation_id).html("<div class='status done' title='Выполнен'></div>");
                     },
                     error: function() {
                         console.log("error");

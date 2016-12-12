@@ -90,8 +90,8 @@ class Orders extends MY_Form
 				$ext = $info['extension']; // get the extension of the file
 				$newname = md5(uniqid(rand(), true));
 
+				move_uploaded_file($tmp_file, $uploaddir.$newname.".".$ext);
 				$data['photo'] = '/images/users/' . $user_id . "/".$newname.".".$ext;
-				move_uploaded_file($tmp_file, $data['photo']);
 
 				$img = $this->input->post('photo');
 				if ($img != NULL) {
@@ -166,7 +166,11 @@ class Orders extends MY_Form
 			$data["order"] = $order[0];
 
 			$sources['js'] = array(
-				'/js/vendor/bootstrap/moment.min.js'
+				'/js/vendor/bootstrap/moment.min.js',
+				'/js/vendor/lightbox.js'
+			);
+			$sources['css'] = array(
+				'/css/vendor/lightbox/lightbox.css'
 			);
 			$this->load->view('front/common/header',$sources);
 			$this->load->view('front/users/order',$data);
@@ -395,6 +399,8 @@ class Orders extends MY_Form
 			case "done":
 				$data["date_out"] = date("Y-m-d H:i:s");
 				$this->orders_model->update($data,$order_id);
+				$this->session->set_flashdata('msg','<div class="alert alert-success text-center">Заказ успешно закрыт.</div>');
+				redirect('user/orders/'.$order_id);
 				break;
 			case "in_process":
 				$order_id = $this->input->post("order_id");

@@ -14,7 +14,7 @@
         <?php if($order->photo_thumb){
             ?>
             <div style="float:left;padding-top:10px;margin-right:10px;">
-                <img alt="" src="<?= $order->photo_thumb ?>">
+                <a href="<?= $order->photo ?>" data-lightbox="roadtrip"><img alt="" src="<?= $order->photo_thumb ?>"></a>
             </div>
             <?php
         } ?>
@@ -27,7 +27,7 @@
             <div style="margin-top:10px;">
                 <span>Статус заказа:</span>
                 <?php if($order->date_out) {
-                    echo "выполнен";
+                    echo "<div class='status order done' title='Новый'></div>выполнен";
                 } else if($order->date_in) { ?>
                     <div class='status order in_process' title='Новый'></div> в работе с
                     <script type="text/javascript">
@@ -69,9 +69,9 @@
                             ?>
                             <tr>
                                 <td><?= $i+1 ?></td>
-                                <td><a href="/<?= $files[$i]["file_in"] ?>"><?= $files[$i]["name_in"] ?> <i class="fa fa-download"></i></a></td>
-                                <td><?php if($files[$i]["file_out"]) echo "<a href='/".$files[$i]["file_out"]."'>".$files[$i]['name_out']." <i class='fa fa-download'></i></a>" ?></td>
-                                <td><?php if($files[$i]["translator_user_id"]) echo $this->users_model->getUserName($files[$i]["translator_user_id"]); ?></td>
+                                <td><a href="/<?= $files[$i]["file_in"] ?>" download="<?= $files[$i]["name_in"] ?>"><?= $files[$i]["name_in"] ?> <i class="fa fa-download"></i></a></td>
+                                <td><?php if($files[$i]["file_out"]) echo "<a href='/".$files[$i]["file_out"]."' download='".$files[$i]["name_out"]."'>".$files[$i]['name_out']." <i class='fa fa-download'></i></a>" ?></td>
+                                <td><?php if($files[$i]["translator_user_id"]) echo  '<a href="/user/profile/'.$files[$i]["translator_user_id"].'" target="_blank">'.$this->users_model->getUserName($files[$i]["translator_user_id"]).'</a>'; ?></td>
                                 <td><?php
                                     if($files[$i]["date_out"]) {
                                         echo "выполнен";

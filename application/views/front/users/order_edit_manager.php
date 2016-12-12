@@ -96,14 +96,18 @@
                             <input name="translations[<?= $files[$i]['id'] ?>][volume_out]" type="number" value="<?= $files[$i]["volume_out"] ?>" style="width:80px;"></td>
                         <?php } ?>
                     <td>
-                        <select name="translations[<?= $files[$i]['id'] ?>][translator_user_id]" class="form-control" style="width:210px;">
-                            <option value="">Выберите переводчика...</option>
-                            <?php if(isset($translators) && !empty($translators)){
+                        <?php if($files[$i]["date_in"]) {
+                            echo '<a href="/user/profile/'.$files[$i]["translator_user_id"].'" target="_blank">'.$this->users_model->getUserName($files[$i]["translator_user_id"]).'</a>';
+                        } else {
+                            echo '<select name="translations['.$files[$i]['id'].'][translator_user_id]" class="form-control" style="width:210px;">
+                                  <option value="">Выберите переводчика...</option>';
+                            if(isset($translators) && !empty($translators)){
                                 foreach($translators as $value){
                                     echo "<option value='".$value->id."' ".($value->id == $files[$i]["translator_user_id"] ? "selected" : "").">".$value->last_name." ".$value->first_name." ".$value->patro_name." (".$value->email.")"."</option>";
                                 }
-                            }?>
-                        </select>
+                            }
+                            echo '</select>';
+                        }?>
                     </td>
                     <td class="td_status" style="vertical-align: middle;"><?php
                         if($files[$i]["date_out"]) {
