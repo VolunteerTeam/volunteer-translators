@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            <p align="center">© Волонтёры Переводов, 2015</p>
+            <p align="center">© Волонтёры Переводов, 2015 - <?= date("Y") ?></p>
         </footer>
 
         <div id="sypex-model" class="modal fade bs-example-modal-sm ">

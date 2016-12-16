@@ -30,6 +30,12 @@ class Orders extends MY_Form
 
 	function index() {
 		if($this->ion_auth->logged_in()){
+			$user_id = $this->ion_auth->get_user_id();
+			$user_groups = $this->ion_auth->get_users_groups($user_id)->result();
+			if(empty($user_groups)) {
+				$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Выберите Вашу роль, чтобы иметь возможность просматривать Заказы.</div>');
+				redirect("user/profile");
+			}
 			$data = array();
 			$data["languages"] = $this->orders_model->getLanguages();
 			$this->load_view('front/users/orders',$data);
@@ -135,23 +141,24 @@ class Orders extends MY_Form
 					}
 				}
 				$json_data["order"] = $this->orders_model->getOrder($order);
+
 				// отправить на почту письмо, что был создан заказ
-//				$this->load->library('email');
-//				$subject = 'Создан заказ №'.$order;
-//				$message = 'Тестирование сервиса создания заказов на сайте Волонтёры переводов.';
-//				$from_email = 'system@perevodov.info';
-//
-//				$result = $this->email
-//					->from($from_email)
-//					->reply_to('volontery@perevodov.info')
-//					->to('volontery@perevodov.info')
-//					->subject($subject)
-//					->message($message)
-//					->send();
-//
-//				if (!$result) {
-//					$json_data["errors"]['sendEmail'] = "Письмо о заказе не было отправлено";
-//				}
+				$this->load->library('email');
+				$email_data = array(
+					"subject" => 'Создан заказ №'.$order,
+					"message" => '<p>Тестирование сервиса создания заказов на сайте Волонтёры переводов. Для просмотра заказа пройдите по ссылке <a href="'.$this->config->base_url().'user/orders/'.$order.'">'.$this->config->base_url().'user/orders/'.$order.'</a></p>',
+					"from_email" => 'system@perevodov.info',
+//					"to" => 'volontery@perevodov.info',
+					"to" => 'elen.freelancer@gmail.com',
+					"reply_to" => 'volontery@perevodov.info',
+				);
+				$this->sendEmail($email_data);
+
+				$user_email = $this->users_model->getUserEmail($user_id);
+				if($user_email) {
+					$email_data["to"] = $this->users_model->getUserEmail($user_id);
+					$this->sendEmail($email_data);
+				}
 			} else {
 				$json_data["errors"]['create'] = "Ошибка сохранения заказа";
 			}
@@ -257,6 +264,7 @@ class Orders extends MY_Form
 			}
 
 			if($this->input->post("translations")){
+				$this->load->library('email');
 				foreach($this->input->post("translations") as $key => $value){
 					$query = $this->db->query("SELECT * FROM translations WHERE id='".$key."' FOR UPDATE");
 					$translation = $query->row();
@@ -274,6 +282,21 @@ class Orders extends MY_Form
 						$data['translator_user_id'] = $value["translator_user_id"];
 					}
 					$this->orders_model->updateTranslation($data, $key);
+
+					if($data['translator_user_id']) {
+						// Отправляем уведомление на почту Переводчику
+						$translator_email = $this->users_model->getUserEmail($translation->translator_user_id);
+						if($translator_email) {
+							$email_data = array(
+								"subject" => 'Волонтёры переводов: Вам назначен файл для перевода',
+								"from_email" => 'system@perevodov.info',
+								"to" => $translator_email,
+								"reply_to" => 'volontery@perevodov.info',
+								"message" => '<p>Тестирование сервиса заказов на сайте Волонтёры переводов. Вам был назначен файл для перевода (заказ №'.$translation->order_id.')! Чтобы взять файл в работу, пройдите по ссылке <a href="'.$this->config->base_url().'user/translations">'.$this->config->base_url().'user/translations</a></p>',
+							);
+							$this->sendEmail($email_data);
+						}
+					}
 				}
 			}
 			$this->db->trans_complete();
@@ -362,6 +385,9 @@ class Orders extends MY_Form
 			mkdir($uploaddir, 0777, true);
 		}
 
+		$translation = $this->orders_model->getTranslation($translation_id);
+		$translation->date_out ? $status = "изменён" : $status = "выполнен";
+
 		if($translation_id && $_FILES["file_out"] && $_FILES["file_out"]["name"]){
 			$tmp_file = $_FILES["file_out"]["tmp_name"];
 			$info = pathinfo($_FILES["file_out"]["name"]);
@@ -376,6 +402,22 @@ class Orders extends MY_Form
 				'date_out' => date("Y-m-d H:i:s")
 			);
 			$this->orders_model->updateTranslation($data,$translation_id);
+
+			// Отправляем уведомление на почту Менеджеру
+			$manager_id = $this->orders_model->getManager($translation_id);
+			$manager_email = $this->users_model->getUserEmail($manager_id);
+
+			if($manager_email) {
+				$this->load->library('email');
+				$email_data = array(
+					"subject" => 'Волонтёры переводов: Вам назначен файл для перевода',
+					"from_email" => 'system@perevodov.info',
+					"to" => $manager_email,
+					"reply_to" => 'volontery@perevodov.info',
+					"message" => '<p>Тестирование сервиса заказов на сайте Волонтёры переводов. По заказу №'.$translation->order_id.' к файлу оригинала "'.$translation->name_in.'" '.$status.' файл перевода "'.$data['name_out'].'"! Для просмотра заказа пройдите по ссылке <a href="'.$this->config->base_url().'user/orders/'.$translation->order_id.'">'.$this->config->base_url().'user/orders/'.$translation->order_id.'</a></p>',
+				);
+				$this->sendEmail($email_data);
+			}
 
 			$json_data["name_out"] = explode(".".$ext,$_FILES['file_out']['name'])[0];
 			$json_data["ext"] = $ext;
@@ -409,14 +451,35 @@ class Orders extends MY_Form
 	function changeOrderStatus(){
 		$order_id = intval($this->input->post("order_id"));
 
+		$this->load->library('email');
+		$email_data = array(
+			"subject" => 'Статус заказа №'.$order_id.' изменился',
+			"from_email" => 'system@perevodov.info',
+//			"to" => 'volontery@perevodov.info',
+			"to" => 'elen.freelancer@gmail.com',
+			"reply_to" => 'volontery@perevodov.info',
+		);
+
 		$data = array();
 		$json_data = array();
 		date_default_timezone_set("Europe/London");
+		$client_id = $this->orders_model->getClientId($order_id);
+		$client_email = $this->users_model->getUserEmail($client_id);
+
 		switch($this->input->post("order_status")){
 			case "done":
 				$data["date_out"] = date("Y-m-d H:i:s");
 				$this->orders_model->update($data,$order_id);
 				$this->session->set_flashdata('msg','<div class="alert alert-success text-center">Заказ успешно закрыт.</div>');
+
+				// Отправляем уведомление на почту
+				$email_data["message"] = '<p>Тестирование сервиса заказов на сайте Волонтёры переводов. Заказ выполнен! Для просмотра заказа пройдите по ссылке <a href="'.$this->config->base_url().'user/orders/'.$order_id.'">'.$this->config->base_url().'user/orders/'.$order_id.'</a></p>';
+				$this->sendEmail($email_data);
+				if($client_email) {
+					$email_data["to"] = $this->users_model->getUserEmail($client_id);
+					$this->sendEmail($email_data);
+				}
+
 				redirect('user/orders/'.$order_id);
 				break;
 			case "in_process":
@@ -439,11 +502,29 @@ class Orders extends MY_Form
 					$json_data["manager"] = '<a href="/user/profile/'.$user_id.'">'.$this->users_model->getUserName($user_id).'</a>';
 					$this->db->trans_complete();
 					$this->session->set_flashdata('msg','<div class="alert alert-success text-center">Заказ был принят Вами в работу. Теперь Вы можете редактировать его.</div>');
+
+					// Отправляем уведомление на почту
+					$email_data["message"] = '<p>Тестирование сервиса заказов на сайте Волонтёры переводов. Заказ принят в работу! Для просмотра заказа пройдите по ссылке <a href="'.$this->config->base_url().'user/orders/'.$order_id.'">'.$this->config->base_url().'user/orders/'.$order_id.'</a></p>';
+					$this->sendEmail($email_data);
+					if($client_email) {
+						$email_data["to"] = $this->users_model->getUserEmail($client_id);
+						$this->sendEmail($email_data);
+					}
+
 					redirect('user/orders/edit/'.$order_id);
-					// ОТПРАВИТЬ ПИСЬМО НА ПОЧТУ О ЗАКРЕПЛЕНИИ ЗАКАЗА ЗА МЕНЕДЖЕРОМ!!!
 				}
 				break;
 		}
+	}
+
+	function sendEmail($data){
+		$result = $this->email
+				->from($data["from_email"])
+				->reply_to($data["reply_to"])
+				->to($data["to"])
+				->subject($data["subject"])
+				->message($data["message"])
+				->send();
 	}
 
 }

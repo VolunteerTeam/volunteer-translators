@@ -49,6 +49,30 @@ class Orders_model extends MY_Model {
         return $this->db->insert_id();
     }
 
+    function getTranslation($id) {
+        $this->db->select('*');
+        $this->db->from('translations');
+        $this->db->where("id", $id);
+        $result = $this->db->get()->result();
+        return $result;
+    }
+
+    function getManager($translation_id) {
+        $this->db->select('orders.manager_user_id');
+        $this->db->from('orders');
+        $this->db->where('`id` = (SELECT `order_id` FROM `translations` WHERE `id` = '.$translation_id.' LIMIT 1)', NULL, FALSE);
+        $result = $this->db->get()->result();
+        return $result->manager_user_id;
+    }
+
+    function getClientId($order_id) {
+        $this->db->select('client_user_id');
+        $this->db->from('orders');
+        $this->db->where('id','=',$order_id);
+        $result = $this->db->get()->result();
+        return $result->client_user_id;
+    }
+
     function getOrdersPortion($sort, $start, $stop){
         $sort = explode(" ",$sort);
         switch($sort[0]){

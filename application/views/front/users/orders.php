@@ -3,9 +3,7 @@
 ?>
 
 <div class="container main" role="main">
-    <?php
-        echo $this->session->flashdata('msg');
-    ?>
+    <?= $this->session->flashdata('msg'); ?>
     <div id="error_block"></div>
     <?php //require_once APPPATH."views/front/users/order_filter.php"; ?>
     <div id="ordersTable"></div>

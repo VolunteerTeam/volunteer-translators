@@ -19,8 +19,17 @@
             <?php
         } ?>
         <div class="profile_info" style="padding-top:10px;float:left;">
-            <span style="font-weight:bold;font-size:18px;">Заказ №<?= $order->id ?></span><br/>
-            от
+            <span style="font-weight:bold;font-size:18px;">Заказ №<?= $order->id ?></span>
+            <?php
+                if($this->ion_auth->logged_in()) {
+                    $user_id = $this->ion_auth->get_user_id();
+                    $user_groups = $this->users_model->getUserGroupsId($user_id);
+                    if(!empty($user_groups)) {
+                        echo "<a href='/user/orders/edit/".$order->id."' title='Редактировать заказ'><i class='fa fa-edit'></i></a>";
+                    }
+                }
+            ?>
+            <br/>от
             <script type="text/javascript">
                 getLocalDateTime("<?= $order->created_on ?>");
             </script>

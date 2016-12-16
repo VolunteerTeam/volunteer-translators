@@ -75,6 +75,7 @@
                     <input type="number" name="translation_id" class="form-control" style="display:none;">
                     <p class="notice">Вы подтверждаете, что хотите взять этот файл для перевода в работу?</p>
                     <?php echo form_close(); ?>
+                    <div id="loading"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -110,7 +111,7 @@
             fields: {
                 created_on: {
                     title: 'Дата создания',
-                    width: '18%',
+                    width: '11%',
                     display: function (data) {
                         var localTime = moment.utc(data.record.created_on).toDate();
                         localTime = moment(localTime).format('DD.MM.YYYY HH:mm:ss');
@@ -130,14 +131,14 @@
                 },
                 name_in: {
                     title: 'Файл оригинала',
-                    width: '20%',
+                    width: '19%',
                     display: function (data) {
                         return '<a href="/' + data.record.file_in + '" download="' + data.record.name_in + '">' + data.record.name_in + ' <i class="fa fa-download"></i></a>';
                     }
                 },
                 name_out: {
                     title: 'Файл перевода',
-                    width: '20%',
+                    width: '19',
                     display: function (data) {
                         if(data.record.file_out) return '<span id="translation_' + data.record.id + '"><a href="/' + data.record.file_out + '" download="' + data.record.name_out + '">' + data.record.name_out + ' <i class="fa fa-download"></i></a></span>';
                         return '<span id="translation_' + data.record.id + '"></span>';
@@ -165,7 +166,7 @@
                 },
                 manager_name: {
                     title: 'Менеджер',
-                    width: '20%',
+                    width: '10%',
                     display: function (data) {
                         if(data.record.manager_user_id) return "<a href='/user/profile/" + data.record.manager_user_id + "' target='_blank'>" + data.record.last_name + " " + data.record.first_name + "</a>";
                         return "";
@@ -291,6 +292,15 @@
                     }
                 });
             }
+        });
+
+        $(document).ajaxStart(function(){
+            $("#loading").css("display", "block");
+            $("#submitChangeStatus").attr("disabled",true);
+        });
+        $(document).ajaxComplete(function(){
+            $("#loading").css("display", "none");
+            $("#submitChangeStatus").attr("disabled",false);
         });
     });
 
