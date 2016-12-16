@@ -1,5 +1,6 @@
 <?php
     $user_id = $this->ion_auth->get_user_id();
+    $user_groups = $this->users_model->getUserGroupsId($user_id);
 ?>
 
 <div class="container main" role="main">
@@ -150,6 +151,11 @@
 
     $(document).ready(function () {
         var ordersTable = $('#ordersTable');
+        var user_id = <?php echo json_encode($user_id, JSON_HEX_TAG); ?>;
+        <?php
+            $js_array = json_encode($user_groups);
+            echo "var user_groups = ". $js_array . ";\n";
+        ?>
 
         ordersTable.jtable({
             title: 'Заказы',
@@ -232,9 +238,10 @@
                             var date_plus_week = new Date(date_out.getTime() + 7 * 24 * 60 * 60 * 1000);
                             var date_out_check = now.getTime() <= date_plus_week.getTime();
                         }
-                        if((!data.record.manager_user_id && data.record.client_user_id == <?= $user_id ?>) ||
-                            (data.record.manager_user_id == <?= $user_id ?> && date_out_check) ||
-                            <?= $this->ion_auth->is_admin() ?>){
+
+                        if((!data.record.manager_user_id && (data.record.client_user_id == user_id || $.inArray("3",user_groups) >= 0)) ||
+                            (data.record.manager_user_id == user_id && date_out_check) ||
+                            <?php echo json_encode($this->ion_auth->is_admin(), JSON_HEX_TAG); ?>){
                             return "<a href='/user/orders/edit/" + data.record.order_id + "' title='Редактировать'><i class='fa fa-lg fa-edit'></i></a>";
                         }
                         return "<i class='fa fa-lg fa-edit non-active'></i>";
@@ -245,7 +252,7 @@
                     width: '1%',
                     sorting: false,
                     display: function (data) {
-                        if((!data.record.manager_user_id && data.record.client_user_id == <?= $user_id ?>) || <?= $this->ion_auth->is_admin() ?>) return "<a data-toggle='modal' data-target='#deleteOrder' type='button' data-orderid='" + data.record.order_id + "' style='cursor:pointer;' title='Удалить'><i class='fa fa-lg fa-remove'></i></a>";
+                        if((!data.record.manager_user_id && data.record.client_user_id == user_id) || <?php echo json_encode($this->ion_auth->is_admin(), JSON_HEX_TAG); ?>) return "<a data-toggle='modal' data-target='#deleteOrder' type='button' data-orderid='" + data.record.order_id + "' style='cursor:pointer;' title='Удалить'><i class='fa fa-lg fa-remove'></i></a>";
                         return "<i class='fa fa-lg fa-remove non-active'></i>";
                     }
                 }
