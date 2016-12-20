@@ -24,7 +24,7 @@
             }
         }
     ?>
-    <link href="/css/front/custom.css?20161121" rel="stylesheet" type="text/css" />
+    <link href="/css/front/custom.css?20161220" rel="stylesheet" type="text/css" />
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
