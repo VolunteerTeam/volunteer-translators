@@ -385,8 +385,8 @@
                             });
                         }
                     },
-                    error: function() {
-                        console.log("error");
+                    error: function(e) {
+                        console.log(e);
                     }
                 });
             }
