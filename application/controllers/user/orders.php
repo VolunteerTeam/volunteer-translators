@@ -270,12 +270,11 @@ class Orders extends MY_Form
 					$query = $this->db->query("SELECT * FROM translations WHERE id='".$key."' FOR UPDATE");
 					$translation = $query->row();
 					$data = array();
-					$data = array(
-						'name_in' => $value["name_in"].".".$value["name_in_ext"],
-						'name_out' => $value["name_out"].".".$value["name_out_ext"],
-						'volume_in' => $value["volume_in"],
-						'volume_out' => $value["volume_out"],
-					);
+					if($value["name_in"]) $data["name_in"] = $value["name_in"].".".$value["name_in_ext"];
+					if($value["name_out"]) $data["name_out"] = $value["name_out"].".".$value["name_out_ext"];
+					if($value["volume_in"]) $data["volume_in"] = $value["volume_in"];
+					if($value["volume_out"]) $data["volume_out"] = $value["volume_out"];
+
 					// Если файл уже взят в работу переводчиком, переназначить его на другого переводчика нельзя
 					if($translation->date_in && $translation->translator_user_id != $value["translator_user_id"]){
 						$this->session->set_flashdata('msg','<div class="alert alert-danger text-center">Извините, файл "'.$value["name_in"].".".$value["name_in_ext"].'" уже взят в работу переводчиком.</div>');
