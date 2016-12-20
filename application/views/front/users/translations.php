@@ -287,8 +287,8 @@
                         $('#translation_'+translation_id).html('<a href="/' + data["file_out"] + '" download="' + data["name_out"] + '">' + data["name_out"] + ' <i class="fa fa-download"></i></a>');
                         $('#translation_status_'+translation_id).html("<div class='status done' title='Выполнен'></div>");
                     },
-                    error: function() {
-                        console.log("error");
+                    error: function(e) {
+                        console.log(e);
                     }
                 });
             }

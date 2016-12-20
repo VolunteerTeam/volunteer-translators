@@ -148,8 +148,7 @@ class Orders extends MY_Form
 					"subject" => 'Создан заказ №'.$order,
 					"message" => '<p>Тестирование сервиса создания заказов на сайте Волонтёры переводов. Для просмотра заказа пройдите по ссылке <a href="'.$this->config->base_url().'user/orders/'.$order.'">'.$this->config->base_url().'user/orders/'.$order.'</a></p>',
 					"from_email" => 'system@perevodov.info',
-//					"to" => 'volontery@perevodov.info',
-					"to" => 'elen.freelancer@gmail.com',
+					"to" => 'volontery@perevodov.info',
 					"reply_to" => 'volontery@perevodov.info',
 				);
 				$this->sendEmail($email_data);
@@ -262,10 +261,12 @@ class Orders extends MY_Form
 					$translation = $this->orders_model->addTranslation($data);
 				}
 			}
+			$this->db->trans_complete();
 
 			if($this->input->post("translations")){
 				$this->load->library('email');
 				foreach($this->input->post("translations") as $key => $value){
+					$this->db->trans_start();
 					$query = $this->db->query("SELECT * FROM translations WHERE id='".$key."' FOR UPDATE");
 					$translation = $query->row();
 					$data = array();
@@ -282,13 +283,14 @@ class Orders extends MY_Form
 						$data['translator_user_id'] = $value["translator_user_id"];
 					}
 					$this->orders_model->updateTranslation($data, $key);
+					$this->db->trans_complete();
 
 					if($data['translator_user_id']) {
 						// Отправляем уведомление на почту Переводчику
-						$translator_email = $this->users_model->getUserEmail($translation->translator_user_id);
+						$translator_email = $this->users_model->getUserEmail($data['translator_user_id']);
 						if($translator_email) {
 							$email_data = array(
-								"subject" => 'Волонтёры переводов: Вам назначен файл для перевода',
+								"subject" => 'Заказ №'.$translation->order_id.'. Вам назначен файл для перевода',
 								"from_email" => 'system@perevodov.info',
 								"to" => $translator_email,
 								"reply_to" => 'volontery@perevodov.info',
@@ -299,7 +301,7 @@ class Orders extends MY_Form
 					}
 				}
 			}
-			$this->db->trans_complete();
+
 			redirect('user/orders/edit/'.$order_id);
 		}
 	}
@@ -410,7 +412,7 @@ class Orders extends MY_Form
 			if($manager_email) {
 				$this->load->library('email');
 				$email_data = array(
-					"subject" => 'Волонтёры переводов: Вам назначен файл для перевода',
+					"subject" => 'Заказ №'.$translation->order_id.'. Добавлен файл перевода',
 					"from_email" => 'system@perevodov.info',
 					"to" => $manager_email,
 					"reply_to" => 'volontery@perevodov.info',
@@ -443,7 +445,6 @@ class Orders extends MY_Form
 			$data["date_in"] = date("Y-m-d H:i:s");
 			$this->orders_model->updateTranslation($data,$translation_id);
 		}
-
 		$this->db->trans_complete();
 		echo json_encode($json_data);
 	}
@@ -455,8 +456,7 @@ class Orders extends MY_Form
 		$email_data = array(
 			"subject" => 'Статус заказа №'.$order_id.' изменился',
 			"from_email" => 'system@perevodov.info',
-//			"to" => 'volontery@perevodov.info',
-			"to" => 'elen.freelancer@gmail.com',
+			"to" => 'volontery@perevodov.info',
 			"reply_to" => 'volontery@perevodov.info',
 		);
 

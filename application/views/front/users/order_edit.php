@@ -237,8 +237,8 @@
                         $('#translation_'+data['translation_id']+' .file_out_href').attr("href","/"+data["file_out"]).attr("download",data["name_out"]+data["ext"]).css("display","inline-block");
                         $('#translation_'+data['translation_id']+' .td_status').html("<div class='status done' style='margin: 0 auto;' title='Выполнен'></div>");
                     },
-                    error: function() {
-                        console.log("error");
+                    error: function(e) {
+                        console.log(e);
                     }
                 });
             }
